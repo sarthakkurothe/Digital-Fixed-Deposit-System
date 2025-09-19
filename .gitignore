@@ -1,0 +1,19 @@
+# Java / Maven
+/target/
+/*.iml
+/.mvn/
+/.mvnw
+!/src/main/resources/*.properties
+
+# Node / Vite / Vue
+/frontend/node_modules/
+/frontend/dist/
+
+# OS / editors
+.DS_Store
+.vscode/
+.idea/
+
+# env files
+.env
+.env.local
