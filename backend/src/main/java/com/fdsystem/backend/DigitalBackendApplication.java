@@ -1,4 +1,4 @@
-package com.sarthakkurothe.backend;
+package com.fdsystem.backend;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
