@@ -28,6 +28,7 @@ public class FixedDeposit {
   private int tenure_months;
   private Date start_date;
   private Date maturity_date;
+  @Enumerated(EnumType.STRING)
   private FdStatus status;
   private double accrued_interest;
   private Timestamp created_at;

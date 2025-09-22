@@ -26,7 +26,7 @@ public class UserService {
     return false;
   }
 
-  public boolean isCustomerExists(String email){
+  public boolean isUserExists(String email){
     return userRepository.findByEmail(email) != null;
   }
 
