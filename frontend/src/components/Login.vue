@@ -87,7 +87,7 @@ export default {
 
         console.log("User data:", meRes.data);
 
-        this.$router.push("/dashboard");
+        this.$router.push("/user/dashboard");
       } catch (err) {
         this.error = err.response?.data?.message || "Invalid credentials";
         console.error("Login error:", err);

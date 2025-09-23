@@ -10,12 +10,8 @@
     "serve": "vite preview"
   },
   "dependencies": {
-<<<<<<< HEAD
     "axios": "^1.12.2",
-=======
-    "axios": "^1.6.0",
     "lucide-vue-next": "^0.544.0",
->>>>>>> main
     "vue": "^3.5.21",
     "vue-router": "^4.5.1",
     "vuex": "^4.1.0"

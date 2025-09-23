@@ -1,4 +1,4 @@
-<template>
+ <template>
   <div class="p-6 space-y-6">
     <!-- Stats Grid -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">

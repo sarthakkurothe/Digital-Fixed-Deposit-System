@@ -24,7 +24,7 @@
                 <br>
                 
           <router-link 
-            to="/" 
+            to="/user/dashboard" 
             class="nav-item group"
             :class="navItemClasses($route.name === 'Dashboard')"
           >
@@ -41,7 +41,7 @@
           </router-link>
           
           <router-link 
-            to="/book-fd" 
+            to="/user/book-fd" 
             class="nav-item group"
             :class="navItemClasses($route.name === 'BookFD')"
           >
@@ -57,7 +57,7 @@
           </router-link>
           
           <router-link 
-            to="/my-fds" 
+            to="/user/my-fds" 
             class="nav-item group"
             :class="navItemClasses($route.name === 'MyFDs')"
           >
@@ -73,7 +73,7 @@
           </router-link>
           
           <router-link 
-            to="/calculator" 
+            to="/user/calculator" 
             class="nav-item group"
             :class="navItemClasses($route.name === 'Calculator')"
           >
@@ -89,7 +89,7 @@
           </router-link>
           
           <router-link 
-            to="/support" 
+            to="/user/support" 
             class="nav-item group"
             :class="navItemClasses($route.name === 'Support')"
           >
