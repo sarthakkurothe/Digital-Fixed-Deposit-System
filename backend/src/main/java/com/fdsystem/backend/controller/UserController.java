@@ -3,11 +3,13 @@ package com.fdsystem.backend.controller;
 import com.fdsystem.backend.dto.LoginRequest;
 
 
+import com.fdsystem.backend.dto.UserDTO;
 import com.fdsystem.backend.model.User;
 import com.fdsystem.backend.model.UserPrincipal;
 import com.fdsystem.backend.service.UserService;
 import com.fdsystem.backend.util.enums.Role;
 import com.fdsystem.backend.util.jwt.JWTUtils;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -60,8 +62,9 @@ public class UserController {
 
         String jwtToken = this.jwtUtils.generateTokenFromUsername(userPrincipal);
 
-
-        return ResponseEntity.ok(jwtToken);
+        Map<String, String> response = new HashMap<>();
+        response.put("token", jwtToken);
+        return ResponseEntity.ok(response);
     }
 
     @PostMapping("/register")
@@ -75,11 +78,20 @@ public class UserController {
         user.setCreated_at(new Timestamp(System.currentTimeMillis()));
         userService.addUser(user);
 
-        return ResponseEntity.ok("User registered successfully");
+        return new ResponseEntity<>("User added successfully!", HttpStatus.CREATED);
     }
 
     @GetMapping("/me")
     public ResponseEntity<?> getUser(){
-        return ResponseEntity.ok("Helllo");
+        UserPrincipal principal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = principal.getUser();
+
+        UserDTO userDTO = new UserDTO();
+        userDTO.setRole(user.getRole());
+        userDTO.setName(user.getName());
+        userDTO.setAge(user.getAge());
+        userDTO.setEmail(user.getEmail());
+
+        return new ResponseEntity<>(userDTO, HttpStatus.ACCEPTED);
     }
 }
