@@ -1,13 +1,18 @@
 <template>
   <div class="home-layout">
-    <!-- Router outlet for nested routes -->
+    <Header></Header>
     <router-view />
   </div>
 </template>
 
 <script>
+import Header from '../components/Header.vue';
+
 export default {
-  name: 'HomeView'
+  name: 'HomeView',
+  components: {
+    Header
+  },
 }
 </script>
 

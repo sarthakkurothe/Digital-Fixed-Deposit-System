@@ -27,6 +27,7 @@ public class SupportTicket {
 
   private String subject;
   private String description;
+  @Enumerated(EnumType.STRING)
   private SupportTicketStatus status;
   private String response;
 

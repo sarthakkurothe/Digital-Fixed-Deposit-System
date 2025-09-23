@@ -1,47 +1,70 @@
 import { createRouter, createWebHistory } from 'vue-router'
-
-// Import components
 import HomeView from '../views/HomeView.vue'
-import Dashboard from '../views/Dashboard.vue'
+import DashBoard from '../views/DashBoard.vue'
 import MyFDs from '../views/MyFDs.vue'
 import BookFD from '../views/BookFD.vue'
 import Calculator from '../views/Calculator.vue'
 import Support from '../views/Support.vue'
+import Login from '../components/Login.vue'
+import Register from '../components/Register.vue'
+import store from '../store'
+import Interface from '../components/Interface.vue'
 
 const routes = [
-  // Main application routes (with layout)
   {
     path: '/',
-    component: HomeView,
-    children: [
+    name: 'Home',
+    component: HomeView,  // public homepage content
+    children:[
       {
-        path: '',
+        path: 'login',
+        component: Login,
+        meta: { requiresAuth: false }
+      },
+      {
+        path: 'register',
+        component: Register,
+        meta: { requiresAuth: false }
+      },
+    ]
+  },
+  {
+    path: '/user',
+    component: Interface,
+    children:
+    [
+      {
+        path: 'dashboard',
         name: 'Dashboard',
-        component: Dashboard
+        component: DashBoard,
+        meta: { requiresAuth: true }
       },
       {
         path: 'my-fds',
-        name: 'MyFDs', 
-        component: MyFDs
+        name: 'MyFDs',
+        component: MyFDs,
+        meta: { requiresAuth: true }
       },
       {
         path: 'book-fd',
+        component: BookFD,
         name: 'BookFD',
-        component: BookFD
+        meta: { requiresAuth: true }
       },
       {
         path: 'calculator',
         name: 'Calculator',
-        component: Calculator
+        component: Calculator,
+        meta: { requiresAuth: true }
       },
       {
         path: 'support',
         name: 'Support',
-        component: Support
-      }
+        component: Support,
+        meta: { requiresAuth: true }
+      },
     ]
   },
-  // Catch all route - redirect to dashboard
   {
     path: '/:pathMatch(.*)*',
     redirect: '/'
@@ -52,6 +75,18 @@ const router = createRouter({
   history: createWebHistory(),
   routes
 })
- 
+
+// Navigation guard
+router.beforeEach((to, from, next) => {
+  const isAuthenticated = !!store.state.token;
+
+  if (to.meta.requiresAuth && !isAuthenticated) {
+    next('/login');
+  } else if ((to.path === '/login' || to.path === '/register') && isAuthenticated) {
+    next('/user/dashboard');
+  } else {
+    next();
+  }
+});
 
 export default router

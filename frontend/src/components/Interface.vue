@@ -1,12 +1,31 @@
 
 <template>
-<router-view />
-
+  <div id="app" class="min-h-screen bg-gray-50">
+    <!-- Main Layout -->
+    <div class="flex h-screen">
+      <!-- Sidebar -->
+      <Sidebar 
+        ref="sidebar" 
+        @sidebar-toggled="handleSidebarToggle"
+      />
+      
+      <!-- Main Content Area -->
+      <div class="flex-1 flex flex-col transition-all duration-300" :class="mainContentClasses">
+        <!-- Navbar -->
+        <Navbar @toggle-sidebar="handleToggleSidebar" />
+        
+        <!-- Page Content -->
+        <main class="flex-1 overflow-auto bg-gray-50">
+          <router-view />
+        </main>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
-import Navbar from './components/Navbar.vue'
-import Sidebar from './components/Sidebar.vue'
+import Navbar from './Navbar.vue'
+import Sidebar from './Sidebar.vue'
 
 export default {
   name: 'App',
