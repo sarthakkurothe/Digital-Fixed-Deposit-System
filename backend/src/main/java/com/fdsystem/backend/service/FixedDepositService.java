@@ -1,10 +1,14 @@
 package com.fdsystem.backend.service;
 
+import com.fdsystem.backend.dto.BreakPreviewResponse;
 import com.fdsystem.backend.model.FixedDeposit;
+import com.fdsystem.backend.model.SupportTicket;
 import com.fdsystem.backend.model.User;
 import com.fdsystem.backend.repository.FixedDepositRepository;
+import com.fdsystem.backend.repository.SupportTicketRepository;
 import com.fdsystem.backend.repository.UserRepository;
 import com.fdsystem.backend.util.enums.FdStatus;
+import com.fdsystem.backend.util.enums.SupportTicketStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -12,10 +16,15 @@ import org.springframework.stereotype.Service;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @Service public class FixedDepositService {
+
     private FixedDepositRepository fixedDepositRepository;
+    @Autowired
+    private SupportTicketRepository supportTicketRepository;
 
     @Autowired
     private UserRepository userRepository;
@@ -38,5 +47,39 @@ import java.util.List;
     public List<FixedDeposit> getFdsByUserId(Long user_id){
         User user = userRepository.findById(user_id).get();
         return this.fixedDepositRepository.findAllByUser(user);
+    }
+
+    public void breakFD(Long fdId) {
+        FixedDeposit fd = fixedDepositRepository.findById(fdId).get();
+        SupportTicket ticket = new SupportTicket();
+        ticket.setUser(fd.getUser());
+        ticket.setFixedDeposit(fd);
+        ticket.setSubject("Break Fixed Deposit");
+        ticket.setDescription("Premature Withdrawal");
+        ticket.setStatus(SupportTicketStatus.OPEN);
+        supportTicketRepository.save(ticket);
+        fd.setStatus(FdStatus.BROKEN_PENDING);
+        fixedDepositRepository.save(fd);
+    }
+
+    public BreakPreviewResponse getBreakPreview(Long fdId) {
+        FixedDeposit fd = this.fixedDepositRepository.findById(fdId).get();
+        double penalty = calculatePenalty(fd);
+        double payout = fd.getAmount() + fd.getAccrued_interest() - penalty;
+        return new BreakPreviewResponse(fd.getId(), fd.getAmount(), fd.getAccrued_interest(), fd.getStart_date(), fd.getMaturity_date(), penalty, payout, fd.getStatus().toString());
+    }
+
+    private double calculatePenalty(FixedDeposit fd) {
+        LocalDate startDate = fd.getStart_date().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate today = LocalDate.now();
+        long monthsElapsed = ChronoUnit.MONTHS.between(startDate, today);
+        double accruedInterest = fd.getAccrued_interest();
+        double penalty = 0;
+        if (monthsElapsed < 3) {
+            penalty = accruedInterest;
+        } else if (monthsElapsed < fd.getTenure_months()) {
+            penalty = accruedInterest * 0.01;
+        }
+        return penalty;
     }
 }
