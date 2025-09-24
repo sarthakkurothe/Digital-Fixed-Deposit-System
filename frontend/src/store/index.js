@@ -1,5 +1,3 @@
-
-import axios from '../api';
 import { createStore } from "vuex";
 
 export default createStore({
@@ -22,61 +20,81 @@ export default createStore({
     clearAuth(state) {
       state.user = null;
       state.token = null;
+      state.fds = [];
       localStorage.removeItem("user");
       localStorage.removeItem("token");
     },
+    SET_FDS(state, fds) {
+      state.fds = fds;
+    },
+    SET_LOADING(state, loading) {
+      state.loading = loading;
+    },
+    UPDATE_FD_STATUS(state, { fdId, status }) {
+      const fd = state.fds.find(fd => fd.id === fdId);
+      if (fd) fd.status = status;
+    }
   },
 
   actions: {
-    async fetchFDs({ commit }) {
-      commit('SET_LOADING', true)
-      
-      commit('SET_LOADING', false)
-    },
-    async login({ commit }, credentials) {
-      const res = await axios.post('/auth/login',{
-        email: credentials.email,
-        password: credentials.password
-      })
-      const token = res.data.token;
-      commit("setToken", token);
-      
-    },
-    async setUserData({ commit }, user) {
-      const token = localStorage.getItem("token");
-      if (!token) return;
-      const res = await axios.get('/auth/me')
-
-      commit("setUser", res.data);
-    },
-    async register({ commit }, credentials) {
+    async fetchFDs({ commit, state }) {
+      commit("SET_LOADING", true);
       try {
-        console.log("Registering user with credentials:", credentials);
-        const res = await axios.post('/auth/register', {
-          name: credentials.name,
-          email: credentials.email,
-          age: credentials.age,
-          password: credentials.password,
-        });
-
-        console.log(res)
-        if (res.status === 201) {
-          return { success: true };
-        }
-        
+        const res = await fetch(
+          `http://localhost:8080/fd/user/${state.user.id}`,
+          {
+            headers: {
+              Authorization: `bearer ${state.token}`
+            }
+          }
+        );
+        if (!res.ok) throw new Error("Failed to fetch FDs");
+        const data = await res.json();
+        commit("SET_FDS", data);
       } catch (err) {
-        
-        return { success: false, status: err.response?.status, error: err.response?.data};
+        console.error("Error fetching FDs", err);
+      } finally {
+        commit("SET_LOADING", false);
       }
+    },
+
+    async breakFD({ commit, state }, fdId) {
+      try {
+        // Call backend API (PUT or POST depending on your design)
+        const res = await fetch(
+          `http://localhost:8080/fds/${fdId}/break`,
+          {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `bearer ${state.token}`
+            }
+          }
+        );
+        if (!res.ok) throw new Error("Failed to break FD");
+
+        // Update store state locally
+        commit("UPDATE_FD_STATUS", { fdId, status: "BROKEN" });
+      } catch (err) {
+        console.error("Error breaking FD", err);
+      }
+    },
+
+    login({ commit }, token) {
+      commit("setToken", token);
+    },
+    setUserData({ commit }, user) {
+      commit("setUser", user);
     },
     logout({ commit }) {
       commit("clearAuth");
-    },
+    }
   },
 
   getters: {
     isAuthenticated: (state) => !!state.token,
     getUser: (state) => state.user,
     getToken: (state) => state.token,
-  },
+    getFDs: (state) => state.fds
+  }
 });
