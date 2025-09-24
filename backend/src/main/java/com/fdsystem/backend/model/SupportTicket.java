@@ -19,11 +19,11 @@ public class SupportTicket {
 
   @ManyToOne
   @JoinColumn(name = "user_id")
-  private User user_id;
+  private User user;
 
   @ManyToOne
   @JoinColumn(name = "fd_id")
-  private FixedDeposit fd_id;
+  private FixedDeposit fd;
 
   private String subject;
   private String description;
