@@ -1,7 +1,27 @@
-
 <template>
-<router-view />
+  <div class="min-h-screen flex flex-col">
+    <!-- Navbar / Header (only for authenticated routes or /user pages) -->
+    <Navbar
+      v-if="showLayout"
+      ref="navbar"
+      @toggle-sidebar="handleToggleSidebar"
+    />
 
+    <div class="flex flex-1">
+      <!-- Sidebar (only for authenticated routes) -->
+      <Sidebar
+        v-if="showLayout"
+        ref="sidebar"
+        :collapsed="sidebarCollapsed"
+        @update:collapsed="handleSidebarToggle"
+      />
+
+      <!-- Main content -->
+      <main :class="mainContentClasses + ' flex-1'" >
+        <router-view />
+      </main>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -10,10 +30,7 @@ import Sidebar from './components/Sidebar.vue'
 
 export default {
   name: 'App',
-  components: {
-    Navbar,
-    Sidebar
-  },
+  components: { Navbar, Sidebar },
   data() {
     return {
       sidebarCollapsed: false,
@@ -22,17 +39,18 @@ export default {
   },
   computed: {
     mainContentClasses() {
-      if (this.isMobile) {
-        return 'ml-0'
-      }
-      return this.sidebarCollapsed ? 'md:ml-16' : 'md:ml-64'
+      if (!this.showLayout) return 'w-full' // full width for pages without sidebar/navbar
+      if (this.isMobile) return 'ml-0 w-full'
+      return this.sidebarCollapsed ? 'md:ml-16 w-full' : 'md:ml-64 w-full'
+    },
+    showLayout() {
+      // Only show Navbar + Sidebar for /user/* routes
+      return this.$route.path.startsWith('/user')
     }
   },
   methods: {
     handleToggleSidebar() {
-      if (this.$refs.sidebar) {
-        this.$refs.sidebar.toggleSidebar()
-      }
+      if (this.$refs.sidebar) this.$refs.sidebar.toggleSidebar()
     },
     handleSidebarToggle(collapsed) {
       this.sidebarCollapsed = collapsed
@@ -63,47 +81,30 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Smooth scrolling */
 html {
   scroll-behavior: smooth;
+}
+
+/* Remove default margin/padding of main content */
+main {
+  margin: 0;
+  padding: 0;
 }
 
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 6px;
 }
+::-webkit-scrollbar-track { background: #f1f1f1; }
+::-webkit-scrollbar-thumb { background: #c1c1c1; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #a8a8a8; }
 
-::-webkit-scrollbar-track {
-  background: #f1f1f1;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #c1c1c1;
-  border-radius: 3px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #a8a8a8;
-}
-
-/* Loading animations */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-.fade-in {
-  animation: fadeIn 0.3s ease-in;
-}
+/* Fade-in animation */
+@keyframes fadeIn { from { opacity: 0 } to { opacity: 1 } }
+.fade-in { animation: fadeIn 0.3s ease-in }
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
-  .ml-64 {
-    margin-left: 0 !important;
-  }
+  .ml-64 { margin-left: 0 !important; }
 }
 </style>
