@@ -23,7 +23,7 @@ public class SupportTicket {
 
   @ManyToOne
   @JoinColumn(name = "fd_id")
-  private FixedDeposit fd;
+  private FixedDeposit fixedDeposit;
 
   private String subject;
   private String description;
