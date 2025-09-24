@@ -17,11 +17,11 @@ public class SupportTicket {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private long id;
 
-  @OneToOne
+  @ManyToOne
   @JoinColumn(name = "user_id")
   private User user_id;
 
-  @OneToOne
+  @ManyToOne
   @JoinColumn(name = "fd_id")
   private FixedDeposit fd_id;
 

@@ -85,8 +85,9 @@ public class UserController {
     public ResponseEntity<?> getUser(){
         UserPrincipal principal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = principal.getUser();
-
         UserDTO userDTO = new UserDTO();
+
+        userDTO.setId(user.getUser_id());
         userDTO.setRole(user.getRole());
         userDTO.setName(user.getName());
         userDTO.setAge(user.getAge());
@@ -94,4 +95,6 @@ public class UserController {
 
         return new ResponseEntity<>(userDTO, HttpStatus.ACCEPTED);
     }
+
+
 }
