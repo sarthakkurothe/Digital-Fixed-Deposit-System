@@ -53,7 +53,7 @@ import java.util.List;
         FixedDeposit fd = fixedDepositRepository.findById(fdId).get();
         SupportTicket ticket = new SupportTicket();
         ticket.setUser(fd.getUser());
-        ticket.setFd(fd);
+        ticket.setFixedDeposit(fd);
         ticket.setSubject("Break Fixed Deposit");
         ticket.setDescription("Premature Withdrawal");
         ticket.setStatus(SupportTicketStatus.OPEN);
