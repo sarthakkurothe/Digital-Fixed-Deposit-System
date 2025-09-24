@@ -15,7 +15,7 @@
           class="w-9 h-9 rounded-lg flex items-center justify-center text-white shadow-sm transform transition-transform duration-200 group-hover:scale-105"
           style="background: linear-gradient(135deg,#2563eb,#4f46e5)"
         >
-          <Shield class="w-5 h-5" />
+          <Vault class="w-5 h-5" />
         </div>
         <span  class="text-xl md:text-2xl font-extrabold text-slate-900">SmartFD</span>
       </button>
@@ -127,7 +127,7 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount, nextTick, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-import { Menu, X, Shield } from 'lucide-vue-next'
+import { Menu, X, Vault } from 'lucide-vue-next'
 
 const router = useRouter()
 const route = useRoute()

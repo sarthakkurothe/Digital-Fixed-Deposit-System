@@ -1,4 +1,4 @@
-package com.fdsystem.backend.entity;
+package com.fdsystem.backend.model;
 
 
 import com.fdsystem.backend.util.enums.FdStatus;
@@ -20,7 +20,7 @@ public class FixedDeposit {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private long id;
 
-  @OneToOne
+  @ManyToOne
   @JoinColumn(name = "user_id")
   private User user;
   private double amount;

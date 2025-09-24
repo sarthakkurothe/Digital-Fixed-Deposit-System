@@ -1,4 +1,4 @@
-package com.fdsystem.backend.entity;
+package com.fdsystem.backend.model;
 
 import com.fdsystem.backend.util.enums.Role;
 import jakarta.persistence.*;

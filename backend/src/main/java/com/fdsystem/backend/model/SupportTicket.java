@@ -1,4 +1,4 @@
-package com.fdsystem.backend.entity;
+package com.fdsystem.backend.model;
 
 
 import com.fdsystem.backend.util.enums.SupportTicketStatus;
@@ -17,13 +17,13 @@ public class SupportTicket {
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private long id;
 
-  @OneToOne
+  @ManyToOne
   @JoinColumn(name = "user_id")
-  private User user_id;
+  private User user;
 
-  @OneToOne
+  @ManyToOne
   @JoinColumn(name = "fd_id")
-  private FixedDeposit fd_id;
+  private FixedDeposit fixedDeposit;
 
   private String subject;
   private String description;

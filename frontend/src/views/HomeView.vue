@@ -5,7 +5,8 @@
     <HeroSection />
     <FeaturesSection :features="features" />
     <SecuritySection :securityFeatures="securityFeatures" :compliance="compliance" />
-
+    <Footer />
+    
     <router-view />
   </div>
 </template>
@@ -15,6 +16,8 @@ import Header from '../components/Header.vue';
 import HeroSection from '../components/HeroSection.vue';
 import FeaturesSection from '../components/FeaturesSection.vue';
 import SecuritySection from '../components/SecuritySection.vue';
+import Footer from "../components/Footer.vue"; 
+
 import { 
   Smartphone, PieChart, Calendar, RefreshCw, Headphones, Lock,
   Shield, Eye, CheckCircle, Award, Globe
@@ -22,7 +25,7 @@ import {
 
 export default {
   name: 'HomeView',
-  components: { Header, HeroSection, FeaturesSection, SecuritySection },
+  components: { Header, HeroSection, FeaturesSection, SecuritySection, Footer },
   data() {
     return {
       features: [

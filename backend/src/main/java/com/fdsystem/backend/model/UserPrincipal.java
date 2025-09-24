@@ -1,4 +1,4 @@
-package com.fdsystem.backend.entity;
+package com.fdsystem.backend.model;
 
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
