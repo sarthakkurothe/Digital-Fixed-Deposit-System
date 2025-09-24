@@ -28,7 +28,7 @@ import Navbar from './Navbar.vue'
 import Sidebar from './Sidebar.vue'
 
 export default {
-  name: 'App',
+  name: 'Interface',
   components: {
     Navbar,
     Sidebar

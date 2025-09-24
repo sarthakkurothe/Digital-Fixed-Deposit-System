@@ -17,7 +17,7 @@
         >
           <Vault class="w-5 h-5" />
         </div>
-        <span class="text-xl md:text-2xl font-extrabold text-slate-900">SmartFD</span>
+        <span  class="text-xl md:text-2xl font-extrabold text-slate-900">SmartFD</span>
       </button>
 
       <!-- Nav: only on HomeView -->
@@ -171,6 +171,9 @@ const goToRegister = () => router.push({ name: 'Register' })
 const scrollToSection = (id) => {
   const el = document.getElementById(id)
   if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  else{
+    router.push("/")
+  }
 }
 
 const navClick = (id) => {
