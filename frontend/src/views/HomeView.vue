@@ -1,6 +1,6 @@
 <template>
   <div class="home-layout">
-    <Header />
+    <Header ></Header>
 
     <HeroSection />
     <FeaturesSection :features="features" />

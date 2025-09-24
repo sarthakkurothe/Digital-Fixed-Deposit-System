@@ -4,12 +4,11 @@ import com.fdsystem.backend.dto.LoginRequest;
 
 
 import com.fdsystem.backend.dto.UserDTO;
-import com.fdsystem.backend.model.User;
-import com.fdsystem.backend.model.UserPrincipal;
+import com.fdsystem.backend.entity.User;
+import com.fdsystem.backend.entity.UserPrincipal;
 import com.fdsystem.backend.service.UserService;
 import com.fdsystem.backend.util.enums.Role;
 import com.fdsystem.backend.util.jwt.JWTUtils;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

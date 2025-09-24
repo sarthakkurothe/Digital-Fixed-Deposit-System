@@ -1,129 +1,194 @@
 <template>
-  <div class="grid grid-cols-1 lg:grid-cols-2 h-screen w-screen bg-white">
+  <Header ></Header>
+  <div class="min-h-[calc(100vh-300px)] bg-gradient-to-br from-white via-blue-50 to-blue-100 flex items-center justify-center p-0">
+    <div class="w-full max-w-6xl mx-auto flex flex-col lg:flex-row items-center justify-between p-6 lg:p-12 gap-12">
+      
+      <!-- Left Side - Branding -->
+      <div class="flex-1 space-y-10">
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M9 21h6m-6-7h6m-6-7h6" />
+            </svg>
+          </div>
+          <div>
+            <h1 class="text-2xl font-bold text-blue-700">DigitalFD</h1>
+            <p class="text-sm text-gray-500">Join thousands of smart investors</p>
+          </div>
+        </div>
 
-    <div class="flex items-center justify-center text-gray-800 bg-gray-200 p-8">
-      <div class="max-w-md">
-        <h2 class="text-4xl font-bold mb-4">Fixed Deposit System</h2>
-        <p class="text-lg leading-relaxed">
-          Empowering businesses with secure and scalable solutions.  
-          Together, let’s build the future of finance and management.
-        </p>
+        <div class="space-y-6">
+          <div class="flex items-start gap-3">
+            <div class="w-9 h-9 bg-blue-100 rounded-lg flex items-center justify-center">
+              <svg class="w-5 h-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+              </svg>
+            </div>
+            <div>
+              <h3 class="font-semibold text-gray-900">Secure & Regulated</h3>
+              <p class="text-sm text-gray-500">FDIC insured deposits with bank-grade security protocols</p>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-3">
+            <div class="w-9 h-9 bg-green-100 rounded-lg flex items-center justify-center">
+              <svg class="w-5 h-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8l3 6 7 1-5 5 2 7-6-3-6 3 2-7-5-5 7-1z"/>
+              </svg>
+            </div>
+            <div>
+              <h3 class="font-semibold text-gray-900">Best-in-Class Returns</h3>
+              <p class="text-sm text-gray-500">Competitive interest rates up to 8.5% annually</p>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-3">
+            <div class="w-9 h-9 bg-yellow-100 rounded-lg flex items-center justify-center">
+              <svg class="w-5 h-5 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a4 4 0 00-5-3.87M9 20H4v-2a4 4 0 015-3.87M12 12a5 5 0 100-10 5 5 0 000 10z"/>
+              </svg>
+            </div>
+            <div>
+              <h3 class="font-semibold text-gray-900">Trusted by 10,000+ Users</h3>
+              <p class="text-sm text-gray-500">Join our growing community of successful investors</p>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
 
-    <div class="flex flex-col justify-center items-center bg-gray-100 p-8">
-      <h2 class="text-4xl font-bold mb-8 text-black text-center">Register</h2>
-      <form @submit.prevent="handleRegister" class="w-full max-w-md space-y-6">
+      <!-- Right Side - Registration Form -->
+      <div class="flex-1 max-w-md w-full">
+        <div class="bg-white shadow-md rounded-xl p-8">
+          <h2 class="text-2xl font-bold text-center text-gray-900">Create Account</h2>
+          <p class="text-sm text-gray-500 text-center mb-6">Start your investment journey with DigitalFD</p>
 
-        <div>
-          <label class="block text-sm font-medium text-black mb-2">Name</label>
-          <input 
-            v-model="name" 
-            type="text" 
-            required 
-            class="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
-            placeholder="Enter your full name"
-          />
+          <form @submit.prevent="handleRegister" class="space-y-4">
+            <input v-model="name" type="text" placeholder="Full Name" required class="w-full h-11 px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+            
+            <input v-model="email" type="email" placeholder="Email Address" required class="w-full h-11 px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+            
+            <input v-model="phone" type="tel" placeholder="Phone Number" required class="w-full h-11 px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+
+            <input v-model="age" type="number" placeholder="Age" required class="w-full h-11 px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+
+            <!-- Password -->
+            <div class="relative">
+              <input :type="showPassword ? 'text' : 'password'" v-model="password" placeholder="Password" required class="w-full h-11 px-4 pr-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+              <button type="button" @click="showPassword = !showPassword" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500">
+                <EyeIcon v-if="!showPassword" class="w-5 h-5"/>
+                <EyeSlashIcon v-else class="w-5 h-5"/>
+              </button>
+            </div>
+
+            <!-- Confirm Password -->
+            <div class="relative">
+              <input :type="showConfirmPassword ? 'text' : 'password'" v-model="confirmPassword" placeholder="Confirm Password" required class="w-full h-11 px-4 pr-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+              <button type="button" @click="showConfirmPassword = !showConfirmPassword" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500">
+                <EyeIcon v-if="!showConfirmPassword" class="w-5 h-5"/>
+                <EyeSlashIcon v-else class="w-5 h-5"/>
+              </button>
+            </div>
+
+            <!-- Terms & Conditions -->
+            <div class="flex items-start gap-2">
+              <input type="checkbox" v-model="agreeTerms" class="mt-1 w-4 h-4 border-gray-300 rounded"/>
+              <label class="text-sm text-gray-600">
+                I agree to the 
+                <router-link to="/terms" class="text-blue-600 hover:underline">Terms of Service</router-link> 
+                and 
+                <router-link to="/privacy" class="text-blue-600 hover:underline">Privacy Policy</router-link>
+              </label>
+            </div>
+
+            <!-- Error / Success messages -->
+            <p v-if="errorMessage" class="text-sm text-red-500">{{ errorMessage }}</p>
+            <p v-if="successMessage" class="text-sm text-green-600">{{ successMessage }}</p>
+
+            <button type="submit" class="w-full h-11 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition" :disabled="loading">
+              {{ loading ? "Creating Account..." : "Create Account" }}
+            </button>
+          </form>
+
+          <div class="text-center text-sm text-gray-600 mt-4">
+            Already have an account? 
+            <router-link to="/login" class="text-blue-600 hover:underline font-medium">Sign In</router-link>
+          </div>
+
+          <div class="pt-4 text-center">
+            <p class="text-xs text-gray-400">
+              By creating an account, you agree to our Terms and Privacy Policy
+            </p>
+          </div>
         </div>
-
-        <div>
-          <label class="block text-sm font-medium text-black mb-2">Email</label>
-          <input 
-            v-model="email" 
-            type="email" 
-            required 
-            class="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
-            placeholder="Enter your email"
-          />
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-black mb-2">Age</label>
-          <input 
-            v-model="age" 
-            type="number" 
-            required 
-            min="0"
-            class="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
-            placeholder="Enter your age"
-          />
-        </div>
-
-        <div>
-          <label class="block text-sm font-medium text-black mb-2">Password</label>
-          <input 
-            v-model="password" 
-            type="password" 
-            required 
-            class="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
-            placeholder="Enter your password"
-          />
-        </div>
-
-        <div>
-          <label class="block text-sm font-medium text-black mb-2">Confirm Password</label>
-          <input 
-            v-model="confirmPassword" 
-            type="password" 
-            required 
-            class="w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 focus:ring-blue-500 text-black"
-            placeholder="Confirm your password"
-          />
-        </div>
-
-
-        <button type="submit" :disabled="loading" class="w-full py-3 px-4 bg-blue-900 text-white rounded-lg hover:bg-blue-950 transition text-lg font-semibold">
-            {{ loading ? "Registering..." : "Register" }}
-        </button>
-    
-      </form>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import axios from 'axios';
+import axios from "axios";
+import { EyeIcon, EyeSlashIcon } from "@heroicons/vue/24/solid";
+import Header from "./Header.vue";
 
 export default {
+  components: { EyeIcon, EyeSlashIcon, Header },
   data() {
     return {
       name: "",
       email: "",
+      phone: "",
+      age: "",
       password: "",
       confirmPassword: "",
-      age: "",
-      loading: false
+      agreeTerms: false,
+      loading: false,
+      errorMessage: "",
+      successMessage: "",
+      showPassword: false,
+      showConfirmPassword: false,
     };
   },
   methods: {
     async handleRegister() {
-        if (this.password !== this.confirmPassword) {
-            alert("Passwords do not match!");
-            return;
-        }
+      this.errorMessage = "";
+      this.successMessage = "";
 
-        this.loading = true;
-        
-        try {
-            const res = await axios.post("http://localhost:8080/auth/register", {
-                name: this.name,
-                email: this.email,
-                password: this.password,
-                age: this.age
-            });
-    
-            if(res.status === 201) {
-                this.$router.push("/login");
-            } else {
-                alert("Registration failed. Please try again.");
-            }
-            
-        } catch (error) {
-            console.log("Registration error:", error);
+      if (!this.name || !this.email || !this.phone || !this.age || !this.password || !this.confirmPassword) {
+        this.errorMessage = "All fields are required.";
+        return;
+      }
+      if (!this.agreeTerms) {
+        this.errorMessage = "You must agree to the Terms and Privacy Policy.";
+        return;
+      }
+      if (this.password !== this.confirmPassword) {
+        this.errorMessage = "Passwords do not match!";
+        return;
+      }
+
+      this.loading = true;
+      try {
+        const res = await axios.post("http://localhost:8080/auth/register", {
+          name: this.name,
+          email: this.email,
+          phone: this.phone,
+          age: this.age,
+          password: this.password,
+        });
+
+        if (res.status === 201) {
+          this.successMessage = "Registration successful! 🎉 You can now log in.";
+          this.name = this.email = this.phone = this.age = this.password = this.confirmPassword = "";
+          this.agreeTerms = false;
+        } else {
+          this.errorMessage = "Registration failed. Please try again.";
         }
-        finally{
-            this.loading = false;
-        }
-    }
-  }
+      } catch (error) {
+        this.errorMessage = error.response?.data?.message || "Registration failed. Please try again.";
+      } finally {
+        this.loading = false;
+      }
+    },
+  },
 };
 </script>

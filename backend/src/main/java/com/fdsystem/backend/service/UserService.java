@@ -1,7 +1,7 @@
 package com.fdsystem.backend.service;
 
 
-import com.fdsystem.backend.model.User;
+import com.fdsystem.backend.entity.User;
 import com.fdsystem.backend.repository.UserRepository;
 
 import lombok.extern.slf4j.Slf4j;

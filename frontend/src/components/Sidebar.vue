@@ -17,7 +17,7 @@
         <div class="space-y-1">
 
             <!-- Logo -->
-          <router-link to="/" class="flex items-center space-x-2 text-gray-800 hover:text-blue-600 transition-colors">
+          <router-link to="/user/dashboard" class="flex items-center space-x-2 text-gray-800 hover:text-blue-600 transition-colors">
             <span class="text-3xl">💰</span>
             <span v-if="!isCollapsed" class="text-xl font-bold">DigitalFD</span>
           </router-link>
@@ -107,10 +107,24 @@
       </nav>
 
       <!-- User Profile Section -->
-      <div class="p-4 border-b border-gray-100">
-        <div class="flex items-center mb-4">
-          <button></button>
-        </div>
+      <div class="p-4 border-t border-gray-200">
+        <button
+          @click="logout"
+          class="flex items-center w-full px-4 py-2 text-gray-700 rounded-lg hover:bg-red-50 hover:text-red-600 transition group"
+        >
+          <!-- Fixed-size icon -->
+          <ArrowLeftEndOnRectangleIcon
+            class="w-6 h-6 text-gray-500 group-hover:text-red-600"
+          />
+
+          <!-- Only show text if sidebar is expanded -->
+          <span
+            v-if="!isCollapsed"
+            class="ml-3 font-medium whitespace-nowrap"
+          >
+            Logout
+          </span>
+        </button>
       </div>
 
       <!-- Bottom Actions -->
@@ -133,10 +147,13 @@
 </template>
 
 <script>
+import { ArrowLeftEndOnRectangleIcon } from '@heroicons/vue/24/solid'
+import { ArrowLeft } from 'lucide-vue-next'
 import { ref, computed } from 'vue'
 
 export default {
   name: 'Sidebar',
+  components: { ArrowLeftEndOnRectangleIcon},
   setup(props, { emit }) {
     const isCollapsed = ref(false)
     const showMobile = ref(false)
