@@ -109,13 +109,7 @@
       <!-- User Profile Section -->
       <div class="p-4 border-b border-gray-100">
         <div class="flex items-center mb-4">
-          <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-medium mr-3">
-            R
-          </div>
-          <div v-if="!isCollapsed" class="transition-opacity duration-200">
-            <h3 class="text-gray-900 font-medium text-sm">Rajesh Kumar</h3>
-            <p class="text-gray-500 text-xs">rajesh.kumar@example.com</p>
-          </div>
+          <button></button>
         </div>
       </div>
 

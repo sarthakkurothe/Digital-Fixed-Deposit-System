@@ -1,26 +1,11 @@
 <template>
   <div class="min-h-screen flex flex-col">
-    <!-- Navbar / Header (only for authenticated routes or /user pages) -->
-    <Navbar
-      v-if="showLayout"
-      ref="navbar"
-      @toggle-sidebar="handleToggleSidebar"
-    />
 
-    <div class="flex flex-1">
-      <!-- Sidebar (only for authenticated routes) -->
-      <Sidebar
-        v-if="showLayout"
-        ref="sidebar"
-        :collapsed="sidebarCollapsed"
-        @update:collapsed="handleSidebarToggle"
-      />
-
-      <!-- Main content -->
-      <main :class="mainContentClasses + ' flex-1'" >
-        <router-view />
-      </main>
-    </div>
+    <!-- Main content -->
+    <main :class="mainContentClasses + ' flex-1'" >
+      <router-view />
+    </main>
+    
   </div>
 </template>
 
