@@ -1,60 +1,10 @@
 <template>
   <Header ></Header>
   <div class="min-h-[calc(100vh-200px)] bg-gradient-to-br from-white via-blue-50 to-blue-100 flex items-center justify-center p-6">
-    <div class="w-full max-w-6xl mx-auto flex flex-col lg:flex-row items-center justify-between p-6 lg:p-12 gap-12">
+    <div class="w-full max-w-6xl mx-auto flex flex-col lg:flex-row items-center justify-between p-6 lg:p-12 gap-5">
       
       <!-- Left Side - Branding -->
-      <div class="flex-1 space-y-10">
-        <div class="flex items-center gap-3">
-          <div class="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M9 21h6m-6-7h6m-6-7h6" />
-            </svg>
-          </div>
-          <div>
-            <h1 class="text-2xl font-bold text-blue-700">DigitalFD</h1>
-            <p class="text-sm text-gray-500">Join thousands of smart investors</p>
-          </div>
-        </div>
-
-        <div class="space-y-6">
-          <div class="flex items-start gap-3">
-            <div class="w-9 h-9 bg-blue-100 rounded-lg flex items-center justify-center">
-              <svg class="w-5 h-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
-              </svg>
-            </div>
-            <div>
-              <h3 class="font-semibold text-gray-900">Secure & Regulated</h3>
-              <p class="text-sm text-gray-500">FDIC insured deposits with bank-grade security protocols</p>
-            </div>
-          </div>
-
-          <div class="flex items-start gap-3">
-            <div class="w-9 h-9 bg-green-100 rounded-lg flex items-center justify-center">
-              <svg class="w-5 h-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8l3 6 7 1-5 5 2 7-6-3-6 3 2-7-5-5 7-1z"/>
-              </svg>
-            </div>
-            <div>
-              <h3 class="font-semibold text-gray-900">Best-in-Class Returns</h3>
-              <p class="text-sm text-gray-500">Competitive interest rates up to 8.5% annually</p>
-            </div>
-          </div>
-
-          <div class="flex items-start gap-3">
-            <div class="w-9 h-9 bg-yellow-100 rounded-lg flex items-center justify-center">
-              <svg class="w-5 h-5 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a4 4 0 00-5-3.87M9 20H4v-2a4 4 0 015-3.87M12 12a5 5 0 100-10 5 5 0 000 10z"/>
-              </svg>
-            </div>
-            <div>
-              <h3 class="font-semibold text-gray-900">Trusted by 10,000+ Users</h3>
-              <p class="text-sm text-gray-500">Join our growing community of successful investors</p>
-            </div>
-          </div>
-        </div>
-      </div>
+      <DotLottieVue style="height: 500px; width: 500px" autoplay loop src="https://lottie.host/8ddc1863-565e-41eb-b9f0-24f37513683d/JfunXkHkx9.lottie" />
 
       <!-- Right Side - Registration Form -->
       <div class="flex-1 max-w-md w-full">
@@ -129,9 +79,11 @@ import axios from "axios";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/vue/24/solid";
 import Header from "../components/Header.vue";
 import { mapActions } from "vuex/dist/vuex.cjs.js";
+import { DotLottieVue } from '@lottiefiles/dotlottie-vue'
+
 
 export default {
-  components: { EyeIcon, EyeSlashIcon, Header },
+  components: { EyeIcon, EyeSlashIcon, Header,DotLottieVue},
   data() {
     return {
       name: "",

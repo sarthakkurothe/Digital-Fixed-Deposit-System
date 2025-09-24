@@ -1,52 +1,14 @@
 <template>
   <Header />
 
-  <div class="min-h-[calc(100vh-64px)] bg-gradient-to-br from-white via-blue-50 to-blue-100 flex items-center justify-center p-4">
-    <div class="w-full max-w-6xl flex items-center justify-between gap-8">
+  <div class="min-h-[calc(100vh-64px)] bg-gradient-to-br from-white via-blue-50 to-blue-100 flex items-center justify-center p-3">
+    <div class="w-full max-w-6xl mx-auto flex flex-col lg:flex-row items-center justify-between p-6  lg:p-12 gap-8">
       
       <!-- Left Side - Branding & Features -->
-      <div class="hidden lg:flex flex-1 flex-col justify-center space-y-10 pl-6">
-        <div class="flex items-center gap-3">
-          <div class="w-12 h-12 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg">
-            <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 1.343-3 3h6c0-1.657-1.343-3-3-3z" />
-            </svg>
-          </div>
-          <div>
-            <h1 class="text-3xl font-bold text-blue-600">DigitalFD</h1>
-            <p class="text-base text-gray-500">Secure Fixed Deposit Management</p>
-          </div>
-        </div>
-
-        <div class="space-y-6">
-          <div class="flex items-start gap-4">
-            <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-              <svg class="w-5 h-5 text-green-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </div>
-            <div>
-              <h3 class="font-semibold text-lg text-gray-800">Bank-Grade Security</h3>
-              <p class="text-base text-gray-500">Your deposits are protected with advanced encryption and security protocols</p>
-            </div>
-          </div>
-
-          <div class="flex items-start gap-4">
-            <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-              <svg class="w-5 h-5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-              </svg>
-            </div>
-            <div>
-              <h3 class="font-semibold text-lg text-gray-800">Competitive Interest Rates</h3>
-              <p class="text-base text-gray-500">Earn up to 8.5% annual interest on your fixed deposits</p>
-            </div>
-          </div>
-        </div>
-      </div>
+      <DotLottieVue style="height: 500px; width: 500px" autoplay loop src="https://lottie.host/61b67c2f-ce7e-42bd-9f35-74450e0453a5/YbUAdRE2Jl.lottie" />
 
       <!-- Right Side - Login Form -->
-      <div class="w-full lg:w-96">
+      <div class="w-full lg:w-110">
         <div class="bg-white shadow-xl rounded-2xl p-8">
           <h2 class="text-2xl font-bold text-center mb-2">Welcome Back</h2>
           <p class="text-base text-center text-gray-500 mb-6">Sign in to access your Fixed Deposit account</p>
@@ -127,14 +89,16 @@
 <script>
 import { EyeIcon, EyeSlashIcon } from '@heroicons/vue/24/solid';
 import { mapActions } from 'vuex';
+import { DotLottieVue } from '@lottiefiles/dotlottie-vue'
 
 import Header from '../components/Header.vue';
 import { mapGetters } from 'vuex/dist/vuex.cjs.js';
 
 export default {
-  components: { Header,EyeIcon, EyeSlashIcon },
+  components: { Header,EyeIcon, EyeSlashIcon, DotLottieVue },
   data() {
     return {
+    
       email: "",
       password: "",
       loading: false,
