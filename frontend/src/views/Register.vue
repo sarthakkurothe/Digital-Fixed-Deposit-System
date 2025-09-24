@@ -23,18 +23,18 @@
             <!-- Password -->
             <div class="relative">
               <input :type="showPassword ? 'text' : 'password'" v-model="password" placeholder="Password" required class="w-full h-11 px-4 pr-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"/>
-              <button type="button" @click="showPassword = !showPassword" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500">
-                <EyeIcon v-if="!showPassword" class="w-5 h-5"/>
-                <EyeSlashIcon v-else class="w-5 h-5"/>
+              <button type="button" @click="showPassword = !showPassword" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 cursor-pointer">
+                <Eye v-if="!showPassword" class="w-5 h-5"/>
+                <EyeOff v-else class="w-5 h-5"/>
               </button>
             </div>
 
             <!-- Confirm Password -->
             <div class="relative">
               <input :type="showConfirmPassword ? 'text' : 'password'" v-model="confirmPassword" placeholder="Confirm Password" required class="w-full h-11 px-4 pr-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"/>
-              <button type="button" @click="showConfirmPassword = !showConfirmPassword" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500">
-                <EyeIcon v-if="!showConfirmPassword" class="w-5 h-5"/>
-                <EyeSlashIcon v-else class="w-5 h-5"/>
+              <button type="button" @click="showConfirmPassword = !showConfirmPassword" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 cursor-pointer">
+                <Eye v-if="!showConfirmPassword" class="w-5 h-5"/>
+                <EyeOff v-else class="w-5 h-5"/>
               </button>
             </div>
 
@@ -75,15 +75,15 @@
 </template>
 
 <script>
-import axios from "axios";
-import { EyeIcon, EyeSlashIcon } from "@heroicons/vue/24/solid";
+
 import Header from "../components/Header.vue";
 import { mapActions } from "vuex/dist/vuex.cjs.js";
 import { DotLottieVue } from '@lottiefiles/dotlottie-vue'
+import { Eye,EyeOff } from "lucide-vue-next";
 
 
 export default {
-  components: { EyeIcon, EyeSlashIcon, Header,DotLottieVue},
+  components: { Eye, EyeOff, Header,DotLottieVue},
   data() {
     return {
       name: "",

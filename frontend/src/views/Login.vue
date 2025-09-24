@@ -39,9 +39,9 @@
                   required
                   class="w-full h-11 px-4 pr-10 rounded-xl border border-gray-300 bg-white shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
                 />
-                <button type="button" @click="showPassword = !showPassword" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600">
-                  <EyeIcon v-if="!showPassword" class="w-5 h-5" />
-                  <EyeSlashIcon v-else class="w-5 h-5" />
+                <button type="button" @click="showPassword = !showPassword" class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 cursor-pointer">
+                  <Eye v-if="!showPassword" class="w-5 h-5" />
+                  <EyeOff v-else class="w-5 h-5" />
                 </button>
               </div>
             </div>
@@ -87,7 +87,7 @@
 
 
 <script>
-import { EyeIcon, EyeSlashIcon } from '@heroicons/vue/24/solid';
+import { Eye,EyeOff } from 'lucide-vue-next';
 import { mapActions } from 'vuex';
 import { DotLottieVue } from '@lottiefiles/dotlottie-vue'
 
@@ -95,7 +95,7 @@ import Header from '../components/Header.vue';
 import { mapGetters } from 'vuex/dist/vuex.cjs.js';
 
 export default {
-  components: { Header,EyeIcon, EyeSlashIcon, DotLottieVue },
+  components: { Header,Eye, EyeOff, DotLottieVue },
   data() {
     return {
     
