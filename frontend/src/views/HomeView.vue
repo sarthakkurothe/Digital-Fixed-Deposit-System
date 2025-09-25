@@ -26,6 +26,18 @@ import {
 export default {
   name: 'HomeView',
   components: { Header, HeroSection, FeaturesSection, SecuritySection, Footer },
+
+  beforeRouteEnter(to, from, next) {
+    const token = localStorage.getItem("token");
+    if (token) {
+      // If token exists → redirect to dashboard
+      next("/user/dashboard");
+    } else {
+      next(); // Otherwise stay on Home
+    }
+  },
+
+  
   data() {
     return {
       features: [
