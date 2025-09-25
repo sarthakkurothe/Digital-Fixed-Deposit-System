@@ -90,4 +90,13 @@ import java.util.List;
         }
         return penalty;
     }
+
+    public List<FixedDeposit> getAllFDsByStatus(FdStatus fdStatus){
+        return this.fixedDepositRepository.findAllByStatus(fdStatus);
+    }
+
+    public void setFixedDepositStatus(long id, FdStatus fdStatus){
+        FixedDeposit fixedDeposit = this.fixedDepositRepository.findById(id).get();
+        fixedDeposit.setStatus(fdStatus);
+    }
 }

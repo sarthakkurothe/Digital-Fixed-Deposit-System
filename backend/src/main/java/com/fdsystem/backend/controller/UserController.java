@@ -73,7 +73,7 @@ public class UserController {
         }
         String hashed_password = passwordEncoder.encode(user.getPassword());
         user.setPassword(hashed_password);
-        user.setRole(Role.USER);
+        user.setRole(Role.ROLE_USER);
         user.setCreated_at(new Timestamp(System.currentTimeMillis()));
         userService.addUser(user);
 
