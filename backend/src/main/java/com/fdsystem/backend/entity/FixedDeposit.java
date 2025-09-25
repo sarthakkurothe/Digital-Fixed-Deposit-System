@@ -1,7 +1,7 @@
-package com.fdsystem.backend.model;
+package com.fdsystem.backend.entity;
 
 
-import com.fdsystem.backend.util.enums.FdStatus;
+import com.fdsystem.backend.entity.enums.FdStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

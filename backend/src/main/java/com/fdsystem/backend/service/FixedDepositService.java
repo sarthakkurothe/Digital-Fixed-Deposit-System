@@ -1,16 +1,15 @@
 package com.fdsystem.backend.service;
 
 import com.fdsystem.backend.dto.BreakPreviewResponse;
-import com.fdsystem.backend.model.FixedDeposit;
-import com.fdsystem.backend.model.SupportTicket;
-import com.fdsystem.backend.model.User;
+import com.fdsystem.backend.entity.FixedDeposit;
+import com.fdsystem.backend.entity.SupportTicket;
+import com.fdsystem.backend.entity.User;
 import com.fdsystem.backend.repository.FixedDepositRepository;
 import com.fdsystem.backend.repository.SupportTicketRepository;
 import com.fdsystem.backend.repository.UserRepository;
-import com.fdsystem.backend.util.enums.FdStatus;
-import com.fdsystem.backend.util.enums.SupportTicketStatus;
+import com.fdsystem.backend.entity.enums.FdStatus;
+import com.fdsystem.backend.entity.enums.SupportTicketStatus;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;

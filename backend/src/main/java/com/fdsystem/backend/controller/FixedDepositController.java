@@ -2,14 +2,13 @@ package com.fdsystem.backend.controller;
 
 import com.fdsystem.backend.dto.BreakPreviewResponse;
 import com.fdsystem.backend.dto.FixedDepositDTO;
-import com.fdsystem.backend.model.FixedDeposit;
-import com.fdsystem.backend.model.User;
+import com.fdsystem.backend.entity.FixedDeposit;
+import com.fdsystem.backend.entity.User;
 import com.fdsystem.backend.service.FixedDepositService;
 import com.fdsystem.backend.service.UserService;
-import com.fdsystem.backend.util.enums.FdStatus;
+import com.fdsystem.backend.entity.enums.FdStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

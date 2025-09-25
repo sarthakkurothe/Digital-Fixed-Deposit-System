@@ -1,21 +1,22 @@
 <template>
   <div class="min-h-screen flex flex-col">
+    <!-- Navbar / Header (only for authenticated routes or /user pages) -->
 
-    <!-- Main content -->
-    <main :class="mainContentClasses + ' flex-1'" >
-      <router-view />
-    </main>
-    
+    <div class="flex flex-1">
+
+      <!-- Main content -->
+      <main :class="mainContentClasses + ' flex-1'" >
+        <router-view />
+      </main>
+    </div>
   </div>
 </template>
 
 <script>
-import Navbar from './components/Navbar.vue'
-import Sidebar from './components/Sidebar.vue'
+
 
 export default {
   name: 'App',
-  components: { Navbar, Sidebar },
   data() {
     return {
       sidebarCollapsed: false,

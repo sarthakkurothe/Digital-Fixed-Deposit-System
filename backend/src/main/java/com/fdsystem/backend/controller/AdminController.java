@@ -1,15 +1,13 @@
 package com.fdsystem.backend.controller;
 
-import com.fdsystem.backend.model.FixedDeposit;
-import com.fdsystem.backend.model.SupportTicket;
+import com.fdsystem.backend.entity.FixedDeposit;
+import com.fdsystem.backend.entity.SupportTicket;
 import com.fdsystem.backend.service.FixedDepositService;
 import com.fdsystem.backend.service.SupportTicketService;
-import com.fdsystem.backend.util.enums.FdStatus;
-import com.fdsystem.backend.util.enums.SupportTicketStatus;
-import org.apache.coyote.Response;
+import com.fdsystem.backend.entity.enums.FdStatus;
+import com.fdsystem.backend.entity.enums.SupportTicketStatus;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

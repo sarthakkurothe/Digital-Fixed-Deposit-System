@@ -5,12 +5,12 @@ import com.fdsystem.backend.dto.LoginRequest;
 
 import com.fdsystem.backend.dto.UserDTO;
 import com.fdsystem.backend.dto.UserDashboardDTO;
-import com.fdsystem.backend.model.User;
-import com.fdsystem.backend.model.UserPrincipal;
+import com.fdsystem.backend.entity.User;
+import com.fdsystem.backend.entity.UserPrincipal;
 import com.fdsystem.backend.service.AccruedInterestService;
 import com.fdsystem.backend.service.FixedDepositService;
 import com.fdsystem.backend.service.UserService;
-import com.fdsystem.backend.util.enums.Role;
+import com.fdsystem.backend.entity.enums.Role;
 import com.fdsystem.backend.util.jwt.JWTUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

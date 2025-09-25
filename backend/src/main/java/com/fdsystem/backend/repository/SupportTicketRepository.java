@@ -1,8 +1,8 @@
 package com.fdsystem.backend.repository;
 
-import com.fdsystem.backend.model.SupportTicket;
-import com.fdsystem.backend.model.User;
-import com.fdsystem.backend.util.enums.SupportTicketStatus;
+import com.fdsystem.backend.entity.SupportTicket;
+import com.fdsystem.backend.entity.User;
+import com.fdsystem.backend.entity.enums.SupportTicketStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
