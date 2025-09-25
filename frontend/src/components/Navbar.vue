@@ -18,24 +18,23 @@
           <!-- Welcome Message -->
           <div class="hidden sm:block">
             <h1 class="text-lg font-semibold text-gray-900">
-              Welcome back, Rajesh! 
-              <span class="text-base">�</span>
+              Welcome back, {{ getUserName }}!
             </h1>
             <p class="text-sm text-gray-600">Here's your fixed deposit portfolio overview</p>
           </div> 
-          
         </div>
  
+        <!-- Right Section - User Avatar -->
         <div class="flex items-center space-x-4">
-          
-          <!-- User Avatar -->
           <div class="flex items-center space-x-2">
             <div class="hidden md:block text-right">
-              <div class="text-sm font-medium text-gray-900">Rajesh Kumar</div>
-              <div class="text-xs text-gray-500">rajesh.kumar@example.com</div>
+              <div class="text-sm font-medium text-gray-900">{{ getUserName }}</div>
+              <div class="text-xs text-gray-500">{{ getUserEmail }}</div>
             </div>
             <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-              <span class="text-blue-600 text-sm font-medium">R</span>
+              <span class="text-blue-600 text-sm font-medium">
+                {{ getUserName ? getUserName.charAt(0).toUpperCase() : "U" }}
+              </span>
             </div>
           </div>
         </div>
@@ -45,22 +44,17 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters } from "vuex";
 
 export default {
-  name: 'Navbar',
+  name: "Navbar",
   computed: {
-    ...mapGetters(['user'])
+    ...mapGetters(["getUserName", "getUserEmail"])
   },
   methods: {
     toggleSidebar() {
-      // Emit event to parent to toggle sidebar
-      this.$emit('toggle-sidebar')
+      this.$emit("toggle-sidebar");
     }
   }
-}
+};
 </script>
-
-<style scoped>
-/* Additional custom styles if needed */
-</style>

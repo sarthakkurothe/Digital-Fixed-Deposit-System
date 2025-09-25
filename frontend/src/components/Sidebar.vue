@@ -18,8 +18,15 @@
 
             <!-- Logo -->
           <router-link to="/user/dashboard" class="flex items-center space-x-2 text-gray-800 hover:text-blue-600 transition-colors">
-            <span class="text-3xl">💰</span>
-            <span v-if="!isCollapsed" class="text-xl font-bold">DigitalFD</span>
+            <span class="text-3xl">
+             <div
+              class="w-9 h-9 rounded-lg flex items-center justify-center text-white shadow-sm transform transition-transform duration-200 group-hover:scale-105"
+              style="background: linear-gradient(135deg,#2563eb,#4f46e5)"
+            >
+              <Vault class="w-5 h-5" />
+            </div>  
+            </span>
+            <span v-if="!isCollapsed" class="text-xl font-bold">SmartFD</span>
           </router-link>
                 <br>
                 
@@ -148,12 +155,12 @@
 
 <script>
 import { ArrowLeftEndOnRectangleIcon } from '@heroicons/vue/24/solid'
-import { ArrowLeft } from 'lucide-vue-next'
+import { ArrowLeft, Vault } from 'lucide-vue-next'
 import { mapActions } from 'vuex/dist/vuex.cjs.js'
 
 export default {
   name: 'Sidebar',
-  components: { ArrowLeftEndOnRectangleIcon },
+  components: { ArrowLeftEndOnRectangleIcon,Vault },
 
   data() {
     return {

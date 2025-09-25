@@ -101,11 +101,11 @@
         <h2 class="text-xl font-semibold text-gray-700 mb-4">FD Details (ID: {{ selectedFD.id }})</h2>
         <ul class="space-y-2 text-gray-600">
           <li><strong>Amount:</strong> ₹{{ selectedFD.amount }}</li>
-          <li><strong>Interest Rate:</strong> {{ selectedFD.interestRate }}%</li>
-          <li><strong>Tenure:</strong> {{ selectedFD.tenureMonths }} months</li>
-          <li><strong>Start Date:</strong> {{ formatDate(selectedFD.startDate) }}</li>
-          <li><strong>Maturity Date:</strong> {{ formatDate(selectedFD.maturityDate) }}</li>
-          <li><strong>Accrued Interest:</strong> ₹{{ selectedFD.accruedInterest }}</li>
+          <li><strong>Interest Rate:</strong> {{ selectedFD.interest_rate }}%</li>
+          <li><strong>Tenure:</strong> {{ selectedFD.tenure_months }} months</li>
+          <li><strong>Start Date:</strong> {{ formatDate(selectedFD.start_date) }}</li>
+          <li><strong>Maturity Date:</strong> {{ formatDate(selectedFD.maturity_date) }}</li>
+          <li><strong>Accrued Interest:</strong> ₹{{ selectedFD.accrued_interest }}</li>
           <li><strong>Status:</strong> {{ selectedFD.status }}</li>
         </ul>
       </div>
