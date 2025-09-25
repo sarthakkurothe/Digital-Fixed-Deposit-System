@@ -6,56 +6,58 @@
       <p class="text-gray-600">Secure your savings with competitive interest rates</p>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
       <!-- Left Side - FD Details Form -->
-      <div class="space-y-6">
-        <!-- FD Details Card -->
-        <div class="bg-white rounded-lg shadow p-6">
+      <div class="space-y-6 h-full">
+        <div class="bg-white rounded-lg shadow p-6 h-full flex flex-col">
           <div class="flex items-center mb-4">
             <div class="w-6 h-6 bg-blue-100 rounded mr-3 flex items-center justify-center">
               <svg class="w-4 h-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                <path
+                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                ></path>
               </svg>
             </div>
             <h2 class="text-lg font-semibold text-gray-800">FD Details</h2>
           </div>
-          <p class="text-gray-600 text-sm mb-6">Enter your investment details to book a new Fixed Deposit</p>
+          <p class="text-gray-600 text-sm mb-6">
+            Enter your investment details to book a new Fixed Deposit
+          </p>
 
+           <!-- Inputs area should grow -->
+          <div class="flex-grow">
           <!-- Investment Amount -->
           <div class="mb-4">
             <label class="block text-sm font-medium text-gray-700 mb-2">Investment Amount (₹)</label>
-            <input 
-              type="number" 
-              class="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" 
-              v-model.number="amount" 
+            <input
+              type="number"
+              class="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              v-model.number="amount"
               :min="minAmount"
               :max="maxAmount"
               step="1000"
               placeholder="50000"
             />
-            <p class="text-gray-500 text-xs mt-1">Minimum investment: ₹{{ minAmount.toLocaleString() }}</p>
+            <p class="text-gray-500 text-xs mt-1">
+              Minimum investment: ₹{{ minAmount.toLocaleString() }}
+            </p>
           </div>
 
           <!-- Interest Scheme Selection -->
           <div class="mb-4">
             <label class="block text-sm font-medium text-gray-700 mb-2">Interest Scheme</label>
-            <select 
-              class="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" 
-              v-model="selectedScheme"
-            >
-              <option value="">-- Choose a Scheme --</option>
-              <option v-for="scheme in schemesToShow" :key="scheme.name" :value="scheme">
-                {{ scheme.name }} - {{ scheme.rate }}% p.a.
-              </option>
-            </select>
+             <SchemeDropdown v-model="selectedScheme" :schemes="schemesToShow" />
             <p v-if="isSenior" class="text-green-600 text-xs mt-1">
               ✓ Senior citizen benefits applicable (+0.5% on all rates)
             </p>
-            <p v-if="selectedScheme && calculationResults.isCompoundEligible" class="text-green-600 text-xs mt-1">
-              ✓ Compound Interest benefits applicable (2+ years tenure)
+            <p v-if="selectedScheme && selectedScheme.compound" class="text-green-600 text-xs mt-1">
+              ✓ Compound Interest benefits applicable
             </p>
           </div>
+          </div>
 
+          <!-- Summary + Button pinned at bottom -->
+          <div class="mt-auto space-y-4">
           <!-- Summary Details -->
           <div v-if="selectedScheme" class="bg-gray-50 rounded-lg p-4">
             <div class="flex items-center justify-between mb-2">
@@ -73,224 +75,197 @@
           </div>
         </div>
 
-        <!-- Book FD Button --> 
-      <button
-        @click="bookFD"
-        :disabled="!selectedScheme || loading"
-        class="w-full bg-blue-600 text-white font-semibold py-4 px-6 rounded-lg hover:bg-blue-700 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
-      >
-        <div class="flex items-center justify-center">
-          <span v-if="loading" class="loader mr-2"></span>
-          <svg v-if="!loading" class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
-          </svg>
-          {{ loading ? "Booking..." : "Book Fixed Deposit" }}
+        <!-- Book FD Button -->
+        <button
+          @click="bookFD"
+          :disabled="!selectedScheme || loading"
+          class="w-full bg-blue-600 text-white font-semibold py-4 px-6 rounded-lg hover:bg-blue-700 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
+        >
+          <div class="flex items-center justify-center">
+            <span v-if="loading" class="loader mr-2"></span>
+            <svg
+              v-if="!loading"
+              class="w-5 h-5 mr-2"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+            </svg>
+            {{ loading ? "Booking..." : "Book Fixed Deposit" }}
+          </div>
+        </button>
         </div>
-      </button> 
       </div>
 
       <!-- Right Side - Interest Calculation -->
-      <div class="space-y-6">
-        <!-- Interest Calculation Card -->
-        <div class="bg-white rounded-lg shadow p-6">
+      <div class="h-full">
+        <div class="bg-white rounded-lg shadow p-6 h-full flex flex-col">
           <div class="flex items-center mb-4">
             <div class="w-6 h-6 bg-green-100 rounded mr-3 flex items-center justify-center">
               <svg class="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z"></path>
+                <path
+                  d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z"
+                ></path>
               </svg>
             </div>
             <h3 class="text-lg font-semibold text-gray-800">Preview your investment returns</h3>
-          </div> 
-          <!-- Investment Overview Cards -->
-          <div class="grid grid-cols-2 gap-4 mb-6">
-            <div class="bg-blue-50 rounded-lg p-4 text-center">
-              <div class="text-2xl font-bold text-blue-600 mb-1">₹</div>
-              <div class="text-sm text-gray-600 mb-1">Principal Amount</div>
-              <div class="text-xl font-bold text-gray-800">₹{{ formatCurrency(amount) }}</div>
-            </div>
-            <div class="bg-green-50 rounded-lg p-4 text-center">
-              <div class="text-2xl font-bold text-green-600 mb-1">💰</div>
-              <div class="text-sm text-gray-600 mb-1">Interest Earned</div>
-              <div class="text-xl font-bold text-gray-800">₹{{ formatCurrency(maturityInterest) }}</div>
-              <div v-if="calculationResults.isCompoundEligible" class="text-xs text-green-600 mt-1">With Compounding</div>
-            </div>
           </div>
 
-          <!-- Simple Donut Chart -->
-          <div v-if="selectedScheme" class="flex flex-col items-center mb-6">
-            <div class="relative w-48 h-48 mb-4">
-              <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
-                <!-- Background Circle -->
-                <circle
-                  cx="50"
-                  cy="50"
-                  r="35"
-                  stroke="#e5e7eb"
-                  stroke-width="10"
-                  fill="none"
-                />
-                <!-- Principal Amount Arc -->
-                <circle
-                  cx="50"
-                  cy="50"
-                  r="35"
-                  stroke="#3b82f6"
-                  stroke-width="10"
-                  fill="none"
-                  :stroke-dasharray="`${principalPercentage * 2.2} 220`"
-                  stroke-linecap="round"
-                  class="transition-all duration-1000 ease-in-out"
-                />
-                <!-- Interest Amount Arc -->
-                <circle
-                  cx="50"
-                  cy="50"
-                  r="35"
-                  stroke="#10b981"
-                  stroke-width="10"
-                  fill="none"
-                  :stroke-dasharray="`${interestPercentage * 2.2} 220`"
-                  :stroke-dashoffset="`${-(principalPercentage * 2.2)}`"
-                  stroke-linecap="round"
-                  class="transition-all duration-1000 ease-in-out"
-                />
-              </svg>
-              <!-- Center Content -->
-              <div class="absolute inset-0 flex flex-col items-center justify-center">
-                <div class="text-center">
-                  <div class="text-sm text-gray-600">Tenure</div>
-                  <div class="text-2xl font-bold text-gray-800">{{ selectedScheme.tenure }}</div>
-                  <div class="text-xs text-gray-600">months</div>
+          <!-- Show Placeholder -->
+          <div
+            v-if="!selectedScheme"
+            class="flex-1 flex items-center justify-center text-gray-500 text-sm"
+          >
+            Select a scheme to view investment returns
+          </div>
+
+          <!-- Preview Content -->
+          <div v-else class="flex-1 flex flex-col">
+            <!-- Investment Overview -->
+            <div class="grid grid-cols-2 gap-4 mb-6">
+              <div class="bg-blue-50 rounded-lg p-4 text-center">
+                <div class="text-2xl font-bold text-blue-600 mb-1">₹</div>
+                <div class="text-sm text-gray-600 mb-1">Principal Amount</div>
+                <div class="text-xl font-bold text-gray-800">₹{{ formatCurrency(amount) }}</div>
+              </div>
+              <div class="bg-green-50 rounded-lg p-4 text-center">
+                <div class="text-2xl font-bold text-green-600 mb-1">💰</div>
+                <div class="text-sm text-gray-600 mb-1">Interest Earned</div>
+                <div class="text-xl font-bold text-gray-800">₹{{ formatCurrency(maturityInterest) }}</div>
+              </div>
+            </div>
+
+            <!-- Donut Chart -->
+            <div class="flex flex-col items-center mb-6">
+              <div class="relative w-48 h-48 mb-4">
+                <svg class="w-full h-full transform -rotate-90" viewBox="0 0 100 100">
+                  <circle cx="50" cy="50" r="35" stroke="#e5e7eb" stroke-width="10" fill="none"/>
+                  <circle
+                    cx="50"
+                    cy="50"
+                    r="35"
+                    stroke="#3b82f6"
+                    stroke-width="10"
+                    fill="none"
+                    :stroke-dasharray="`${principalPercentage * 2.2} 220`"
+                    stroke-linecap="round"
+                  />
+                  <circle
+                    cx="50"
+                    cy="50"
+                    r="35"
+                    stroke="#10b981"
+                    stroke-width="10"
+                    fill="none"
+                    :stroke-dasharray="`${interestPercentage * 2.2} 220`"
+                    :stroke-dashoffset="`${-(principalPercentage * 2.2)}`"
+                    stroke-linecap="round"
+                  />
+                </svg>
+                <div class="absolute inset-0 flex flex-col items-center justify-center">
+                  <div class="text-center">
+                    <div class="text-sm text-gray-600">Tenure</div>
+                    <div class="text-2xl font-bold text-gray-800">{{ selectedScheme.tenure }}</div>
+                    <div class="text-xs text-gray-600">months</div>
+                  </div>
+                </div>
+              </div>
+              <div class="flex space-x-4 text-sm">
+                <div class="flex items-center">
+                  <div class="w-3 h-3 bg-blue-500 rounded-full mr-2"></div>
+                  <span class="text-gray-600">Principal ({{ principalPercentage.toFixed(1) }}%)</span>
+                </div>
+                <div class="flex items-center">
+                  <div class="w-3 h-3 bg-green-500 rounded-full mr-2"></div>
+                  <span class="text-gray-600">Interest ({{ interestPercentage.toFixed(1) }}%)</span>
                 </div>
               </div>
             </div>
 
-            <!-- Chart Legend -->
-            <div class="flex space-x-4 text-sm">
-              <div class="flex items-center">
-                <div class="w-3 h-3 bg-blue-500 rounded-full mr-2"></div>
-                <span class="text-gray-600">Principal ({{ principalPercentage.toFixed(1) }}%)</span>
+            <!-- Summary Table -->
+            <div class="space-y-3">
+              <div class="flex justify-between py-2 border-b border-gray-100">
+                <span class="text-gray-600">Principal Amount</span>
+                <span class="font-semibold">₹{{ formatCurrency(amount) }}</span>
               </div>
-              <div class="flex items-center">
-                <div class="w-3 h-3 bg-green-500 rounded-full mr-2"></div>
-                <span class="text-gray-600">Interest ({{ interestPercentage.toFixed(1) }}%)</span>
+              <div class="flex justify-between py-2 border-b border-gray-100">
+                <span class="text-gray-600">Interest Earned</span>
+                <span class="font-semibold text-green-600">₹{{ formatCurrency(maturityInterest) }}</span>
               </div>
-            </div>
-          </div>
-
-          <!-- Summary Table -->
-          <div v-if="selectedScheme" class="space-y-3">
-            <div class="flex justify-between py-2 border-b border-gray-100">
-              <span class="text-gray-600">Principal Amount</span>
-              <span class="font-semibold">₹{{ formatCurrency(amount) }}</span>
-            </div>
-            <div class="flex justify-between py-2 border-b border-gray-100">
-              <span class="text-gray-600">Interest Earned</span>
-              <span class="font-semibold text-green-600">₹{{ formatCurrency(maturityInterest) }}</span>
-            </div>
-            <div class="flex justify-between py-3 bg-blue-600 text-white px-4 rounded-lg">
-              <span class="font-medium">Total Maturity Amount</span>
-              <span class="font-bold">₹{{ formatCurrency(maturityAmount) }}</span>
+              <div class="flex justify-between py-3 bg-blue-600 text-white px-4 rounded-lg">
+                <span class="font-medium">Total Maturity Amount</span>
+                <span class="font-bold">₹{{ formatCurrency(maturityAmount) }}</span>
+              </div>
             </div>
           </div>
         </div>
+      </div>
+    </div>
 
-        <!-- Available Schemes -->
-        <!-- <div class="bg-white rounded-lg shadow p-6">
-          <h3 class="text-lg font-semibold text-gray-800 mb-4">Available Schemes</h3>
-          <p class="text-gray-600 text-sm mb-4">Choose from our competitive interest rates</p>
-          <div class="space-y-2">
-            <div v-for="scheme in schemesToShow" :key="scheme.name" class="flex justify-between items-center text-sm py-2">
-              <div>
-                <span class="font-medium">{{ scheme.name }}</span>
-                <span v-if="scheme.compound" class="text-xs text-green-600 ml-2">(Compound)</span>
-              </div>
-              <span class="font-semibold text-blue-600">{{ scheme.rate }}% p.a.</span>
+    <!-- Schemes Section -->
+    <div class="bg-white rounded-lg shadow p-6">
+      <div class="flex items-center mb-4">
+        <svg class="w-6 h-6 text-indigo-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
+          <path d="M13 7H7v6h6V7zM3 5h2v10H3V5zm12 0h2v10h-2V5z"></path>
+        </svg>
+        <h2 class="text-lg font-semibold text-gray-800">Our Fixed Deposit Schemes</h2>
+      </div>
+      <p class="text-gray-600 text-sm mb-6">
+        Choose from flexible tenures and competitive rates. Senior citizens automatically receive
+        an extra <span class="font-semibold">0.5% interest</span>.
+      </p>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div
+          v-for="scheme in schemesToShow"
+          :key="scheme.name"
+          class="bg-gray-50 hover:bg-white border border-gray-200 rounded-xl p-5 shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col justify-between"
+        >
+          <div>
+            <div class="flex items-center justify-between mb-2">
+              <h3 class="text-base font-semibold text-gray-800">{{ scheme.name }}</h3>
+             <span class="bg-green-100 text-green-800 font-bold text-lg px-2 py-1 rounded-full">  {{ scheme.rate }}% </span>
+
             </div>
+            <p class="text-xs text-gray-500 mb-4">Tenure: <span class="font-medium">{{ scheme.tenure }} months</span></p>
+            <ul class="space-y-2 text-sm text-gray-700">
+              <li class="flex items-start">
+                <svg class="w-4 h-4 text-green-500 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                  <path
+                    d="M16.707 5.293a1 1 0 00-1.414 0L9 11.586 6.707 9.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l7-7a1 1 0 000-1.414z"
+                  />
+                </svg>
+                Guaranteed returns with no market risk
+              </li>
+              <li v-if="scheme.compound" class="flex items-start">
+                <svg class="w-4 h-4 text-green-500 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                  <path
+                    d="M16.707 5.293a1 1 0 00-1.414 0L9 11.586 6.707 9.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l7-7a1 1 0 000-1.414z"
+                  />
+                </svg>
+                Compound interest for higher growth
+              </li>
+              <li class="flex items-start">
+                <svg class="w-4 h-4 text-green-500 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                  <path
+                    d="M16.707 5.293a1 1 0 00-1.414 0L9 11.586 6.707 9.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l7-7a1 1 0 000-1.414z"
+                  />
+                </svg>
+                Senior citizens +0.5% extra interest
+              </li>
+            </ul>
           </div>
-        </div> -->
-      </div>
-    </div>
-
-
-<br>
-
-
- <!-- About Schemes which we are providing -->
-<div class="bg-white rounded-lg shadow p-6">
-  <div class="flex items-center mb-4">
-    <svg class="w-6 h-6 text-indigo-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
-      <path d="M13 7H7v6h6V7zM3 5h2v10H3V5zm12 0h2v10h-2V5z"></path>
-    </svg>
-    <h2 class="text-lg font-semibold text-gray-800">
-      Our Fixed Deposit Schemes
-    </h2>
-  </div>
-  <p class="text-gray-600 text-sm mb-6">
-    Choose from flexible tenures and competitive rates. Senior citizens
-    automatically receive an extra <span class="font-semibold">0.5% interest</span>.
-  </p>
-
-  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-    <div
-      v-for="scheme in schemesToShow"
-      :key="scheme.name"
-      class="bg-gray-50 hover:bg-white border border-gray-200 rounded-xl p-5 shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col justify-between"
-    >
-      <!-- Title & Rate -->
-      <div>
-        <div class="flex items-center justify-between mb-2">
-          <h3 class="text-base font-semibold text-gray-800">
-            {{ scheme.name }}
-          </h3>
-          <span class="text-blue-600 font-bold text-lg">
-            {{ scheme.rate }}%
-          </span>
+          <button
+            @click="selectedScheme = scheme"
+            class="mt-5 w-full bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors duration-300"
+          >
+            Choose This Plan
+          </button>
         </div>
-        <p class="text-xs text-gray-500 mb-4">
-          Tenure: <span class="font-medium">{{ scheme.tenure }} months</span>
-        </p>
-
-        <!-- Advantages -->
-        <ul class="space-y-2 text-sm text-gray-700">
-          <li class="flex items-start">
-            <svg class="w-4 h-4 text-green-500 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M16.707 5.293a1 1 0 00-1.414 0L9 11.586 6.707 9.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l7-7a1 1 0 000-1.414z"/>
-            </svg>
-            Guaranteed returns with no market risk
-          </li>
-          <li v-if="scheme.compound" class="flex items-start">
-            <svg class="w-4 h-4 text-green-500 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M16.707 5.293a1 1 0 00-1.414 0L9 11.586 6.707 9.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l7-7a1 1 0 000-1.414z"/>
-            </svg>
-            Compound interest for higher growth
-          </li>
-          <li class="flex items-start">
-            <svg class="w-4 h-4 text-green-500 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M16.707 5.293a1 1 0 00-1.414 0L9 11.586 6.707 9.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l7-7a1 1 0 000-1.414z"/>
-            </svg>
-            Senior citizens +0.5% extra interest
-          </li>
-        </ul>
       </div>
-
-      <!-- Action -->
-      <button
-        @click="selectedScheme = scheme"
-        class="mt-5 w-full bg-blue-600 text-white font-medium py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors duration-300"
-      >
-        Select This Plan
-      </button>
     </div>
-  </div>
-</div>
 
-
-    
-
-
-
-    <!-- Toast Notification -->
+    <!-- Toast -->
     <div
       v-if="toast.show"
       :class="[
@@ -299,10 +274,22 @@
       ]"
     >
       <div class="flex items-center">
-        <svg v-if="toast.type === 'success'" class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg
+          v-if="toast.type === 'success'"
+          class="w-5 h-5 mr-2"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
         </svg>
-        <svg v-else class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg
+          v-else
+          class="w-5 h-5 mr-2"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
         </svg>
         {{ toast.message }}
@@ -312,12 +299,14 @@
 </template>
 
 <script>
+import SchemeDropdown from "../components/SchemeDropDown.vue";
 import { mapGetters } from "vuex";
 import axios from "axios";
 import FDCalculator, { STANDARD_FD_SCHEMES } from '../utils/fdCalculations.js';
 
 export default {
   name: "BookFD",
+  components: { SchemeDropdown },
   data() {
     return {
       amount: 50000,

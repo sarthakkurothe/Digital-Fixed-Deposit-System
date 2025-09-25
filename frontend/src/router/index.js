@@ -33,7 +33,10 @@ const router = createRouter({ history: createWebHistory(), routes })
 router.beforeEach((to, from, next) => {
   const isAuthenticated = !!store.state.token
 
-  if (to.meta.requiresAuth && !isAuthenticated) next('/login')
+  if(to.name = 'Home' && isAuthenticated){
+    store.dispatch('setUserData').then(() => next("/user/dashboard"))
+  }
+  else if (to.meta.requiresAuth && !isAuthenticated) next('/login')
   else if ((to.name === 'Login' || to.name === 'Register') && isAuthenticated) next('/user/dashboard')
   else next()
 })

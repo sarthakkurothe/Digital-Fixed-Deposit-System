@@ -67,91 +67,14 @@
       </div>
     </div>
 
-    <!-- Recent Fixed Deposits Section -->
-    <div class="bg-white rounded-lg border border-gray-200">
-      <div class="p-6 border-b border-gray-200">
-        <div class="flex items-center justify-between">
-          <h2 class="text-lg font-semibold text-gray-900">Recent Fixed Deposits</h2>
-          <button class="text-sm text-gray-500 hover:text-gray-700 flex items-center">
-            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
-            </svg>
-            View All
-          </button>
-        </div>
-        <p class="text-sm text-gray-600 mt-1">Your latest FD investments</p>
-      </div>
-      
-      <!-- FD List -->
-      <div class="p-6 space-y-4">
-        <!-- FD Item 1 -->
-        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-          <div class="flex items-center space-x-4">
-            <div class="w-2 h-8 bg-green-500 rounded-full"></div>
-            <div>
-              <h4 class="font-medium text-gray-900">FD #1</h4>
-              <p class="text-sm text-gray-600">₹1,00,000 • 7% • 12 months</p>
-              <p class="text-xs text-gray-500">Maturity: 15 Jan 2025</p>
-            </div>
-          </div>
-          <div class="text-right">
-            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-              ACTIVE
-            </span>
-            <p class="text-sm font-semibold text-gray-900 mt-1">₹5,833</p>
-            <p class="text-xs text-gray-500">Interest</p>
-          </div>
-        </div>
-
-        <!-- FD Item 2 -->
-        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-          <div class="flex items-center space-x-4">
-            <div class="w-2 h-8 bg-green-500 rounded-full"></div>
-            <div>
-              <h4 class="font-medium text-gray-900">FD #2</h4>
-              <p class="text-sm text-gray-600">₹2,50,000 • 8% • 36 months</p>
-              <p class="text-xs text-gray-500">Maturity: 10 Jun 2026</p>
-            </div>
-          </div>
-          <div class="text-right">
-            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
-              ACTIVE
-            </span>
-            <p class="text-sm font-semibold text-gray-900 mt-1">₹35,000</p>
-            <p class="text-xs text-gray-500">Interest</p>
-          </div>
-        </div>
-
-        <!-- FD Item 3 -->
-        <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-          <div class="flex items-center space-x-4">
-            <div class="w-2 h-8 bg-blue-500 rounded-full"></div>
-            <div>
-              <h4 class="font-medium text-gray-900">FD #3</h4>
-              <p class="text-sm text-gray-600">₹50,000 • 6.5% • 6 months</p>
-              <p class="text-xs text-gray-500">Maturity: 1 Sept 2024</p>
-            </div>
-          </div>
-          <div class="text-right">
-            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-              MATURED
-            </span>
-            <p class="text-sm font-semibold text-gray-900 mt-1">₹1,625</p>
-            <p class="text-xs text-gray-500">Interest</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Quick Actions Section -->
+      <!-- Quick Actions Section -->
     <div class="bg-white rounded-lg border border-gray-200 p-6">
       <h2 class="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h2>
       <p class="text-sm text-gray-600 mb-4">Manage your fixed deposits</p>
       
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
         <router-link 
-          to="/book-fd"
+          to="book-fd"
           class="flex items-center p-4 border border-blue-200 rounded-lg hover:bg-blue-50 transition-colors group"
         >
           <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mr-4 group-hover:bg-blue-200 transition-colors">
@@ -169,7 +92,7 @@
         </router-link>
 
         <router-link 
-          to="/calculator"
+          to="calculator"
           class="flex items-center p-4 border border-green-200 rounded-lg hover:bg-green-50 transition-colors group"
         >
           <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center mr-4 group-hover:bg-green-200 transition-colors">
@@ -187,7 +110,7 @@
         </router-link>
 
         <router-link 
-          to="/support"
+          to="support"
           class="flex items-center p-4 border border-orange-200 rounded-lg hover:bg-orange-50 transition-colors group"
         >
           <div class="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center mr-4 group-hover:bg-orange-200 transition-colors">

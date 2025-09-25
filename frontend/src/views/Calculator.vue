@@ -44,15 +44,7 @@
           <!-- Scheme Selection -->
           <div class="mb-4">
             <label class="block text-sm font-medium text-gray-700 mb-2">Interest Scheme</label>
-            <select 
-              class="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" 
-              v-model="selectedScheme"
-            >
-              <option value="">-- Choose a Scheme --</option>
-              <option v-for="scheme in schemesToShow" :key="scheme.name" :value="scheme">
-                {{ scheme.name }} - {{ scheme.rate }}% p.a.
-              </option>
-            </select> 
+            <SchemeDropdown v-model="selectedScheme" :schemes="schemesToShow" />
             <p v-if="hasCompoundInterest" class="text-green-600 text-xs mt-1">
               ✓ Compound Interest benefits applicable (24+ months tenure)
             </p>
@@ -237,9 +229,11 @@
 
 <script> 
 import FDCalculator, { STANDARD_FD_SCHEMES } from '../utils/fdCalculations.js'
+import SchemeDropdown from "../components/SchemeDropDown.vue";
 
 export default { 
   name: 'InterestCalculator',
+  components: { SchemeDropdown },
   data() {
     return {
       amount: 100000,

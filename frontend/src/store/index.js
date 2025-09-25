@@ -156,6 +156,8 @@ export default createStore({
   getters: {
     isAuthenticated: (state) => !!state.token,
     getUser: (state) => state.user,
+    getUserName: (state) => state.user?.name || '',
+    getUserEmail: (state) => state.user?.email || '', 
     getToken: (state) => state.token,
     getFDs: (state) => state.fds,
     isLoading: (state) => state.loading,
