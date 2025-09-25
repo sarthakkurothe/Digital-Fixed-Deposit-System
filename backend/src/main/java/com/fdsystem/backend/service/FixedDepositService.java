@@ -86,4 +86,13 @@ import java.util.List;
         return new BreakPreviewResponse(fd.getId(), fd.getAmount(), fd.getAccrued_interest(), fd.getStart_date(), fd.getMaturity_date(), penalty, payout, fd.getInterest_rate(), fd.getTenure_months(), monthsElapsed);
     }
 
+    public void setFixedDepositStatus(Long id, FdStatus fdStatus) {
+        FixedDeposit fixedDeposit = this.fixedDepositRepository.findById(id).get();
+        fixedDeposit.setStatus(fdStatus);
+        this.fixedDepositRepository.save(fixedDeposit);
+    }
+
+    public List<FixedDeposit> getAllFDsByStatus(FdStatus fdStatus) {
+        return this.fixedDepositRepository.findAllByStatus(fdStatus);
+    }
 }
