@@ -1,5 +1,6 @@
 package com.fdsystem.backend.controller;
 
+import com.fdsystem.backend.dto.AdminTicketDTO;
 import com.fdsystem.backend.entity.FixedDeposit;
 import com.fdsystem.backend.entity.SupportTicket;
 import com.fdsystem.backend.service.FixedDepositService;
@@ -41,8 +42,8 @@ public class AdminController {
   }
 
   @PostMapping("/tickets/{id}")
-  public ResponseEntity<Void> setTicketStatusById(@PathVariable long id,@RequestBody SupportTicketStatus status){
-    this.supportTicketService.setTicketStatusById(id, status);
+  public ResponseEntity<Void> setTicketStatusById(@PathVariable long id,@RequestBody AdminTicketDTO adminTicketDTO){
+    this.supportTicketService.setTicketStatusById(id, adminTicketDTO.getResponse(), SupportTicketStatus.valueOf(adminTicketDTO.getStatus()));
 
     return new ResponseEntity<>(HttpStatus.OK);
   }

@@ -97,5 +97,6 @@ import java.util.List;
     public void setFixedDepositStatus(long id, FdStatus fdStatus){
         FixedDeposit fixedDeposit = this.fixedDepositRepository.findById(id).get();
         fixedDeposit.setStatus(fdStatus);
+        this.fixedDepositRepository.save(fixedDeposit);
     }
 }

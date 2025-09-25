@@ -47,11 +47,7 @@ export default createStore({
     async fetchFDs({ commit, state }) {
       commit("SET_LOADING", true);
       try {
-        const res = await axios.get(`/fd/user/${state.user.id}`, {
-          headers: {
-            Authorization: `Bearer ${state.token}`,
-          },
-        });
+        const res = await axios.get(`/fd/user/${state.user.id}`);
         commit("SET_FDS", res.data);
       } catch (err) {
         console.error("Error fetching FDs", err);
@@ -61,24 +57,43 @@ export default createStore({
     },
 
     /**
-     * Break an FD (set status to BROKEN)
+     * Break an FD (set status to BROKEN_PENDING)
      */
+    async fetchBreakPreview({ state }, fdId) {
+      try {
+        const res = await axios.get(`/fd/${fdId}/break-preview`, {
+          headers: { Authorization: `bearer ${state.token}` },
+        });
+        return res.data;
+      } catch (err) {
+        console.error("Error fetching break preview", err);
+        return null;
+      }
+    },
+
     async breakFD({ commit, state }, fdId) {
       try {
-        const res = await axios.put(
-          `/fds/${fdId}/break`,
-          {},
-          {
-            headers: {
-              Authorization: `Bearer ${state.token}`,
-            },
-          }
-        );
-        if (res.status !== 200) throw new Error("Failed to break FD");
+        const res = await axios.post(`/fd/${fdId}/break`, {}, {
+          headers: { Authorization: `bearer ${state.token}` },
+        });
 
-        commit("UPDATE_FD_STATUS", { fdId, status: "BROKEN" });
+        if (res.status === 201) {
+          commit("UPDATE_FD_STATUS", { fdId, status: "BROKEN_PENDING" });
+          return {
+            success: true,
+            message: "Request for Break FD has been created successfully.",
+          };
+        }
+
+        return {
+          success: false,
+          message: "Unexpected response from server.",
+        };
       } catch (err) {
-        console.error("Error breaking FD", err);
+        return {
+          success: false,
+          message: "Failed to submit FD Break Request.",
+        };
       }
     },
 
@@ -159,5 +174,6 @@ export default createStore({
     getToken: (state) => state.token,
     getFDs: (state) => state.fds,
     isLoading: (state) => state.loading,
+    getFDById: (state) => (id) => state.fds.find(fd => fd.id === id),
   },
 });

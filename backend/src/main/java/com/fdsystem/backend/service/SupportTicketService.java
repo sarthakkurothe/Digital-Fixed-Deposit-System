@@ -59,8 +59,9 @@ public class SupportTicketService {
         return this.supportTicketRepository.findAllByStatus(SupportTicketStatus.OPEN);
     }
 
-    public void setTicketStatusById(long id, SupportTicketStatus status){
+    public void setTicketStatusById(long id,String response, SupportTicketStatus status){
         SupportTicket ticket = this.supportTicketRepository.findById(id).get();
+        ticket.setResponse(response);
         ticket.setStatus(status);
         this.supportTicketRepository.save(ticket);
     }
