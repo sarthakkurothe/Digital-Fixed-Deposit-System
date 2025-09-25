@@ -17,7 +17,7 @@
 
       <!-- FD Info -->
       <div class="bg-gray-100 p-4 rounded-lg space-y-2 text-sm">
-        <div class="flex justify-between px-4"><span>Amount:</span><span class="font-bold">₹{{ preview.principalAmount.toLocaleString() }}</span></div>
+        <div class="flex justify-between px-4"><span>Amount:</span><span class="font-bold">₹{{ preview.principalAmount.toLocaleString('en-IN') }}</span></div>
         <div class="flex justify-between px-4"><span>Interest Rate:</span><span class="font-bold">{{ preview.interestRate }}%</span></div>
         <div class="flex justify-between px-4"><span>Tenure:</span><span class="font-bold">{{ preview.tenure }} months</span></div>
         <div class="flex justify-between px-4"><span>Start Date:</span><span class="font-bold">{{ formatDate(preview.startDate) }}</span></div>
@@ -29,12 +29,12 @@
       <div class="bg-red-50 p-4 rounded-lg border border-red-200 text-sm">
         <h4 class="font-medium text-red-600 mb-3">Premature Withdrawal Calculation</h4>
         <div class="space-y-2">
-          <div class="flex justify-between px-4"><span>Principal:</span><span class="font-bold">₹{{ preview.principalAmount.toLocaleString() }}</span></div>
-          <div class="flex justify-between px-4"><span>Accrued Interest:</span><span class="text-green-600">₹{{ preview.accruedInterest.toLocaleString() }}</span></div>
-          <div class="flex justify-between px-4"><span>Penalty:</span><span class="text-red-600">₹{{ preview.penalty.toLocaleString() }}</span></div>
+          <div class="flex justify-between px-4"><span>Principal:</span><span class="font-bold">₹{{ preview.principalAmount.toLocaleString('en-IN') }}</span></div>
+          <div class="flex justify-between px-4"><span>Accrued Interest:</span><span class="text-green-600">₹{{ preview.accruedInterest.toLocaleString('en-IN') }}</span></div>
+          <div class="flex justify-between px-4"><span>Penalty:</span><span class="text-red-600">₹{{ preview.penalty.toLocaleString('en-IN') }}</span></div>
           <div class="w-full flex justify-between py-3 bg-white text-black px-4 rounded-lg">
             <span class="font-medium">Total Payout</span>
-            <span class="font-bold">₹{{ preview.payout.toLocaleString() }}</span>
+            <span class="font-bold">₹{{ preview.payout.toLocaleString('en-IN') }}</span>
           </div>
         </div>
       </div>
@@ -68,6 +68,7 @@ const preview = ref(null);
 
 onMounted(async () => {
   preview.value = await store.dispatch('fetchBreakPreview', props.fdId);
+  console.log(preview.value)
 });
 
 const formatDate = (dateStr) => {

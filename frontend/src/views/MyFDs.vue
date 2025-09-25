@@ -51,8 +51,8 @@
               : fd.status === 'MATURED' 
                 ? 'text-blue-600 text-sm font-medium' 
                 : fd.status === 'PENDING' 
-                  ? 'text-red-600 text-sm font-medium' 
-                  : 'text-gray-500 text-sm font-medium'"
+                  ? 'text-yellow-500 text-sm font-medium' 
+                  : 'text-red-600 text-sm font-medium'"
           >
             {{ fd.status }}
           </p>
@@ -78,7 +78,10 @@
         <button
           @click="breakFD(fd)"
           :disabled="fd.status !== 'ACTIVE'"
-          class="px-3 py-2 bg-red-600 text-white rounded-md text-sm hover:bg-red-700 disabled:opacity-50 cursor-pointer"
+          :class="[
+            'px-3 py-2 bg-red-600 text-white rounded-md text-sm disabled:opacity-50',
+            fd.status === 'ACTIVE' ? 'hover:bg-red-700 cursor-pointer' : 'cursor-not-allowed'
+          ]"
         >
           Break
         </button>
@@ -123,8 +126,8 @@
     <div
       v-if="toast.show"
       :class="[
-        'fixed bottom-4 right-4 px-6 py-4 rounded-lg shadow-lg text-white transition-all duration-300 z-50',
-        toast.type === 'success' ? 'bg-green-500' : 'bg-red-500'
+        'fixed top-16 right-4 px-6 py-4 rounded-lg shadow-lg text-white transition-all duration-300 z-50 font-bold',
+        toast.type === 'success' ? 'bg-blue-400' : 'bg-red-500'
       ]"
     >
     <div class="flex items-center">
