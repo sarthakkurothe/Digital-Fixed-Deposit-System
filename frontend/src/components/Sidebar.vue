@@ -107,10 +107,10 @@
       </nav>
 
       <!-- User Profile Section -->
-      <div class="p-4 border-t border-gray-200">
+      <div class="p-4 border-t border-gray-200 cursor-pointer">
         <button
-          @click="logout"
-          class="flex items-center w-full px-4 py-2 text-gray-700 rounded-lg hover:bg-red-50 hover:text-red-600 transition group"
+          @click="signout"
+          class="flex items-center w-full px-4 py-2 text-gray-700 rounded-lg hover:bg-red-50 hover:text-red-600 transition group cursor-pointer"
         >
           <!-- Fixed-size icon -->
           <ArrowLeftEndOnRectangleIcon
@@ -149,69 +149,74 @@
 <script>
 import { ArrowLeftEndOnRectangleIcon } from '@heroicons/vue/24/solid'
 import { ArrowLeft } from 'lucide-vue-next'
-import { ref, computed } from 'vue'
+import { mapActions } from 'vuex/dist/vuex.cjs.js'
 
 export default {
   name: 'Sidebar',
-  components: { ArrowLeftEndOnRectangleIcon},
-  setup(props, { emit }) {
-    const isCollapsed = ref(false)
-    const showMobile = ref(false)
+  components: { ArrowLeftEndOnRectangleIcon },
 
-    const sidebarClasses = computed(() => {
+  data() {
+    return {
+      isCollapsed: false,
+      showMobile: false
+    }
+  },
+
+  computed: {
+    sidebarClasses() {
       return [
         'fixed top-0 left-0 h-full shadow-lg z-50 transition-all duration-300',
         {
-          'w-22': isCollapsed.value,
-          'w-64': !isCollapsed.value,
-          'transform -translate-x-full md:translate-x-0': !showMobile.value,
-          'transform translate-x-0': showMobile.value
+          'w-22': this.isCollapsed,
+          'w-64': !this.isCollapsed,
+          'transform -translate-x-full md:translate-x-0': !this.showMobile,
+          'transform translate-x-0': this.showMobile
         }
       ]
-    })
+    }
+  },
 
-    const navItemClasses = (isActive) => {
+  methods: {
+
+    ...mapActions(['logout']),
+    navItemClasses(isActive) {
       return [
         'flex items-center px-3 py-3 rounded-lg transition-all duration-200 relative text-gray-700 mb-1',
         {
           'bg-blue-50 text-blue-700 border-r-2 border-blue-700': isActive,
           'hover:bg-gray-100 hover:text-gray-900': !isActive,
-          'justify-center': isCollapsed.value
+          'justify-center': this.isCollapsed
         }
       ]
-    }
+    },
 
-    const toggleSidebar = () => {
+    toggleSidebar() {
       if (window.innerWidth < 768) {
         // On mobile, toggle visibility
-        showMobile.value = !showMobile.value
+        this.showMobile = !this.showMobile
       } else {
         // On desktop, toggle collapse
-        isCollapsed.value = !isCollapsed.value
-        emit('sidebar-toggled', isCollapsed.value)
+        this.isCollapsed = !this.isCollapsed
+        this.$emit('sidebar-toggled', this.isCollapsed)
       }
-    }
+    },
 
-    const openMobileSidebar = () => {
-      showMobile.value = true
-    }
+    openMobileSidebar() {
+      this.showMobile = true
+    },
 
-    const closeMobileSidebar = () => {
-      showMobile.value = false
-    }
+    closeMobileSidebar() {
+      this.showMobile = false
+    },
 
-    return {
-      isCollapsed,
-      showMobile,
-      sidebarClasses,
-      navItemClasses,
-      toggleSidebar,
-      openMobileSidebar,
-      closeMobileSidebar
+    signout() {
+      this.logout()
+      this.$router.push('/')
     }
   }
 }
 </script>
+
 
 <style scoped>
 .nav-item {

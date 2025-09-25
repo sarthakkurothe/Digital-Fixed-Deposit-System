@@ -5,8 +5,8 @@ import MyFDs from '../views/MyFDs.vue'
 import BookFD from '../views/BookFD.vue'
 import Calculator from '../views/Calculator.vue'
 import Support from '../views/Support.vue'
-import Login from '../components/Login.vue'
-import Register from '../components/Register.vue'
+import Login from '../views/Login.vue'
+import Register from '../views/Register.vue'
 import Interface from '../components/Interface.vue'
 import store from '../store'
 
@@ -32,6 +32,7 @@ const router = createRouter({ history: createWebHistory(), routes })
 
 router.beforeEach((to, from, next) => {
   const isAuthenticated = !!store.state.token
+  console.log('Navigation Guard: isAuthenticated =', isAuthenticated)
   if (to.meta.requiresAuth && !isAuthenticated) next('/login')
   else if ((to.name === 'Login' || to.name === 'Register') && isAuthenticated) next('/user/dashboard')
   else next()

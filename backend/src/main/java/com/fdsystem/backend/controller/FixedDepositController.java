@@ -1,5 +1,6 @@
 package com.fdsystem.backend.controller;
 
+import com.fdsystem.backend.dto.BreakPreviewResponse;
 import com.fdsystem.backend.dto.FixedDepositDTO;
 import com.fdsystem.backend.model.FixedDeposit;
 import com.fdsystem.backend.model.User;
@@ -68,6 +69,18 @@ public class FixedDepositController {
         fixedDeposit.setStatus(Enum.valueOf(FdStatus.class, status));
         fixedDepositService.bookFD(fixedDeposit);
         return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PostMapping("/{fdId}/break")
+    public ResponseEntity<Void> breakFD(@PathVariable Long fdId){
+        this.fixedDepositService.breakFD(fdId);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{fdId}/break-preview")
+    public ResponseEntity<BreakPreviewResponse> getPreview(@PathVariable Long fdId){
+        BreakPreviewResponse previewResponse = this.fixedDepositService.getBreakPreview(fdId);
+        return new ResponseEntity<>(previewResponse, HttpStatus.FOUND);
     }
 
 }
