@@ -38,24 +38,23 @@
               </button>
             </div>
 
-            <!-- Terms & Conditions -->
-            <div class="flex items-start gap-2">
-              <input type="checkbox" v-model="agreeTerms" class="mt-1 w-4 h-4 border-gray-300 rounded"/>
-              <label class="text-sm text-gray-600">
-                I agree to the 
-                <router-link to="/terms" class="text-blue-600 hover:underline">Terms of Service</router-link> 
-                and 
-                <router-link to="/privacy" class="text-blue-600 hover:underline">Privacy Policy</router-link>
-              </label>
-            </div>
+          
 
             <!-- Error / Success messages -->
             <p v-if="errorMessage" class="text-sm text-center text-red-600">{{ errorMessage }}</p>
             <p v-if="successMessage" class="text-sm text-center text-green-600">{{ successMessage }}</p>
 
-            <button type="submit" class="w-full h-11 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition" :disabled="loading">
-              {{ loading ? "Creating Account..." : "Create Account" }}
+            <button
+              type="submit"
+              class="w-full h-11 rounded-xl bg-blue-600 text-white text-base font-semibold shadow hover:bg-blue-700 transition flex items-center justify-center disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
+              :disabled="loading"
+            >
+              <LoadingSpinner v-if="loading" customClass="h-5 w-5 text-white" />
+              <span v-else>Create Account</span>
             </button>
+
+            <!-- Error -->
+            <p v-if="error" class="text-red-500 text-center text-sm mt-2">{{ error }}</p>
           </form>
 
           <div class="text-center text-sm text-gray-600 mt-4">
@@ -91,7 +90,6 @@ export default {
       age: "",
       password: "",
       confirmPassword: "",
-      agreeTerms: false,
       loading: false,
       errorMessage: "",
       successMessage: "",
@@ -109,10 +107,7 @@ export default {
         this.errorMessage = "All fields are required.";
         return;
       }
-      if (!this.agreeTerms) {
-        this.errorMessage = "You must agree to the Terms and Privacy Policy.";
-        return;
-      }
+      
       if (this.password !== this.confirmPassword) {
         this.errorMessage = "Passwords do not match!";
         return;

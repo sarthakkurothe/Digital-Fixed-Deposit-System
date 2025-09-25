@@ -2,7 +2,7 @@
   <Header />
 
   <div class="min-h-[calc(100vh-64px)] bg-gradient-to-br from-white via-blue-50 to-blue-100 flex items-center justify-center p-3">
-    <div class="w-full max-w-6xl mx-auto flex flex-col lg:flex-row items-center justify-between p-6  lg:p-12 gap-12">
+    <div class="w-full max-w-6xl mx-auto flex flex-col lg:flex-row items-center justify-between p-6  lg:p-12 gap-50">
       
       <!-- Left Side - Branding & Features -->
       <DotLottieVue style="height: 500px; width: 500px" autoplay loop src="https://lottie.host/61b67c2f-ce7e-42bd-9f35-74450e0453a5/YbUAdRE2Jl.lottie" />
@@ -46,22 +46,16 @@
               </div>
             </div>
 
-            <!-- Remember & Forgot -->
-            <div class="flex items-center justify-between text-sm text-gray-600">
-              <label class="flex items-center space-x-2">
-                <input type="checkbox" class="rounded border-gray-300" />
-                <span>Remember me</span>
-              </label>
-              <router-link to="/forgot-password" class="text-blue-600 hover:underline font-medium">Forgot password?</router-link>
-            </div>
+            
 
             <!-- Submit -->
             <button
               type="submit"
-              class="w-full h-11 rounded-xl bg-blue-600 text-white text-base font-semibold shadow hover:bg-blue-700 transition"
+              class="w-full h-11 rounded-xl bg-blue-600 text-white text-base font-semibold shadow hover:bg-blue-700 transition flex items-center justify-center disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
               :disabled="loading"
             >
-              {{ loading ? "Signing In..." : "Sign In" }}
+              <LoadingSpinner v-if="loading" customClass="h-5 w-5 text-white" />
+              <span v-else>Sign In</span>
             </button>
 
             <!-- Error -->
@@ -84,57 +78,75 @@
 
 
 <script>
-import { Eye,EyeOff } from 'lucide-vue-next';
-import { mapActions } from 'vuex';
+import { Eye, EyeOff } from 'lucide-vue-next'
+import { mapActions, mapGetters } from 'vuex'
 import { DotLottieVue } from '@lottiefiles/dotlottie-vue'
+import LoadingSpinner from '../components/LoadingSpinner.vue'
 
-import Header from '../components/Header.vue';
-import { mapGetters } from 'vuex/dist/vuex.cjs.js';
+import Header from '../components/Header.vue'
 
 export default {
-  components: { Header,Eye, EyeOff, DotLottieVue },
+  name: 'LoginView',
+  components: {
+    Header,
+    Eye,
+    EyeOff,
+    DotLottieVue,
+    LoadingSpinner,
+  },
+
   data() {
     return {
-    
-      email: "",
-      password: "",
+      email: '',
+      password: '',
       loading: false,
       error: null,
       showPassword: false,
-    };
+    }
   },
+
+  // mapGetters must be used in computed
+  computed: {
+    ...mapGetters(['getToken']),
+  },
+
   methods: {
-    ...mapActions(["setToken", "setUserData","login"]),
-    ...mapGetters(["getToken"]),
+    // mapActions goes in methods
+    ...mapActions(['setToken', 'setUserData', 'login']),
 
     async handleLogin() {
-      this.loading = true;
-      this.error = null;
+      // start UI loading
+      this.loading = true
+      this.error = null
 
-      try{
-
+      try {
+        // call the login action; your Vuex action should commit the token
         await this.login({
           email: this.email,
-          password: this.password
-        });
-        const token = this.getToken();
+          password: this.password,
+        })
 
-        console.log("Received token:", token);
+        // read token via mapped getter
+        const token = this.getToken
+
+        console.log('Received token:', token)
 
         if (token) {
-          await this.setUserData();
-          this.$router.push({ name: "Dashboard" });
+          // fetch & set user data (optional)
+          await this.setUserData()
+          this.$router.push({ name: 'Dashboard' })
         } else {
-          this.error = "Login failed. Please try again.";
+          this.error = 'Invalid credentials'
         }
-
       } catch (err) {
-        this.error = err.response?.data?.message || "Invalid credentials";
-        console.error("Login error:", err);
+        // prefer server message when available, fallback to generic message
+        this.error = err?.response?.data?.message || err.message || 'Invalid credentials'
+        console.error('Login error:', err)
       } finally {
-        this.loading = false;
+        this.loading = false
       }
     },
   },
-};
+}
 </script>
+
