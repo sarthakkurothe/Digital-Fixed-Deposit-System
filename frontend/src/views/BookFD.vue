@@ -54,10 +54,10 @@
               ✓ Compound Interest benefits applicable
             </p>
           </div>
-          </div>  
+          </div>
 
-        <!-- Summary + Button pinned at bottom -->
-        <div class="mt-auto space-y-4">
+          <!-- Summary + Button pinned at bottom -->
+          <div class="mt-auto space-y-4">
           <!-- Summary Details -->
           <div v-if="selectedScheme" class="bg-gray-50 rounded-lg p-4">
             <div class="flex items-center justify-between mb-2">
@@ -73,12 +73,13 @@
               <span class="font-semibold">{{ formattedMaturityDate }}</span>
             </div>
           </div>
-        
+        </div>
+
         <!-- Book FD Button -->
         <button
           @click="bookFD"
           :disabled="!selectedScheme || loading"
-          class="w-full bg-blue-600 text-white font-semibold py-4 px-6 rounded-lg hover:bg-blue-700 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer shadow-lg"
+          class="w-full bg-blue-600 text-white font-semibold py-4 px-6 rounded-lg hover:bg-blue-700 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
         >
           <div class="flex items-center justify-center">
             <span v-if="loading" class="loader mr-2"></span>
@@ -94,9 +95,8 @@
             {{ loading ? "Booking..." : "Book Fixed Deposit" }}
           </div>
         </button>
-        </div>  
+        </div>
       </div>
-    </div>
 
       <!-- Right Side - Interest Calculation -->
       <div class="h-full">
@@ -224,7 +224,8 @@
           <div>
             <div class="flex items-center justify-between mb-2">
               <h3 class="text-base font-semibold text-gray-800">{{ scheme.name }}</h3>
-              <span class="bg-green-100 text-green-800 font-bold text-lg px-2 py-1 rounded-full">{{ scheme.rate }}%</span>
+             <span class="bg-green-100 text-green-800 font-bold text-lg px-2 py-1 rounded-full">  {{ scheme.rate }}% </span>
+
             </div>
             <p class="text-xs text-gray-500 mb-4">Tenure: <span class="font-medium">{{ scheme.tenure }} months</span></p>
             <ul class="space-y-2 text-sm text-gray-700">
@@ -256,7 +257,7 @@
           </div>
           <button
             @click="selectedScheme = scheme"
-            class="mt-5 w-full bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors duration-300 cursor-pointer shadow" 
+            class="mt-5 w-full bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors duration-300"
           >
             Choose This Plan
           </button>
@@ -301,6 +302,7 @@
 import SchemeDropdown from "../components/SchemeDropDown.vue";
 import { mapGetters } from "vuex";
 import axios from "axios";
+import FDCalculator, { STANDARD_FD_SCHEMES } from '../utils/fdCalculations.js';
 
 export default {
   name: "BookFD",
@@ -314,13 +316,8 @@ export default {
       selectedScheme: "",
       loading: false,
       toast: { show: false, message: "", type: "success" },
-      baseSchemes: [
-        { name: "6 Months FD", tenure: 6, baseRate: 6.0, compound: false },
-        { name: "1 Year FD", tenure: 12, baseRate: 6.5, compound: false },
-        { name: "2 Year FD", tenure: 24, baseRate: 7.0, compound: true },
-        { name: "3 Year FD", tenure: 36, baseRate: 7.5, compound: true },
-        { name: "5 Year FD", tenure: 60, baseRate: 8.0, compound: true },
-      ],
+      // Using standardized schemes from utility
+      baseSchemes: STANDARD_FD_SCHEMES,
     };
   },
   computed: {
@@ -330,47 +327,51 @@ export default {
     },
     schemesToShow() {
       return this.baseSchemes.map(scheme => {
-        const seniorBonus = this.isSenior ? 0.5 : 0;
+        const finalRate = FDCalculator.getApplicableRate(scheme.baseRate, this.getUser?.age || 30);
         return {
           ...scheme,
-          rate: (scheme.baseRate + seniorBonus).toFixed(1)
+          rate: finalRate.toFixed(1),
+          name: scheme.name,
+          tenure: scheme.tenureMonths,
+          compound: scheme.hasCompound
         };
       });
     },
     effectiveRate() {
       return this.selectedScheme ? this.selectedScheme.rate : 0;
     },
-    maturityInterest() {
-      if (!this.selectedScheme) return 0;
-      const r = parseFloat(this.effectiveRate) / 100;
-      const years = this.selectedScheme.tenure / 12;
-      
-      if (this.selectedScheme.compound) {
-        // Compound interest calculation
-        const maturity = this.amount * Math.pow(1 + r, years);
-        return Math.round(maturity - this.amount);
-      } else {
-        // Simple interest calculation
-        return Math.round(this.amount * r * years);
+    calculationResults() {
+      if (!this.selectedScheme) {
+        return { simple: { interest: 0, maturityAmount: 0 }, compound: { interest: 0, maturityAmount: 0 } };
       }
+      
+      return FDCalculator.calculateFDReturns({
+        principal: this.amount,
+        rate: this.selectedScheme.baseRate,
+        tenureMonths: this.selectedScheme.tenure,
+        age: this.getUser?.age || 30
+      });
+    },
+    maturityInterest() {
+      // Use compound interest if eligible, otherwise simple (consistent with Calculator)
+      const results = this.calculationResults;
+      return results.isCompoundEligible 
+        ? results.compound.interest 
+        : results.simple.interest;
     },
     maturityAmount() {
-      return this.amount + this.maturityInterest;
+      const results = this.calculationResults;
+      return results.isCompoundEligible 
+        ? results.compound.maturityAmount 
+        : results.simple.maturityAmount;
     },
     maturityDate() {
       if (!this.selectedScheme) return "";
-      const start = new Date(this.startDate);
-      const maturity = new Date(start.setMonth(start.getMonth() + this.selectedScheme.tenure));
-      return maturity.toISOString().substr(0, 10);
+      return FDCalculator.getMaturityDate(this.startDate, this.selectedScheme.tenure);
     },
     formattedMaturityDate() {
       if (!this.selectedScheme) return "";
-      const date = new Date(this.maturityDate);
-      return date.toLocaleDateString('en-GB', {
-        day: '2-digit',
-        month: 'short',
-        year: 'numeric'
-      });
+      return this.maturityDate.formattedDate;
     },
     // Chart calculations
     principalPercentage() {
@@ -384,8 +385,7 @@ export default {
   },
   methods: {
     formatCurrency(amount) {
-      if (!amount) return '0';
-      return new Intl.NumberFormat('en-IN').format(Math.round(amount));
+      return FDCalculator.formatCurrency(amount);
     },
     async bookFD() {
       if (!this.selectedScheme) return;
@@ -394,7 +394,7 @@ export default {
       const payload = {
         user_id: this.getUser.id,
         amount: this.amount,  
-        tenure_months: this.selectedScheme.tenure,
+        tenure_months: this.selectedScheme.tenureMonths || this.selectedScheme.tenure,
         interest_rate: parseFloat(this.effectiveRate)
       };
 
