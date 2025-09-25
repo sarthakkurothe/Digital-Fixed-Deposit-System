@@ -49,6 +49,14 @@ import java.util.List;
         return this.fixedDepositRepository.findAllByUser(user);
     }
 
+    public List<FixedDeposit> getAll(){
+        return this.fixedDepositRepository.findAll();
+    }
+
+    public  FixedDeposit getFdById(Long fd_id){
+        return this.fixedDepositRepository.findById(fd_id).get();
+    }
+
     public void breakFD(Long fdId) {
         FixedDeposit fd = fixedDepositRepository.findById(fdId).get();
         SupportTicket ticket = new SupportTicket();
@@ -58,7 +66,7 @@ import java.util.List;
         ticket.setDescription("Premature Withdrawal");
         ticket.setStatus(SupportTicketStatus.OPEN);
         supportTicketRepository.save(ticket);
-        fd.setStatus(FdStatus.BROKEN_PENDING);
+        fd.setStatus(FdStatus.PENDING);
         fixedDepositRepository.save(fd);
     }
 
