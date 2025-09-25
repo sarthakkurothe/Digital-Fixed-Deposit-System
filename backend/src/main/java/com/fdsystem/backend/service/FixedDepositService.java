@@ -39,4 +39,12 @@ import java.util.List;
         User user = userRepository.findById(user_id).get();
         return this.fixedDepositRepository.findAllByUser(user);
     }
+
+    public List<FixedDeposit> getAll(){
+        return this.fixedDepositRepository.findAll();
+    }
+
+    public  FixedDeposit getFdById(Long fd_id){
+        return this.fixedDepositRepository.findById(fd_id).get();
+    }
 }
