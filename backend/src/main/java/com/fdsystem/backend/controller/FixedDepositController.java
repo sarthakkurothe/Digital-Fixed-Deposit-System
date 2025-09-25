@@ -46,6 +46,21 @@ public class FixedDepositController {
         return new ResponseEntity<>(fds, HttpStatus.OK);
     }
 
+    @PostMapping("/{fdId}/break")
+    public ResponseEntity<Void> breakFD(@PathVariable Long fdId){
+        this.fixedDepositService.breakFD(fdId);
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @GetMapping("/{fdId}/break-preview")
+    public ResponseEntity<BreakPreviewResponse> getPreview(@PathVariable Long fdId){
+        BreakPreviewResponse previewResponse = this.fixedDepositService.getBreakPreview(fdId);
+        return new ResponseEntity<>(previewResponse, HttpStatus.FOUND);
+    }
+
+
+
+    
 
     @GetMapping("/fds")
     public ResponseEntity<List<FixedDeposit>> viewAllFDs() {
@@ -71,16 +86,5 @@ public class FixedDepositController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PostMapping("/{fdId}/break")
-    public ResponseEntity<Void> breakFD(@PathVariable Long fdId){
-        this.fixedDepositService.breakFD(fdId);
-        return new ResponseEntity<>(HttpStatus.CREATED);
-    }
-
-    @GetMapping("/{fdId}/break-preview")
-    public ResponseEntity<BreakPreviewResponse> getPreview(@PathVariable Long fdId){
-        BreakPreviewResponse previewResponse = this.fixedDepositService.getBreakPreview(fdId);
-        return new ResponseEntity<>(previewResponse, HttpStatus.FOUND);
-    }
 
 }
