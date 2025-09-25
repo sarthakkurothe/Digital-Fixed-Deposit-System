@@ -51,8 +51,8 @@
             <p v-if="isSenior" class="text-green-600 text-xs mt-1">
               ✓ Senior citizen benefits applicable (+0.5% on all rates)
             </p>
-            <p v-if="selectedScheme && selectedScheme.compound" class="text-green-600 text-xs mt-1">
-              ✓ Compound Interest benefits applicable 
+            <p v-if="selectedScheme && calculationResults.isCompoundEligible" class="text-green-600 text-xs mt-1">
+              ✓ Compound Interest benefits applicable (2+ years tenure)
             </p>
           </div>
 
@@ -112,6 +112,7 @@
               <div class="text-2xl font-bold text-green-600 mb-1">💰</div>
               <div class="text-sm text-gray-600 mb-1">Interest Earned</div>
               <div class="text-xl font-bold text-gray-800">₹{{ formatCurrency(maturityInterest) }}</div>
+              <div v-if="calculationResults.isCompoundEligible" class="text-xs text-green-600 mt-1">With Compounding</div>
             </div>
           </div>
 
@@ -313,6 +314,7 @@
 <script>
 import { mapGetters } from "vuex";
 import axios from "axios";
+import FDCalculator, { STANDARD_FD_SCHEMES } from '../utils/fdCalculations.js';
 
 export default {
   name: "BookFD",
@@ -325,13 +327,8 @@ export default {
       selectedScheme: "",
       loading: false,
       toast: { show: false, message: "", type: "success" },
-      baseSchemes: [
-        { name: "6 Months FD", tenure: 6, baseRate: 6.0, compound: false },
-        { name: "1 Year FD", tenure: 12, baseRate: 6.5, compound: false },
-        { name: "2 Year FD", tenure: 24, baseRate: 7.0, compound: true },
-        { name: "3 Year FD", tenure: 36, baseRate: 7.5, compound: true },
-        { name: "5 Year FD", tenure: 60, baseRate: 8.0, compound: true },
-      ],
+      // Using standardized schemes from utility
+      baseSchemes: STANDARD_FD_SCHEMES,
     };
   },
   computed: {
@@ -341,47 +338,51 @@ export default {
     },
     schemesToShow() {
       return this.baseSchemes.map(scheme => {
-        const seniorBonus = this.isSenior ? 0.5 : 0;
+        const finalRate = FDCalculator.getApplicableRate(scheme.baseRate, this.getUser?.age || 30);
         return {
           ...scheme,
-          rate: (scheme.baseRate + seniorBonus).toFixed(1)
+          rate: finalRate.toFixed(1),
+          name: scheme.name,
+          tenure: scheme.tenureMonths,
+          compound: scheme.hasCompound
         };
       });
     },
     effectiveRate() {
       return this.selectedScheme ? this.selectedScheme.rate : 0;
     },
-    maturityInterest() {
-      if (!this.selectedScheme) return 0;
-      const r = parseFloat(this.effectiveRate) / 100;
-      const years = this.selectedScheme.tenure / 12;
-      
-      if (this.selectedScheme.compound) {
-        // Compound interest calculation
-        const maturity = this.amount * Math.pow(1 + r, years);
-        return Math.round(maturity - this.amount);
-      } else {
-        // Simple interest calculation
-        return Math.round(this.amount * r * years);
+    calculationResults() {
+      if (!this.selectedScheme) {
+        return { simple: { interest: 0, maturityAmount: 0 }, compound: { interest: 0, maturityAmount: 0 } };
       }
+      
+      return FDCalculator.calculateFDReturns({
+        principal: this.amount,
+        rate: this.selectedScheme.baseRate,
+        tenureMonths: this.selectedScheme.tenure,
+        age: this.getUser?.age || 30
+      });
+    },
+    maturityInterest() {
+      // Use compound interest if eligible, otherwise simple (consistent with Calculator)
+      const results = this.calculationResults;
+      return results.isCompoundEligible 
+        ? results.compound.interest 
+        : results.simple.interest;
     },
     maturityAmount() {
-      return this.amount + this.maturityInterest;
+      const results = this.calculationResults;
+      return results.isCompoundEligible 
+        ? results.compound.maturityAmount 
+        : results.simple.maturityAmount;
     },
     maturityDate() {
       if (!this.selectedScheme) return "";
-      const start = new Date(this.startDate);
-      const maturity = new Date(start.setMonth(start.getMonth() + this.selectedScheme.tenure));
-      return maturity.toISOString().substr(0, 10);
+      return FDCalculator.getMaturityDate(this.startDate, this.selectedScheme.tenure);
     },
     formattedMaturityDate() {
       if (!this.selectedScheme) return "";
-      const date = new Date(this.maturityDate);
-      return date.toLocaleDateString('en-GB', {
-        day: '2-digit',
-        month: 'short',
-        year: 'numeric'
-      });
+      return this.maturityDate.formattedDate;
     },
     // Chart calculations
     principalPercentage() {
@@ -395,8 +396,7 @@ export default {
   },
   methods: {
     formatCurrency(amount) {
-      if (!amount) return '0';
-      return new Intl.NumberFormat('en-IN').format(Math.round(amount));
+      return FDCalculator.formatCurrency(amount);
     },
     async bookFD() {
       if (!this.selectedScheme) return;
@@ -405,7 +405,7 @@ export default {
       const payload = {
         user_id: this.getUser.id,
         amount: this.amount,  
-        tenure_months: this.selectedScheme.tenure,
+        tenure_months: this.selectedScheme.tenureMonths || this.selectedScheme.tenure,
         interest_rate: parseFloat(this.effectiveRate)
       };
 
