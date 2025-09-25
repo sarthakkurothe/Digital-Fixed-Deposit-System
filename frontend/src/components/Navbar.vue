@@ -18,7 +18,7 @@
           <!-- Welcome Message -->
           <div class="hidden sm:block">
             <h1 class="text-lg font-semibold text-gray-900">
-              Welcome back, {{ getUserName }}!
+              Welcome back,{{ getUserName }}! 👋 
             </h1>
             <p class="text-sm text-gray-600">Here's your fixed deposit portfolio overview</p>
           </div> 
