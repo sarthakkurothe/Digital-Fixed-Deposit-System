@@ -79,7 +79,8 @@ import java.util.List;
         if (monthsElapsed < 3) {
             penalty = accruedInterest;
         } else if (monthsElapsed < fd.getTenure_months()) {
-            penalty = accruedInterest * 0.01;
+            penalty = accruedInterest * ( 1 / fd.getInterest_rate());
+            penalty = Math.round(penalty * 100.0) / 100.0;
         }
         double payout = fd.getAmount() + fd.getAccrued_interest() - penalty;
         return new BreakPreviewResponse(fd.getId(), fd.getAmount(), fd.getAccrued_interest(), fd.getStart_date(), fd.getMaturity_date(), penalty, payout, fd.getInterest_rate(), fd.getTenure_months(), monthsElapsed);
