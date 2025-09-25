@@ -1,6 +1,6 @@
 <template>
   <Header ></Header>
-  <div class="min-h-[calc(100vh-300px)] bg-gradient-to-br from-white via-blue-50 to-blue-100 flex items-center justify-center p-0">
+  <div class="min-h-[calc(100vh-200px)] bg-gradient-to-br from-white via-blue-50 to-blue-100 flex items-center justify-center p-6">
     <div class="w-full max-w-6xl mx-auto flex flex-col lg:flex-row items-center justify-between p-6 lg:p-12 gap-12">
       
       <!-- Left Side - Branding -->
@@ -67,7 +67,6 @@
             
             <input v-model="email" type="email" placeholder="Email Address" required class="w-full h-11 px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"/>
             
-            <input v-model="phone" type="tel" placeholder="Phone Number" required class="w-full h-11 px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"/>
 
             <input v-model="age" type="number" placeholder="Age" required class="w-full h-11 px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"/>
 
@@ -101,8 +100,8 @@
             </div>
 
             <!-- Error / Success messages -->
-            <p v-if="errorMessage" class="text-sm text-red-500">{{ errorMessage }}</p>
-            <p v-if="successMessage" class="text-sm text-green-600">{{ successMessage }}</p>
+            <p v-if="errorMessage" class="text-sm text-center text-red-600">{{ errorMessage }}</p>
+            <p v-if="successMessage" class="text-sm text-center text-green-600">{{ successMessage }}</p>
 
             <button type="submit" class="w-full h-11 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition" :disabled="loading">
               {{ loading ? "Creating Account..." : "Create Account" }}
@@ -115,7 +114,7 @@
           </div>
 
           <div class="pt-4 text-center">
-            <p class="text-xs text-gray-400">
+            <p class="text-xs text-gray-400 text-">
               By creating an account, you agree to our Terms and Privacy Policy
             </p>
           </div>
@@ -128,7 +127,8 @@
 <script>
 import axios from "axios";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/vue/24/solid";
-import Header from "./Header.vue";
+import Header from "../components/Header.vue";
+import { mapActions } from "vuex/dist/vuex.cjs.js";
 
 export default {
   components: { EyeIcon, EyeSlashIcon, Header },
@@ -136,7 +136,6 @@ export default {
     return {
       name: "",
       email: "",
-      phone: "",
       age: "",
       password: "",
       confirmPassword: "",
@@ -149,11 +148,12 @@ export default {
     };
   },
   methods: {
+    ...mapActions(["register"]),
     async handleRegister() {
       this.errorMessage = "";
       this.successMessage = "";
-
-      if (!this.name || !this.email || !this.phone || !this.age || !this.password || !this.confirmPassword) {
+      
+      if (!this.name || !this.email|| !this.age || !this.password || !this.confirmPassword) {
         this.errorMessage = "All fields are required.";
         return;
       }
@@ -166,25 +166,28 @@ export default {
         return;
       }
 
+      
+
       this.loading = true;
       try {
-        const res = await axios.post("http://localhost:8080/auth/register", {
+        this.errorMessage = "";
+        const res = await this.register( {
           name: this.name,
           email: this.email,
-          phone: this.phone,
           age: this.age,
           password: this.password,
         });
-
+        console.log("Registration response:", res);
         if (res.status === 201) {
           this.successMessage = "Registration successful! 🎉 You can now log in.";
           this.name = this.email = this.phone = this.age = this.password = this.confirmPassword = "";
           this.agreeTerms = false;
         } else {
-          this.errorMessage = "Registration failed. Please try again.";
+          this.errorMessage = res.error || "Registration failed. Please try again.";
         }
       } catch (error) {
-        this.errorMessage = error.response?.data?.message || "Registration failed. Please try again.";
+        console.error("Registration error:", error);
+        this.errorMessage = error.response?.data || "Registration failed. Please try again.";
       } finally {
         this.loading = false;
       }

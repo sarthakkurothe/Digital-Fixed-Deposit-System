@@ -125,11 +125,11 @@
 
 
 <script>
-import axios from 'axios';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/vue/24/solid';
 import { mapActions } from 'vuex';
 
-import Header from './Header.vue';
+import Header from '../components/Header.vue';
+import { mapGetters } from 'vuex/dist/vuex.cjs.js';
 
 export default {
   components: { Header,EyeIcon, EyeSlashIcon },
@@ -143,37 +143,30 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["login", "setUserData"]),
+    ...mapActions(["setToken", "setUserData","login"]),
+    ...mapGetters(["getToken"]),
 
     async handleLogin() {
       this.loading = true;
       this.error = null;
 
-      
-      try {
-          console.log(this.email, this.password);
-        
-        const res = await axios.post("http://localhost:8080/auth/login", {
-          email: this.email,
-          password: this.password,
-        });
+      try{
 
-        const token = res.data.token;
+        await this.login({
+          email: this.email,
+          password: this.password
+        });
+        const token = this.getToken();
 
         console.log("Received token:", token);
 
-        
-        this.login(token);
+        if (token) {
+          await this.setUserData();
+          this.$router.push({ name: "Dashboard" });
+        } else {
+          this.error = "Login failed. Please try again.";
+        }
 
-        const meRes = await axios.get("http://localhost:8080/auth/me", {
-          headers: { Authorization: `bearer ${token}` },
-        });
-
-        this.setUserData(meRes.data);
-
-        console.log("User data:", meRes.data);
-
-        this.$router.push("/user/dashboard");
       } catch (err) {
         this.error = err.response?.data?.message || "Invalid credentials";
         console.error("Login error:", err);
