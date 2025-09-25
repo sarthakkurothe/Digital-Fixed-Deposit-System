@@ -54,4 +54,14 @@ public class SupportTicketService {
 
         return responseDTOS;
     }
+
+    public List<SupportTicket> getAllOpenTickets(){
+        return this.supportTicketRepository.findAllByStatus(SupportTicketStatus.OPEN);
+    }
+
+    public void setTicketStatusById(long id, SupportTicketStatus status){
+        SupportTicket ticket = this.supportTicketRepository.findById(id).get();
+        ticket.setStatus(status);
+        this.supportTicketRepository.save(ticket);
+    }
 }

@@ -1,8 +1,12 @@
 package com.fdsystem.backend.controller;
 
 import com.fdsystem.backend.model.FixedDeposit;
+import com.fdsystem.backend.model.SupportTicket;
 import com.fdsystem.backend.service.FixedDepositService;
+import com.fdsystem.backend.service.SupportTicketService;
 import com.fdsystem.backend.util.enums.FdStatus;
+import com.fdsystem.backend.util.enums.SupportTicketStatus;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -15,9 +19,11 @@ import java.util.List;
 public class AdminController {
 
   private FixedDepositService fixedDepositService;
+  private SupportTicketService supportTicketService;
 
-  public AdminController(FixedDepositService fixedDepositService){
+  public AdminController(FixedDepositService fixedDepositService, SupportTicketService supportTicketService){
     this.fixedDepositService = fixedDepositService;
+    this.supportTicketService = supportTicketService;
   }
 
   @GetMapping("/fds")
@@ -26,10 +32,21 @@ public class AdminController {
   }
 
   @PostMapping("/fd/{id}")
-  public ResponseEntity<Void> setFDStatusById(@PathVariable Long id,String status){
+  public ResponseEntity<Void> setFDStatusById(@PathVariable Long id,@RequestBody String status){
     this.fixedDepositService.setFixedDepositStatus(id,FdStatus.valueOf(status));
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
+  @GetMapping("/tickets")
+  public ResponseEntity<List<SupportTicket>> getAllOpenTickets(){
+    return new ResponseEntity<>(this.supportTicketService.getAllOpenTickets(), HttpStatus.OK);
+  }
+
+  @PostMapping("/tickets/{id}")
+  public ResponseEntity<Void> setTicketStatusById(@PathVariable long id,@RequestBody SupportTicketStatus status){
+    this.supportTicketService.setTicketStatusById(id, status);
+
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
 
 }
