@@ -55,7 +55,7 @@ public class FixedDepositController {
     @GetMapping("/{fdId}/break-preview")
     public ResponseEntity<BreakPreviewResponse> getPreview(@PathVariable Long fdId){
         BreakPreviewResponse previewResponse = this.fixedDepositService.getBreakPreview(fdId);
-        return new ResponseEntity<>(previewResponse, HttpStatus.FOUND);
+        return new ResponseEntity<>(previewResponse, HttpStatus.OK);
     }
 
 }

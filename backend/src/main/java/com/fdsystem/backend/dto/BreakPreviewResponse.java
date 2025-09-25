@@ -18,5 +18,7 @@ public class BreakPreviewResponse {
     private Date maturityDate;
     private double penalty;
     private double payout;
-    private String status;
+    private double interestRate;
+    private double tenure;
+    private long timeElapsed;
 }
