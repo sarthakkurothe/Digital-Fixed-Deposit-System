@@ -4,8 +4,11 @@ import com.fdsystem.backend.dto.LoginRequest;
 
 
 import com.fdsystem.backend.dto.UserDTO;
+import com.fdsystem.backend.dto.UserDashboardDTO;
 import com.fdsystem.backend.model.User;
 import com.fdsystem.backend.model.UserPrincipal;
+import com.fdsystem.backend.service.AccruedInterestService;
+import com.fdsystem.backend.service.FixedDepositService;
 import com.fdsystem.backend.service.UserService;
 import com.fdsystem.backend.util.enums.Role;
 import com.fdsystem.backend.util.jwt.JWTUtils;
@@ -24,11 +27,19 @@ import java.sql.Timestamp;
 import java.util.HashMap;
 import java.util.Map;
 
+
+// rename this file to AuthController
+
 @RestController
 @RequestMapping("/auth")
 public class UserController {
 
     private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private FixedDepositService fixedDepositService;
+    @Autowired
+    private  AccruedInterestService  accruedInterestService;
 
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
@@ -93,6 +104,34 @@ public class UserController {
         userDTO.setEmail(user.getEmail());
 
         return new ResponseEntity<>(userDTO, HttpStatus.ACCEPTED);
+    }
+
+
+
+    //TotalInvestment , InterestEarned, ActiveFDs,AverageInterest
+    @GetMapping("/user/investments")
+    public ResponseEntity<?> getDashboardStats(){
+
+        UserPrincipal principal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User user = principal.getUser();
+        accruedInterestService.calculateAccruedInterest(user);
+        long userId = user.getUser_id();
+
+        double totalInvestment = fixedDepositService.getFdsByUserId(userId).stream().mapToDouble(fd -> fd.getAmount()).sum();
+        double interestEarned = fixedDepositService.getFdsByUserId(userId).stream().mapToDouble(fd -> fd.getAccrued_interest()).sum();
+        long activeFDs = fixedDepositService.getFdsByUserId(userId).stream().filter(fd -> fd.getStatus().toString().equals("ACTIVE")).count();
+        double averageInterest = 0.0;
+        if(activeFDs > 0){
+            averageInterest = interestEarned / activeFDs;
+        }
+
+        UserDashboardDTO dashboardDTO = new UserDashboardDTO();
+        dashboardDTO.setTotalInvestment(totalInvestment);
+        dashboardDTO.setInterestEarned(interestEarned);
+        dashboardDTO.setActiveFDs(activeFDs);
+        dashboardDTO.setAverageInterest(averageInterest);
+
+        return new ResponseEntity<>(dashboardDTO, HttpStatus.ACCEPTED);
     }
 
 
