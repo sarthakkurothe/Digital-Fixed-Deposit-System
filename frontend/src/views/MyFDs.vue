@@ -50,7 +50,9 @@
               ? 'text-green-600 text-sm font-medium' 
               : fd.status === 'MATURED' 
                 ? 'text-blue-600 text-sm font-medium' 
-                : 'text-gray-500 text-sm font-medium'"
+                : fd.status === 'PENDING' 
+                  ? 'text-yellow-500 text-sm font-medium' 
+                  : 'text-red-600 text-sm font-medium'"
           >
             {{ fd.status }}
           </p>
@@ -69,14 +71,17 @@
       <div class="flex gap-2 mt-3 md:mt-0">
         <button
           @click="openViewModal(fd)"
-          class="px-3 py-2 bg-blue-600 text-white rounded-md text-sm hover:bg-blue-700"
+          class="px-3 py-2 bg-blue-600 text-white rounded-md text-sm hover:bg-blue-700 cursor-pointer"
         >
           View
         </button>
         <button
           @click="breakFD(fd)"
           :disabled="fd.status !== 'ACTIVE'"
-          class="px-3 py-2 bg-red-600 text-white rounded-md text-sm hover:bg-red-700 disabled:opacity-50"
+          :class="[
+            'px-3 py-2 bg-red-600 text-white rounded-md text-sm disabled:opacity-50',
+            fd.status === 'ACTIVE' ? 'hover:bg-red-700 cursor-pointer' : 'cursor-not-allowed'
+          ]"
         >
           Break
         </button>
@@ -110,6 +115,32 @@
         </ul>
       </div>
     </div>
+    <!-- Break FD Modal -->
+    <BreakFD
+      v-if="showBreakModal"
+      :fd-id="selectedFD.id"
+      @close="closeBreakModal"
+      @fdBroken="handleFdBroken"
+    />
+    <!-- Toast Notification -->
+    <div
+      v-if="toast.show"
+      :class="[
+        'fixed top-16 right-4 px-6 py-4 rounded-lg shadow-lg text-white transition-all duration-300 z-50 font-bold',
+        toast.type === 'success' ? 'bg-blue-400' : 'bg-red-500'
+      ]"
+    >
+    <div class="flex items-center">
+      <svg v-if="toast.type === 'success'" class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+      </svg>
+      <svg v-else class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+      </svg>
+      {{ toast.message }}
+    </div>
+  </div>
+
     </div>
     </div>
   </div>
@@ -117,13 +148,17 @@
 
 <script>
 import { mapState } from "vuex";
+import BreakFD from "./BreakFD.vue";
 
 export default {
   name: "MyFDs",
+  components: { BreakFD },
   data() {
     return {
       showModal: false,
+      showBreakModal: false,
       selectedFD: {},
+      toast: { show: false, message: "", type: "success" }
     };
   },
   computed: {
@@ -152,12 +187,40 @@ export default {
       this.selectedFD = {};
     },
     breakFD(fd) {
-      if (confirm(`Are you sure you want to break FD ID ${fd.id}?`)) {
-        console.log("Breaking FD:", fd.id);
-        alert(`FD ID ${fd.id} has been broken.`);
-        fd.status = "BROKEN"; // update locally
+      this.selectedFD = fd;
+      this.showBreakModal = true;
+    },
+    closeBreakModal() {
+      this.showBreakModal = false;
+      this.selectedFD = {};
+    },
+    showToast(message, type = "success") {
+      this.toast.message = message;
+      this.toast.type = type;
+      this.toast.show = true;
+
+      setTimeout(() => {
+        this.toast.show = false;
+      }, 4000);
+    },
+    async handleFdBroken(fd) {
+      console.log('Received fd:', fd);
+
+      try {
+        const response = await this.$store.dispatch('breakFD', fd.id);
+        this.showToast(response.message, response.success ? 'success' : 'error');
+
+        if (response.success) {
+          await this.$store.dispatch('fetchFDs');
+        }
+      } catch (err) {
+        console.error('Break FD error:', err);
+        this.showToast("Something went wrong while breaking the FD.", "error");
       }
+
+      this.closeBreakModal();
     }
+
   },
   mounted() {
     this.$store.dispatch("fetchFDs");

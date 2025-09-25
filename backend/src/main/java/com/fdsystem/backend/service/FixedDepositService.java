@@ -10,7 +10,6 @@ import com.fdsystem.backend.repository.UserRepository;
 import com.fdsystem.backend.util.enums.FdStatus;
 import com.fdsystem.backend.util.enums.SupportTicketStatus;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
@@ -72,12 +71,6 @@ import java.util.List;
 
     public BreakPreviewResponse getBreakPreview(Long fdId) {
         FixedDeposit fd = this.fixedDepositRepository.findById(fdId).get();
-        double penalty = calculatePenalty(fd);
-        double payout = fd.getAmount() + fd.getAccrued_interest() - penalty;
-        return new BreakPreviewResponse(fd.getId(), fd.getAmount(), fd.getAccrued_interest(), fd.getStart_date(), fd.getMaturity_date(), penalty, payout, fd.getStatus().toString());
-    }
-
-    private double calculatePenalty(FixedDeposit fd) {
         LocalDate startDate = fd.getStart_date().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         LocalDate today = LocalDate.now();
         long monthsElapsed = ChronoUnit.MONTHS.between(startDate, today);
@@ -86,8 +79,11 @@ import java.util.List;
         if (monthsElapsed < 3) {
             penalty = accruedInterest;
         } else if (monthsElapsed < fd.getTenure_months()) {
-            penalty = accruedInterest * 0.01;
+            penalty = accruedInterest * ( 1 / fd.getInterest_rate());
+            penalty = Math.round(penalty * 100.0) / 100.0;
         }
-        return penalty;
+        double payout = fd.getAmount() + fd.getAccrued_interest() - penalty;
+        return new BreakPreviewResponse(fd.getId(), fd.getAmount(), fd.getAccrued_interest(), fd.getStart_date(), fd.getMaturity_date(), penalty, payout, fd.getInterest_rate(), fd.getTenure_months(), monthsElapsed);
     }
+
 }
