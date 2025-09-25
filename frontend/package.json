@@ -10,7 +10,11 @@
     "serve": "vite preview"
   },
   "dependencies": {
+<<<<<<< HEAD
     "@heroicons/vue": "^2.2.0",
+=======
+    "@lottiefiles/dotlottie-vue": "^0.10.1",
+>>>>>>> 802e4305e6c0767f39805f832a3813aae359a4e1
     "axios": "^1.12.2",
     "lucide-vue-next": "^0.544.0",
     "vue": "^3.5.21",

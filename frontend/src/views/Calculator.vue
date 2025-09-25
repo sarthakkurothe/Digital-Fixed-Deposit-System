@@ -41,29 +41,25 @@
             </p>
           </div>
 
-          <!-- Quick Scheme Selection -->
+          <!-- Scheme Selection -->
           <div class="mb-4">
-            <label class="block text-sm font-medium text-gray-700 mb-2">Quick Select Scheme (Optional)</label>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Interest Scheme</label>
             <select 
               class="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" 
-              v-model="selectedScheme" 
-              @change="handleSchemeChange"
+              v-model="selectedScheme"
             >
-              <option value="">Choose a predefined scheme</option>
-              <option v-for="scheme in availableSchemes" :key="scheme.id" :value="scheme.id">
-                {{ scheme.description }} - {{ scheme.displayRate }}% p.a.
+              <option value="">-- Choose a Scheme --</option>
+              <option v-for="scheme in schemesToShow" :key="scheme.name" :value="scheme">
+                {{ scheme.name }} - {{ scheme.rate }}% p.a.
               </option>
-            </select>
-             <p v-if="hasCompound" class="text-green-600 text-xs mt-1">
-              ✓ Compound Interest benefits applicable 
+            </select> 
+            <p v-if="hasCompoundInterest" class="text-green-600 text-xs mt-1">
+              ✓ Compound Interest benefits applicable (24+ months tenure)
             </p>
           </div> 
             
           <!-- Investment Form -->
           <div class="space-y-4">
-             <p v-if="selectedScheme && hasCompoundInterest" class="text-green-600 text-xs mt-1">
-              ✓ Compound Interest benefits applicable 
-            </p>
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-2">Investment Amount (₹)</label>
               <input 
@@ -75,51 +71,21 @@
                 placeholder="100000"
               />
             </div>
-           
-            
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Interest Rate (% per annum)</label>
-              <input 
-                type="number" 
-                class="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" 
-                v-model.number="interestRate" 
-                min="1" 
-                max="15" 
-                step="0.1"
-                placeholder="7.0"
-              />
-            </div>
-            
-            <div>
-              <label class="block text-sm font-medium text-gray-700 mb-2">Tenure (Months)</label>
-              <select 
-                class="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" 
-                v-model.number="tenure"
-              >
-                <option value="6">6 months</option>
-                <option value="12">12 months</option>
-                <option value="24">24 months</option>
-                <option value="36">36 months</option>
-                <option value="60">60 months</option>
-              </select>
-            </div>
-            
-
           </div>
 
           <!-- Investment Summary -->
-          <div class="bg-gray-50 rounded-lg p-4 mt-6">
+          <div v-if="selectedScheme" class="bg-gray-50 rounded-lg p-4 mt-6">
             <div class="flex items-center justify-between mb-2">
               <span class="text-sm text-gray-600">Principal:</span>
               <span class="font-semibold">₹{{ formatCurrency(amount) }}</span>
             </div>
             <div class="flex items-center justify-between mb-2">
               <span class="text-sm text-gray-600">Rate:</span>
-              <span class="font-semibold">{{ interestRate }}% p.a.</span>
+              <span class="font-semibold">{{ effectiveRate }}% p.a.</span>
             </div>
             <div class="flex items-center justify-between">
               <span class="text-sm text-gray-600">Tenure:</span>
-              <span class="font-semibold">{{ tenure }} months</span>
+              <span class="font-semibold">{{ selectedScheme.tenure }} months</span>
             </div>
           </div>
         </div>
@@ -135,21 +101,23 @@
                 <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z"></path>
               </svg>
             </div>
-            <h3 class="text-lg font-semibold text-gray-800">Simple Interest Calculation</h3>
+            <h3 class="text-lg font-semibold text-gray-800">Interest Calculation Breakdown</h3>
           </div>
-          <p class="text-gray-600 text-sm mb-6">Standard FD interest calculation</p>
+          <p class="text-gray-600 text-sm mb-6">Detailed view of your FD returns</p>
 
           <!-- Interest Cards -->
           <div class="grid grid-cols-2 gap-4 mb-6">
             <div class="bg-green-50 rounded-lg p-4 text-center">
               <div class="text-2xl font-bold text-green-600 mb-1">₹</div>
               <div class="text-sm text-gray-600 mb-1">Interest Earned</div>
-              <div class="text-xl font-bold text-gray-800">₹{{ formatCurrency(simpleInterest.interest) }}</div>
+              <div class="text-xl font-bold text-gray-800">₹{{ formatCurrency(bestMaturityInterest) }}</div>
+              <div v-if="hasCompoundInterest" class="text-xs text-green-600 mt-1">With Compounding</div>
             </div>
             <div class="bg-blue-50 rounded-lg p-4 text-center">
               <div class="text-2xl font-bold text-blue-600 mb-1">📅</div>
-              <div class="text-sm text-gray-600 mb-1">Maturity Amount</div>
-              <div class="text-xl font-bold text-gray-800">₹{{ formatCurrency(simpleInterest.maturityAmount) }}</div>
+              <div class="text-sm text-gray-600 mb-1">Best Maturity Amount</div>
+              <div class="text-xl font-bold text-gray-800">₹{{ formatCurrency(bestMaturityAmount) }}</div>
+              <div v-if="hasCompoundInterest" class="text-xs text-green-600 mt-1">Compound Interest Applied</div>
             </div>
           </div>
 
@@ -161,16 +129,16 @@
             </div>
             <div class="flex justify-between py-2 border-b border-gray-100">
               <span class="text-gray-600">Interest Earned</span>
-              <span class="font-semibold text-green-600">₹{{ formatCurrency(simpleInterest.interest) }}</span>
+              <span class="font-semibold text-green-600">₹{{ formatCurrency(bestMaturityInterest) }}</span>
             </div>
             <div class="flex justify-between py-3 bg-blue-600 text-white px-4 rounded-lg">
               <span class="font-medium">Total Maturity Amount</span>
-              <span class="font-bold">₹{{ formatCurrency(simpleInterest.maturityAmount) }}</span>
+              <span class="font-bold">₹{{ formatCurrency(bestMaturityAmount) }}</span>
             </div>
           </div>
         </div>
 
-        <!-- Compound Interest Reference (only for eligible tenures) -->
+        <!-- Compound Interest Comparison (only for eligible tenures) -->
         <div v-if="hasCompoundInterest" class="bg-white rounded-lg shadow p-6">
           <div class="flex items-center mb-4">
             <div class="w-6 h-6 bg-orange-100 rounded mr-3 flex items-center justify-center">
@@ -178,9 +146,9 @@
                 <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
               </svg>
             </div>
-            <h3 class="text-lg font-semibold text-gray-800">Compound Interest (Reference)</h3>
+            <h3 class="text-lg font-semibold text-gray-800">Compound vs Simple Interest</h3>
           </div>
-          <p class="text-gray-600 text-sm mb-6">For comparison with compound schemes</p>
+          <p class="text-gray-600 text-sm mb-6">Comparison showing compound interest benefits</p>
 
           <!-- Compound Interest Cards -->
           <div class="grid grid-cols-2 gap-4 mb-6">
@@ -268,103 +236,69 @@
 </template>
 
 <script> 
+import FDCalculator, { STANDARD_FD_SCHEMES } from '../utils/fdCalculations.js'
+
 export default { 
   name: 'InterestCalculator',
   data() {
     return {
       amount: 100000,
-      interestRate: 7.0,
-      tenure: 12,
       age: this.$store.state.user ? this.$store.state.user.age : 30,
-      selectedScheme: '',
-      hasCompoundInterest: false,
-       baseSchemes: [
-        { 
-          id: 1, 
-          description: '6 months', 
-          baseRate: 6.00, 
-          tenureMonths: 6, 
-          hasCompound: false 
-        },
-        { 
-          id: 2, 
-          description: '1 year', 
-          baseRate: 6.50, 
-          tenureMonths: 12, 
-          hasCompound: false 
-        },
-        { 
-          id: 3, 
-          description: '2 years', 
-          baseRate: 7.00, 
-          tenureMonths: 24, 
-          hasCompound: true 
-        },
-        { 
-          id: 4, 
-          description: '3 years', 
-          baseRate: 7.50, 
-          tenureMonths: 36, 
-          hasCompound: true 
-        },
-        { 
-          id: 5, 
-          description: '5 years', 
-          baseRate: 8.00, 
-          tenureMonths: 60, 
-          hasCompound: true 
-        }
-      ]
+      selectedScheme: null,
+      baseSchemes: STANDARD_FD_SCHEMES
     }
   },
   computed: { 
-    fetchUserAge(){
-        const user = fetchUser();
-        console.log(user);
-        return user ? user.age : this.age;
-    },
     isSeniorCitizen() {
       return this.age >= 60
     },
-    availableSchemes() {
+    schemesToShow() {
       return this.baseSchemes.map(scheme => {
-        const seniorBonus = this.isSeniorCitizen ? 0.5 : 0
-        const finalRate = scheme.baseRate + seniorBonus
+        const finalRate = FDCalculator.getApplicableRate(scheme.baseRate, this.age);
         return {
           ...scheme,
-          displayRate: finalRate.toFixed(2),
-          finalRate: finalRate
-        }
-      })
+          rate: finalRate.toFixed(1),
+          name: scheme.name,
+          tenure: scheme.tenureMonths,
+          compound: scheme.hasCompound
+        };
+      });
     },
-    currentScheme() {
-      return this.availableSchemes.find(s => s.tenureMonths === this.tenure)
+    effectiveRate() {
+      return this.selectedScheme ? parseFloat(this.selectedScheme.rate) : 0;
+    },
+    calculationResults() {
+      if (!this.selectedScheme) {
+        return { simple: { interest: 0, maturityAmount: 0 }, compound: { interest: 0, maturityAmount: 0 }, isCompoundEligible: false };
+      }
+      
+      return FDCalculator.calculateFDReturns({
+        principal: this.amount,
+        rate: this.selectedScheme.baseRate,
+        tenureMonths: this.selectedScheme.tenure,
+        age: this.age
+      });
     },
     hasCompoundInterest() {
-      return this.currentScheme ? this.currentScheme.hasCompound : this.tenure >= 24
+      return this.calculationResults.isCompoundEligible;
+    },
+    bestMaturityAmount() {
+      const results = this.calculationResults;
+      return results.isCompoundEligible 
+        ? results.compound.maturityAmount 
+        : results.simple.maturityAmount;
+    },
+    bestMaturityInterest() {
+      const results = this.calculationResults;
+      return results.isCompoundEligible 
+        ? results.compound.interest 
+        : results.simple.interest;
     },
     simpleInterest() {
-      const p = Number(this.amount), r = Number(this.interestRate), t = Number(this.tenure)
-      if (!p || !r || !t) return { interest: 0, maturityAmount: 0 }
-      const interest = (p * r * t) / (12 * 100)
-      return { 
-        interest: Math.round(interest), 
-        maturityAmount: Math.round(p + interest) 
-      }
+      return this.calculationResults.simple
     },
     compoundInterest() {
-      const p = Number(this.amount), r = Number(this.interestRate), t = Number(this.tenure)
-      if (!p || !r || !t || !this.hasCompoundInterest) return { interest: 0, maturityAmount: 0 }
-      
-      // Compound quarterly for FDs
-      const quarterlyRate = r / (4 * 100)
-      const quarters = Math.floor(t / 3)
-      const maturityAmount = p * Math.pow(1 + quarterlyRate, quarters)
-      
-      return { 
-        interest: Math.round(maturityAmount - p), 
-        maturityAmount: Math.round(maturityAmount) 
-      }
+      return this.calculationResults.compound
     }
   },
   async mounted() {
@@ -375,25 +309,7 @@ export default {
   },
   methods: { 
     formatCurrency(amount) {
-      if (!amount) return '0'
-      return new Intl.NumberFormat('en-IN').format(Math.round(amount))
-    },
-    handleSchemeChange() {
-      if (!this.selectedScheme) return
-      
-      const scheme = this.availableSchemes.find(s => s.id === Number(this.selectedScheme))
-      if (scheme) {
-        this.interestRate = scheme.finalRate
-        this.tenure = scheme.tenureMonths
-      }
-    }
-  },
-  watch: {
-    // if the store's user changes (login/logout), auto update calculations
-    '$store.state.user'(val) {
-      if (this.selectedScheme) {
-        this.handleSchemeChange()
-      }
+      return FDCalculator.formatCurrency(amount)
     }
   }
 }
@@ -402,4 +318,3 @@ export default {
 <style scoped>
 /* Optional styling here */
 </style>
-

@@ -32,7 +32,7 @@ const router = createRouter({ history: createWebHistory(), routes })
 
 router.beforeEach((to, from, next) => {
   const isAuthenticated = !!store.state.token
-  console.log('Navigation Guard: isAuthenticated =', isAuthenticated)
+
   if (to.meta.requiresAuth && !isAuthenticated) next('/login')
   else if ((to.name === 'Login' || to.name === 'Register') && isAuthenticated) next('/user/dashboard')
   else next()

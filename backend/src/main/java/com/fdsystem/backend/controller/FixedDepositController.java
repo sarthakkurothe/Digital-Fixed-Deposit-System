@@ -6,6 +6,7 @@ import com.fdsystem.backend.model.FixedDeposit;
 import com.fdsystem.backend.model.User;
 import com.fdsystem.backend.service.FixedDepositService;
 import com.fdsystem.backend.service.UserService;
+import com.fdsystem.backend.util.enums.FdStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
@@ -43,7 +44,6 @@ public class FixedDepositController {
             System.out.println(fixedDeposit.getAmount());
         }
         return new ResponseEntity<>(fds, HttpStatus.OK);
-
     }
 
     @PostMapping("/{fdId}/break")
@@ -57,5 +57,34 @@ public class FixedDepositController {
         BreakPreviewResponse previewResponse = this.fixedDepositService.getBreakPreview(fdId);
         return new ResponseEntity<>(previewResponse, HttpStatus.FOUND);
     }
+
+
+
+    
+
+    @GetMapping("/fds")
+    public ResponseEntity<List<FixedDeposit>> viewAllFDs() {
+        List<FixedDeposit> fds = this.fixedDepositService.getAll();
+        return new ResponseEntity<>(fds, HttpStatus.OK);
+    }
+
+
+    //GET /fd/{fdId}/interest – View current interest accrued
+    @GetMapping("/{Id}/interest")
+    public ResponseEntity<Double> viewAccruedInterest(@PathVariable("Id") long id){
+        Double interest = fixedDepositService.getFdById(id).getAccrued_interest();
+        return new ResponseEntity<>(interest, HttpStatus.OK);
+    }
+
+
+    // PUT /fd/{fdId}/status – Mark as matured/broken
+    @PutMapping("/{Id}/status")
+    public ResponseEntity<Void> updateStatus(@PathVariable("Id") long id, @RequestParam("status") String status) {
+        FixedDeposit fixedDeposit = fixedDepositService.getFdById(id);
+        fixedDeposit.setStatus(Enum.valueOf(FdStatus.class, status));
+        fixedDepositService.bookFD(fixedDeposit);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 
 }
