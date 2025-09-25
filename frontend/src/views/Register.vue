@@ -4,7 +4,7 @@
     <div class="w-full max-w-6xl mx-auto flex flex-col lg:flex-row items-center justify-between p-6 lg:p-12 gap-5">
       
       <!-- Left Side - Branding -->
-      <DotLottieVue style="height: 500px; width: 500px" autoplay loop src="https://lottie.host/8ddc1863-565e-41eb-b9f0-24f37513683d/JfunXkHkx9.lottie" />
+      <DotLottieVue style="height: 500px; width: 500px" autoplay loop src="https://lottie.host/3dfb02e8-bf8e-4872-9de1-bc51ae29925b/dEg2EQLi5K.lottie" />
 
       <!-- Right Side - Registration Form -->
       <div class="flex-1 max-w-md w-full">
@@ -64,7 +64,7 @@
           </div>
 
           <div class="pt-4 text-center">
-            <p class="text-xs text-gray-400 text-">
+            <p class="text-xs text-gray-400">
               By creating an account, you agree to our Terms and Privacy Policy
             </p>
           </div>

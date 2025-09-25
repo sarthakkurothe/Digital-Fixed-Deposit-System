@@ -2,7 +2,7 @@
   <Header />
 
   <div class="min-h-[calc(100vh-64px)] bg-gradient-to-br from-white via-blue-50 to-blue-100 flex items-center justify-center p-3">
-    <div class="w-full max-w-6xl mx-auto flex flex-col lg:flex-row items-center justify-between p-6  lg:p-12 gap-8">
+    <div class="w-full max-w-6xl mx-auto flex flex-col lg:flex-row items-center justify-between p-6  lg:p-12 gap-12">
       
       <!-- Left Side - Branding & Features -->
       <DotLottieVue style="height: 500px; width: 500px" autoplay loop src="https://lottie.host/61b67c2f-ce7e-42bd-9f35-74450e0453a5/YbUAdRE2Jl.lottie" />
@@ -74,10 +74,7 @@
             <router-link to="/register" class="text-blue-600 hover:underline font-medium">Create Account</router-link>
           </div>
 
-          <!-- Demo Credentials -->
-          <div class="pt-4 text-center">
-            <p class="text-sm text-gray-400">Demo Credentials: rajesh.kumar@example.com / password123</p>
-          </div>
+          
         </div>
       </div>
 
