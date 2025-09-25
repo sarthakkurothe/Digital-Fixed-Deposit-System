@@ -1,6 +1,6 @@
 <template>
   <div
-    class="bg-white p-6 md:p-6 rounded-xl shadow-lg border border-gray-200 hover:shadow-xl transform transition-all hover:-translate-y-1 flex flex-col justify-between"
+    class="bg-white p-6 md:p-6 rounded-xl shadow-lg border border-gray-200 hover:shadow-xl transform transition-all hover:-translate-y-1 flex flex-col justify-between w-full"
   >
     <!-- FD Header: Serial and Status Badge -->
     <div class="flex justify-between items-center mb-4">
@@ -16,39 +16,34 @@
     <!-- FD Details Grid -->
     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-gray-700 mb-4">
       <!-- Amount -->
-      <div class="flex items-center gap-2 text-green-600 text-base md:text-lg font-semibold">
-        <Currency class="w-4 h-4 md:w-5 md:h-5" />
-        ₹{{ fd.amount.toLocaleString() }}
+      <div class="text-gray-800">
+        <strong>Amount: </strong> ₹{{ fd.amount.toLocaleString() }}
       </div>
 
       <!-- Interest Rate -->
-      <div class="flex items-center gap-2 text-gray-700">
-        <Percent class="w-4 h-4 md:w-5 md:h-5 text-blue-500" />
-        <span><strong>Interest Rate:</strong> {{ fd.interest_rate }}%</span>
+      <div class="text-gray-800">
+        <strong>Interest Rate: </strong>
+        <span class="text-green-600">{{ fd.interest_rate }}%</span>
       </div>
 
       <!-- Tenure -->
-      <div class="flex items-center gap-2 text-gray-700">
-        <Clock class="w-4 h-4 md:w-5 md:h-5 text-yellow-500" />
-        <span><strong>Tenure:</strong> {{ fd.tenure_months }} months</span>
+      <div class="text-gray-800">
+        <strong>Tenure: </strong> {{ fd.tenure_months }} months
       </div>
 
       <!-- Start Date -->
-      <div class="flex items-center gap-2 text-gray-700">
-        <Calendar class="w-4 h-4 md:w-5 md:h-5 text-purple-500" />
-        <span><strong>Start:</strong> {{ formatDate(fd.start_date) }}</span>
+      <div class="text-gray-800">
+        <strong>Start: </strong> {{ formatDate(fd.start_date) }}
       </div>
 
       <!-- Maturity Date -->
-      <div class="flex items-center gap-2 text-gray-700">
-        <CalendarClock class="w-4 h-4 md:w-5 md:h-5 text-red-500" />
-        <span><strong>Maturity:</strong> {{ formatDate(fd.maturity_date) }}</span>
+      <div class="text-gray-800">
+        <strong>Maturity: </strong> {{ formatDate(fd.maturity_date) }}
       </div>
 
       <!-- Accrued Interest -->
-      <div class="flex items-center gap-2 text-green-600 font-medium">
-        <TrendingUp class="w-4 h-4 md:w-5 md:h-5" />
-        <span><strong>Accrued Interest:</strong> ₹{{ fd.accrued_interest.toLocaleString() }}</span>
+      <div class="text-gray-800">
+        <strong>Accrued Interest: </strong> ₹{{ fd.accrued_interest.toLocaleString() }}
       </div>
     </div>
 
@@ -71,11 +66,8 @@
 </template>
 
 <script>
-import { Currency, Percent, Clock, Calendar, CalendarClock, TrendingUp } from "lucide-vue-next";
-
 export default {
   name: "FDCard",
-  components: { Currency, Percent, Clock, Calendar, CalendarClock, TrendingUp },
   props: {
     fd: { type: Object, required: true },
     index: { type: Number, required: true },
@@ -104,5 +96,5 @@ export default {
 </script>
 
 <style scoped>
-/* Optional: subtle hover lift */
+
 </style>
