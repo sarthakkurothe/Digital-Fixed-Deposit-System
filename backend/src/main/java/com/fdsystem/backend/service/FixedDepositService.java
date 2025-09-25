@@ -71,12 +71,6 @@ import java.util.List;
 
     public BreakPreviewResponse getBreakPreview(Long fdId) {
         FixedDeposit fd = this.fixedDepositRepository.findById(fdId).get();
-        double penalty = calculatePenalty(fd);
-        double payout = fd.getAmount() + fd.getAccrued_interest() - penalty;
-        return new BreakPreviewResponse(fd.getId(), fd.getAmount(), fd.getAccrued_interest(), fd.getStart_date(), fd.getMaturity_date(), penalty, payout, fd.getStatus().toString());
-    }
-
-    private double calculatePenalty(FixedDeposit fd) {
         LocalDate startDate = fd.getStart_date().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
         LocalDate today = LocalDate.now();
         long monthsElapsed = ChronoUnit.MONTHS.between(startDate, today);
@@ -85,18 +79,11 @@ import java.util.List;
         if (monthsElapsed < 3) {
             penalty = accruedInterest;
         } else if (monthsElapsed < fd.getTenure_months()) {
-            penalty = accruedInterest * 0.01;
+            penalty = accruedInterest * ( 1 / fd.getInterest_rate());
+            penalty = Math.round(penalty * 100.0) / 100.0;
         }
-        return penalty;
+        double payout = fd.getAmount() + fd.getAccrued_interest() - penalty;
+        return new BreakPreviewResponse(fd.getId(), fd.getAmount(), fd.getAccrued_interest(), fd.getStart_date(), fd.getMaturity_date(), penalty, payout, fd.getInterest_rate(), fd.getTenure_months(), monthsElapsed);
     }
 
-    public List<FixedDeposit> getAllFDsByStatus(FdStatus fdStatus){
-        return this.fixedDepositRepository.findAllByStatus(fdStatus);
-    }
-
-    public void setFixedDepositStatus(long id, FdStatus fdStatus){
-        FixedDeposit fixedDeposit = this.fixedDepositRepository.findById(id).get();
-        fixedDeposit.setStatus(fdStatus);
-        this.fixedDepositRepository.save(fixedDeposit);
-    }
 }
