@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '../views/HomeView.vue'
-import DashBoard from '../views/DashBoard.vue'
+import DashBoard from '../views/Dashboard.vue'
 import MyFDs from '../views/MyFDs.vue'
 import BookFD from '../views/BookFD.vue'
 import Calculator from '../views/Calculator.vue'
