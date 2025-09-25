@@ -16,7 +16,7 @@
 export default {
   name: 'SecurityCard',
   props: {
-    icon: { type: Object, required: true },
+    icon: { type: [Object, Function], required: true }, 
     title: { type: String, required: true },
     description: { type: String, required: true }
   }

@@ -10,6 +10,7 @@
     "serve": "vite preview"
   },
   "dependencies": {
+    "@lottiefiles/dotlottie-vue": "^0.10.1",
     "axios": "^1.12.2",
     "lucide-vue-next": "^0.544.0",
     "vue": "^3.5.21",

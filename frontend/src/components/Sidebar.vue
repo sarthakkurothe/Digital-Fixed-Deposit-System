@@ -113,7 +113,7 @@
           class="flex items-center w-full px-4 py-2 text-gray-700 rounded-lg hover:bg-red-50 hover:text-red-600 transition group cursor-pointer"
         >
           <!-- Fixed-size icon -->
-          <ArrowLeftEndOnRectangleIcon
+          <LogOutIcon
             class="w-6 h-6 text-gray-500 group-hover:text-red-600"
           />
 
@@ -147,13 +147,12 @@
 </template>
 
 <script>
-import { ArrowLeftEndOnRectangleIcon } from '@heroicons/vue/24/solid'
-import { ArrowLeft } from 'lucide-vue-next'
+import {  LogOutIcon } from 'lucide-vue-next'
 import { mapActions } from 'vuex/dist/vuex.cjs.js'
 
 export default {
   name: 'Sidebar',
-  components: { ArrowLeftEndOnRectangleIcon },
+  components: { LogOutIcon },
 
   data() {
     return {
