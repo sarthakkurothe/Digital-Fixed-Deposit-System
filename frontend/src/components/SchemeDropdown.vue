@@ -3,9 +3,9 @@
     <!-- Dropdown button -->
     <button
       @click="toggleDropdown"
-      class="w-full p-3 border border-gray-200 rounded-lg text-left focus:outline-none focus:ring-2 focus:ring-blue-500 flex justify-between items-center"
+      class="w-full p-3 border border-gray-200 rounded-lg text-left focus:outline-none focus:ring-2 focus:ring-blue-500 flex justify-between items-center cursor-pointer"
     >
-      <span>{{ selectedScheme ? selectedScheme.name : '-- Choose a Scheme --' }}</span>
+      <span>{{ selectedScheme ? selectedScheme.name : 'Choose a FD Scheme' }}</span>
       <svg
         class="w-4 h-4 transform transition-transform duration-200"
         :class="{ 'rotate-180': dropdownOpen }"
