@@ -12,11 +12,7 @@
         <div class="bg-white rounded-lg shadow p-6 h-full flex flex-col">
           <div class="flex items-center mb-4">
             <div class="w-6 h-6 bg-blue-100 rounded mr-3 flex items-center justify-center">
-              <svg class="w-4 h-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
-                <path
-                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                ></path>
-              </svg>
+              <check-circle class="w-4 h-4 text-blue-600" />
             </div>
             <h2 class="text-lg font-semibold text-gray-800">FD Details</h2>
           </div>
@@ -300,13 +296,15 @@
 
 <script>
 import SchemeDropdown from "../components/SchemeDropDown.vue";
+import { CheckCircle } from "lucide-vue-next";
 import { mapGetters } from "vuex";
 import axios from "axios";
 import FDCalculator, { STANDARD_FD_SCHEMES } from '../utils/fdCalculations.js';
 
+
 export default {
   name: "BookFD",
-  components: { SchemeDropdown },
+  components: { SchemeDropdown,CheckCircle },
   data() {
     return {
       amount: 50000,
