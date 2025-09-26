@@ -56,10 +56,14 @@
         View
       </button>
       <button
-        @click="$emit('delete', fd)"
-        class="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg text-sm md:text-sm font-medium hover:bg-red-700 transition cursor-pointer"
+        @click="$emit('break', fd)"
+        :disabled="fd.status !== 'ACTIVE'"
+        :class="[
+          'flex-1 px-4 py-2 bg-red-600 text-white rounded-lg text-sm md:text-sm font-medium transition disabled:opacity-70',
+          fd.status === 'ACTIVE' ? 'hover:bg-red-700 cursor-pointer' : 'cursor-not-allowed'
+        ]"
       >
-        Delete
+        Break
       </button>
     </div>
   </div>
