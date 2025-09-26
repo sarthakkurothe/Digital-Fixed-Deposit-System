@@ -32,7 +32,7 @@
               :min="minAmount"
               :max="maxAmount"
               step="1000"
-              placeholder="50000"
+              placeholder="1000"
             />
             <p class="text-gray-500 text-xs mt-1">
               Minimum investment: ₹{{ minAmount.toLocaleString() }}
@@ -366,7 +366,7 @@ export default {
         // Reset form after successful booking
         setTimeout(() => {
           this.selectedScheme = "";
-          this.amount = 50000;
+          this.amount = 1000;
         }, 2000);
       } catch (error) {
         console.error(error);
