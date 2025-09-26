@@ -4,11 +4,11 @@
         <div class="flex items-center justify-between mb-4">
           <h3 class="text-sm font-medium text-gray-600">Total Investment</h3>
           <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-           <IndianRupee />
+           <Wallet />
           </div>
         </div>
         <div class="space-y-1">
-          <p class="text-2xl font-bold text-gray-900">{{ totalAmount }}</p>
+          <p class="text-2xl font-bold text-gray-900">₹{{ totalAmount }}</p>
         </div>
       </div>
 
@@ -21,7 +21,7 @@
           </div>
         </div>
         <div class="space-y-1">
-          <p class="text-2xl font-bold text-green-800">{{ this.totalAccuredInterest }}</p>
+          <p class="text-2xl font-bold text-green-800">₹{{ this.totalAccuredInterest }}</p>
          
         </div>
       </div>
@@ -58,15 +58,15 @@
 
 <script>
 import { mapGetters } from "vuex";
-import { IndianRupee,TrendingUp,Building,BarChart2 } from "lucide-vue-next";
+import { Wallet,TrendingUp,Building,BarChart2 } from "lucide-vue-next";
 export default {
   name: "DashboardCards",
-  components: { IndianRupee,TrendingUp,Building,BarChart2 },
+  components: { Wallet,TrendingUp,Building,BarChart2 },
   computed: {
     ...mapGetters(["getFDs","getFDsCount"]),
 
     totalAmount() {
-      return this.getFDs.reduce((sum, fd) => sum + fd.amount, 0);
+      return this.getFDs.reduce((sum, fd) => sum + fd.amount, 0).toLocaleString('en-IN');
     },
     activeFDs() {
       return this.getFDs.filter((fd) => fd.status === "ACTIVE").length;
@@ -82,7 +82,7 @@ export default {
   
     },
     totalAccuredInterest() {
-      return this.getFDs.reduce((sum, fd) => sum + parseFloat(fd.accrued_interest), 0).toFixed(2);
+      return this.getFDs.reduce((sum, fd) => sum + parseFloat(fd.accrued_interest), 0).toFixed(2).toLocaleString('en-IN');
     },
     averageInterest() {
       if (this.getFDsCount === 0) return 0;
