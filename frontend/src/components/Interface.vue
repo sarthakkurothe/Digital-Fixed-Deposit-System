@@ -44,8 +44,9 @@ export default {
       if (this.isMobile) {
         return 'ml-0'
       }
-      return this.sidebarCollapsed ? 'md:ml-16' : 'md:ml-64'
+      return this.sidebarCollapsed ? 'ml-30' : 'ml-64'
     }
+
   },
   methods: {
     handleToggleSidebar() {
