@@ -54,7 +54,7 @@
           </div>
         </div>
         <div class="space-y-1">
-          <p class="text-2xl font-bold text-gray-900">7.2</p>
+          <p class="text-2xl font-bold text-gray-900">{{ averageInterest }}</p>
           <p class="text-xs text-gray-500">Annual percentage yield</p>
         </div>
       </div>
@@ -84,8 +84,12 @@ export default {
     maturedFDs() {
       return this.getFDs.filter((fd) => fd.status === "MATURED").length;
     },
-     averageFDs() {
-       return (this.getFDs.reduce((sum, fd) => sum + fd.intereast_rate, 0)/getFDsCount).toFixed(2);
+     totalFDInterest() {
+       return this.getFDs.reduce((sum, fd) => sum + fd.intereast_rate, 0);
+    },
+    averageInterest() {
+      if (this.getFDsCount === 0) return 0;
+      return this.totalFDInterest;
     },
   },
 };
