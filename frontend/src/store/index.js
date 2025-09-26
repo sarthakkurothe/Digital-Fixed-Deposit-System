@@ -140,6 +140,7 @@ export default createStore({
      * Register a new user
      */
     async register({ commit }, credentials) {
+      try { 
         const res = await axios.post("/auth/register", {
           name: credentials.name,
           email: credentials.email,
@@ -148,6 +149,11 @@ export default createStore({
         });
 
        return res;
+      } catch (err) {
+        return {
+          status: err.response?.status
+        }
+      }
     },
 
     /**
