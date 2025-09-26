@@ -5,7 +5,7 @@
     <HeroSection />
     <FeaturesSection :features="features" />
     <SecuritySection :securityFeatures="securityFeatures" :compliance="compliance" />
-    <Footer />
+    <Footer/>
     
     <router-view />
   </div>

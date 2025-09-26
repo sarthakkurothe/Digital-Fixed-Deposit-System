@@ -76,6 +76,7 @@ export default {
   components: { DashboardCards },
   mounted() {
     this.$store.dispatch('fetchFDs');
+    this.$store.dispatch('fetchSummary')
   }
 }
 </script>
