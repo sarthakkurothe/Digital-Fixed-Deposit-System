@@ -75,7 +75,7 @@ export default {
   name: 'Dashboard',
   components: { DashboardCards },
   mounted() {
-    console.log('Dashboard component mounted - ready for team development')
+    this.$store.dispatch('fetchFDs');
   }
 }
 </script>
