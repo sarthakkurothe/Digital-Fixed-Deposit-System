@@ -96,10 +96,16 @@
       <div class="p-4 border-t border-gray-200">
         <button
           @click="signout"
-          class="flex items-center w-full px-4 py-2 rounded-lg bg-red-100 text-red-700 hover:bg-red-200 hover:text-red-800 transition group cursor-pointer"
+          class="flex w-full px-4 py-2 rounded-lg bg-red-100 text-red-700 hover:bg-red-200 hover:text-red-800 transition group cursor-pointer"
+          :class="isCollapsed ? 'justify-center' : 'justify-start'"
         >
-          <LogOutIcon class="w-6 h-6 mr-3"/>
-          <span v-if="!isCollapsed" class="font-medium whitespace-nowrap">Sign out</span>
+          <LogOutIcon  class="w-6 h-6 " :class="isCollapsed? 'scale-x-[-1]':''"/>
+          <span
+            v-if="!isCollapsed"
+            class="ml-3 font-medium whitespace-nowrap"
+          >
+            Sign out
+          </span>
         </button>
       </div>
 
