@@ -162,6 +162,8 @@ export default createStore({
     isAuthenticated: (state) => !!state.token,
     getFDsCount: (state) => state.fds.length,
     getUser: (state) => state.user,
+    getUserName: (state) => state.user?.name || '',
+    getUserEmail: (state) => state.user?.email || '', 
     getToken: (state) => state.token,
     getFDs: (state) => state.fds,
     isLoading: (state) => state.loading,
