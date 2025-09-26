@@ -11,6 +11,8 @@ import com.fdsystem.backend.repository.UserRepository;
 import com.fdsystem.backend.entity.enums.SupportTicketStatus;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,6 +38,7 @@ public class SupportTicketService {
         supportTicket.setSubject(ticketRequestDTO.getSubject());
         supportTicket.setDescription(ticketRequestDTO.getDescription());
         supportTicket.setStatus(SupportTicketStatus.OPEN);
+        supportTicket.setCreatedDate(Date.valueOf(LocalDate.now()));
         supportTicketRepository.save(supportTicket);
     }
 
@@ -45,10 +48,13 @@ public class SupportTicketService {
         List<TicketResponseDTO> responseDTOS = new ArrayList<>();
         for(SupportTicket supportTicket: list){
             TicketResponseDTO ticketRequestDTO = new TicketResponseDTO();
-            ticketRequestDTO.setStatus(supportTicket.getSubject());
+            ticketRequestDTO.setStatus(supportTicket.getStatus().toString());
             ticketRequestDTO.setResponse(supportTicket.getResponse());
             ticketRequestDTO.setSubject(supportTicket.getSubject());
             ticketRequestDTO.setDescription(supportTicket.getDescription());
+            ticketRequestDTO.setId(supportTicket.getId());
+            ticketRequestDTO.setFdId(supportTicket.getFixedDeposit().getId());
+            ticketRequestDTO.setCreatedDate(supportTicket.getCreatedDate());
             responseDTOS.add(ticketRequestDTO);
         }
 

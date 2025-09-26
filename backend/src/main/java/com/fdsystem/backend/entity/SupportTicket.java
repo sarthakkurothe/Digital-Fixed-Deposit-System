@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.sql.Date;
+
 @Entity
 @Data
 @NoArgsConstructor
@@ -30,5 +32,6 @@ public class SupportTicket {
   @Enumerated(EnumType.STRING)
   private SupportTicketStatus status;
   private String response;
+  private Date createdDate;
 
 }
