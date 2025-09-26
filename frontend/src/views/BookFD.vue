@@ -313,7 +313,7 @@ export default {
   components: { SchemeDropdown },
   data() {
     return {
-      amount: 50000,
+      amount: 1000,
       minAmount: 1000,
       maxAmount: 1000000,
       startDate: new Date().toISOString().substr(0, 10),
