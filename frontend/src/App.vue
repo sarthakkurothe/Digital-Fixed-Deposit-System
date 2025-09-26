@@ -1,7 +1,7 @@
 
 <template>
   <div id="app" class="min-h-screen bg-gray-50">
-        
+
         <!-- Page Content -->
       <main class="flex-1 overflow-auto bg-gray-50">
         <router-view />
