@@ -86,7 +86,7 @@ export default {
     },
     averageInterest() {
       if (this.getFDsCount === 0) return 0;
-      return this.totalFDInterest / this.getFDsCount + "%";
+      return (this.totalFDInterest / this.getFDsCount).toFixed(2) + "%";
     },
   },
 };
