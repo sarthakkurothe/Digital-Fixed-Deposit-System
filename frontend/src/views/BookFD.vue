@@ -11,8 +11,8 @@
       <div class="space-y-6 h-full">
         <div class="bg-white rounded-lg shadow p-6 h-full flex flex-col">
           <div class="flex items-center mb-4">
-            <div class="w-6 h-6 bg-blue-100 rounded mr-3 flex items-center justify-center">
-              <IndianRupee class="w-4 h-4 text-blue-600"/>
+            <div class="w-8 h-8 bg-blue-100 rounded mr-3 flex items-center justify-center">
+             <IndianRupee />
             </div>
             <h2 class="text-lg font-semibold text-gray-800">FD Details</h2>
           </div>
@@ -75,19 +75,11 @@
         <button
           @click="bookFD"
           :disabled="!selectedScheme || loading"
-          class="w-full bg-blue-600 text-white font-semibold py-4 px-6 rounded-lg hover:bg-blue-700 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg mt-6 cursor-pointer"
+          class="w-full bg-blue-600 text-white font-semibold py-4 px-6 rounded-lg hover:bg-blue-700 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg mt-5"
         >
           <div class="flex items-center justify-center">
             <span v-if="loading" class="loader mr-2"></span>
-            <svg
-              v-if="!loading"
-              class="w-5 h-5 mr-2"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
-            </svg>
+            <CirclePlus class="mr-2" />
             {{ loading ? "Booking..." : "Book Fixed Deposit" }}
           </div>
         </button>
@@ -98,12 +90,8 @@
       <div class="h-full">
         <div class="bg-white rounded-lg shadow p-6 h-full flex flex-col">
           <div class="flex items-center mb-4">
-            <div class="w-6 h-6 bg-green-100 rounded mr-3 flex items-center justify-center">
-              <svg class="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 20 20">
-                <path
-                  d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z"
-                ></path>
-              </svg>
+            <div class="w-8 h-8 bg-green-100 rounded mr-3 flex items-center justify-center">
+              <ChartPie />
             </div>
             <h3 class="text-lg font-semibold text-gray-800">Preview your investment returns</h3>
           </div>
@@ -113,7 +101,7 @@
             v-if="!selectedScheme"
             class="flex-1 flex items-center justify-center text-gray-500 text-sm"
           >
-            Select a scheme to view investment returns
+            <iframe class="w-full h-full" src="https://lottie.host/embed/82ba37c3-3996-4db1-926c-0686019101de/UGGASiUQnm.lottie"></iframe>
           </div>
 
           <!-- Preview Content -->
@@ -202,9 +190,7 @@
     <!-- Schemes Section -->
     <div class="bg-white rounded-lg shadow p-6">
       <div class="flex items-center mb-4">
-        <svg class="w-6 h-6 text-indigo-600 mr-2" fill="currentColor" viewBox="0 0 20 20">
-          <path d="M13 7H7v6h6V7zM3 5h2v10H3V5zm12 0h2v10h-2V5z"></path>
-        </svg>
+        <NotebookTabs />
         <h2 class="text-lg font-semibold text-gray-800">Our Fixed Deposit Schemes</h2>
       </div>
       <p class="text-gray-600 text-sm mb-6">
@@ -226,34 +212,22 @@
             <p class="text-xs text-gray-500 mb-4">Tenure: <span class="font-medium">{{ scheme.tenure }} months</span></p>
             <ul class="space-y-2 text-sm text-gray-700">
               <li class="flex items-start">
-                <svg class="w-4 h-4 text-green-500 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                  <path
-                    d="M16.707 5.293a1 1 0 00-1.414 0L9 11.586 6.707 9.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l7-7a1 1 0 000-1.414z"
-                  />
-                </svg>
+               <Check :class="'text-green-500 w-5 h-4'" />
                 Guaranteed returns with no market risk
               </li>
               <li v-if="scheme.compound" class="flex items-start">
-                <svg class="w-4 h-4 text-green-500 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                  <path
-                    d="M16.707 5.293a1 1 0 00-1.414 0L9 11.586 6.707 9.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l7-7a1 1 0 000-1.414z"
-                  />
-                </svg>
+                <Check :class="'text-green-500 w-5 h-4'" />
                 Compound interest for higher growth
               </li>
               <li class="flex items-start">
-                <svg class="w-4 h-4 text-green-500 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                  <path
-                    d="M16.707 5.293a1 1 0 00-1.414 0L9 11.586 6.707 9.293a1 1 0 00-1.414 1.414l3 3a1 1 0 001.414 0l7-7a1 1 0 000-1.414z"
-                  />
-                </svg>
+               <Check :class="'text-green-500 w-5 h-4'" />
                 Senior citizens +0.5% extra interest
               </li>
             </ul>
           </div>
           <button
             @click="selectedScheme = scheme"
-            class="mt-5 w-full bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors duration-300 cursor-pointer"
+            class="mt-5 w-full bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors duration-300"
           >
             Choose This Plan
           </button>
@@ -264,30 +238,17 @@
     <!-- Toast -->
     <div
       v-if="toast.show"
-      :class="[
-        'fixed bottom-4 right-4 px-6 py-4 rounded-lg shadow-lg text-white transition-all duration-300',
-        toast.type === 'success' ? 'bg-green-500' : 'bg-red-500'
-      ]"
+      :class="{
+        'fixed top-18 right-6 z-50 px-6 py-4 rounded-lg shadow-lg text-white transition-all duration-300': true,
+        'bg-green-500': toast.type === 'success',
+        'bg-red-500': toast.type !== 'success'
+      }"
+      role="status"
+      aria-live="polite"
     >
-      <div class="flex items-center">
-        <svg
-          v-if="toast.type === 'success'"
-          class="w-5 h-5 mr-2"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-        </svg>
-        <svg
-          v-else
-          class="w-5 h-5 mr-2"
-          fill="none"
-          stroke="currentColor"
-          viewBox="0 0 24 24"
-        >
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-        </svg>
+      <div class="flex items-center"> 
+        <Check v-if="toast.type === 'success'"/>
+        <X v-else /> 
         {{ toast.message }}
       </div>
     </div>
@@ -299,11 +260,12 @@ import SchemeDropdown from "../components/SchemeDropDown.vue";
 import { mapGetters } from "vuex";
 import axios from "axios";
 import FDCalculator, { STANDARD_FD_SCHEMES } from '../utils/fdCalculations.js';
-import { IndianRupee } from 'lucide-vue-next'
+import { DotLottieVue } from '@lottiefiles/dotlottie-vue'
+import { IndianRupee,ChartPie,Check,NotebookTabs,X,CirclePlus } from "lucide-vue-next";
 
 export default {
   name: "BookFD",
-  components: { SchemeDropdown, IndianRupee },
+  components: { SchemeDropdown, DotLottieVue, IndianRupee ,ChartPie,Check,NotebookTabs,X,CirclePlus },
   data() {
     return {
       amount: 1000,
@@ -313,6 +275,7 @@ export default {
       selectedScheme: "",
       loading: false,
       toast: { show: false, message: "", type: "success" },
+      // Using standardized schemes from utility
       baseSchemes: STANDARD_FD_SCHEMES,
     };
   },
