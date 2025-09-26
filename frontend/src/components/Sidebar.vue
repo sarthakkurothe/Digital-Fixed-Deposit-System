@@ -8,21 +8,27 @@
 
   <!-- Sidebar -->
   <div class="sidebar-container" :class="sidebarClasses">
-    <div class="flex flex-col h-full bg-white border-r border-gray-200">
+    <div class="flex flex-col h-full bg-white border-r border-gray-200 ">
 
       <!-- Logo + Collapse -->
-      <div class="flex items-center justify-between p-4 border-b border-gray-200">
+      <div class="flex items-center justify-between p-4 border-b border-gray-200 mt-4">
   <router-link 
     to="/user/dashboard" 
-    class="flex items-center space-x-4"
+    class="flex items-center space-x-4 mb-1 group"
   >
-    <div
+    <div v-if="!isCollapsed"
       class="w-9 h-9 rounded-lg flex items-center justify-center text-white shadow-sm transform transition-transform duration-200 group-hover:scale-105"
       style="background: linear-gradient(135deg,#2563eb,#4f46e5)"
     >
       <Vault class="w-5 h-5" />
     </div>
-    <span class="text-xl md:text-2xl font-extrabold text-slate-900">SmartFD</span>
+    <div v-if="isCollapsed"
+      class="w-9 h-9 rounded-lg flex items-center justify-center text-white shadow-sm transform transition-transform duration-200 group-hover:scale-105 ml-5"
+      style="background: linear-gradient(135deg,#2563eb,#4f46e5)"
+    >
+      <Vault class="w-5 h-5" />
+    </div>
+    <span v-if="!isCollapsed" class="text-xl md:text-2xl font-extrabold text-slate-900">SmartFD</span>
   </router-link>
 
         <!-- Collapse Arrow -->

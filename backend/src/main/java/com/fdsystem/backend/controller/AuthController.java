@@ -32,21 +32,17 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
-public class UserController {
+public class AuthController {
 
     private AuthenticationManager authenticationManager;
 
-    @Autowired
-    private FixedDepositService fixedDepositService;
-    @Autowired
-    private  AccruedInterestService  accruedInterestService;
 
     private final UserService userService;
     private final PasswordEncoder passwordEncoder;
     @Autowired
     private JWTUtils jwtUtils;
 
-    public UserController(UserService userService, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager){
+    public AuthController(UserService userService, PasswordEncoder passwordEncoder, AuthenticationManager authenticationManager){
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
         this.authenticationManager = authenticationManager;
@@ -107,32 +103,6 @@ public class UserController {
     }
 
 
-
-    //TotalInvestment , InterestEarned, ActiveFDs,AverageInterest
-    @GetMapping("/user/investments")
-    public ResponseEntity<?> getDashboardStats(){
-
-        UserPrincipal principal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        User user = principal.getUser();
-        accruedInterestService.calculateAccruedInterest(user);
-        long userId = user.getUser_id();
-
-        double totalInvestment = fixedDepositService.getFdsByUserId(userId).stream().mapToDouble(fd -> fd.getAmount()).sum();
-        double interestEarned = fixedDepositService.getFdsByUserId(userId).stream().mapToDouble(fd -> fd.getAccrued_interest()).sum();
-        long activeFDs = fixedDepositService.getFdsByUserId(userId).stream().filter(fd -> fd.getStatus().toString().equals("ACTIVE")).count();
-        double averageInterest = 0.0;
-        if(activeFDs > 0){
-            averageInterest = interestEarned / activeFDs;
-        }
-
-        UserDashboardDTO dashboardDTO = new UserDashboardDTO();
-        dashboardDTO.setTotalInvestment(totalInvestment);
-        dashboardDTO.setInterestEarned(interestEarned);
-        dashboardDTO.setActiveFDs(activeFDs);
-        dashboardDTO.setAverageInterest(averageInterest);
-
-        return new ResponseEntity<>(dashboardDTO, HttpStatus.ACCEPTED);
-    }
 
 
 }
