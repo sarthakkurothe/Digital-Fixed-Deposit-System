@@ -1,5 +1,5 @@
 <template>
-  <nav class="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-40">
+  <nav class="bg-white border-b border-gray-200 shadow-sm sticky top-0 z-40 h-22">
     <div class="px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between h-16">
         <!-- Left Section - Mobile menu + Logo -->
@@ -17,7 +17,7 @@
            
           <!-- Welcome Message -->
           <div class="hidden sm:block">
-            <h1 class="text-lg font-semibold text-gray-900">
+            <h1 class="text-lg font-semibold text-gray-900 mt-4">
               Welcome back, {{ getUserName }}! 👋 
             </h1>
             <p class="text-sm text-gray-600">Here's your fixed deposit portfolio overview</p>
@@ -27,11 +27,11 @@
         <!-- Right Section - User Avatar -->
         <div class="flex items-center space-x-4">
           <div class="flex items-center space-x-2">
-            <div class="hidden md:block text-right">
-              <div class="text-sm font-medium text-gray-900">{{ getUserName }}</div>
-              <div class="text-xs text-gray-500">{{ getUserEmail }}</div>
+            <div class="hidden md:block text-right mt-4">
+              <div class="text-m font-medium text-gray-900">{{ getUserName }}</div>
+              <div class="text-sm text-gray-600">{{ getUserEmail }}</div>
             </div>
-            <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+            <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center mt-4">
               <span class="text-blue-600 text-sm font-medium">
                 {{ getUserName ? getUserName.charAt(0).toUpperCase() : "U" }}
               </span>
