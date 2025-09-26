@@ -18,7 +18,7 @@
             
             <div class="p-6">
               <!-- Search and Filter -->
-              <div class="mb-6 grid grid-cols-1 md:grid-cols-4 gap-4">
+              <div class="mb-6 grid grid-cols-1 md:grid-cols-3 gap-6">
                 <input
                   v-model="searchTerm"
                   type="text"
@@ -43,13 +43,7 @@
                   <option value="date">Sort by Date</option>
                   <option value="customer">Sort by Customer</option>
                 </select>
-                <button
-                  @click="exportData"
-                  class="flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200"
-                >
-                  <Download class="w-4 h-4 mr-2" />
-                  Export Data
-                </button>
+                
               </div>
 
               <!-- FD Cards Grid (Mobile) -->
@@ -113,7 +107,6 @@
                       <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Interest</th>
                       <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Maturity</th>
                       <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                      <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                     </tr>
                   </thead>
                   <tbody class="bg-white divide-y divide-gray-200">
@@ -121,7 +114,6 @@
                       <td class="px-6 py-4 whitespace-nowrap">
                         <div>
                           <div class="text-sm font-medium text-gray-900">{{ fd.fdNumber }}</div>
-                          <div class="text-sm text-gray-500">{{ fd.scheme }}</div>
                         </div>
                       </td>
                       <td class="px-6 py-4 whitespace-nowrap">
@@ -144,20 +136,7 @@
                           {{ fd.status }}
                         </span>
                       </td>
-                      <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
-                        <button
-                          @click="viewDetails(fd)"
-                          class="text-blue-600 hover:text-blue-900"
-                        >
-                          View
-                        </button>
-                        <button
-                          @click="updateStatus(fd)"
-                          class="text-green-600 hover:text-green-900"
-                        >
-                          Update
-                        </button>
-                      </td>
+                      
                     </tr>
                   </tbody>
                 </table>

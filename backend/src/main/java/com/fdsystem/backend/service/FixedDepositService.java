@@ -92,7 +92,9 @@ import java.util.List;
         this.fixedDepositRepository.save(fixedDeposit);
     }
 
-    public List<FixedDeposit> getAllFDsByStatus(FdStatus fdStatus) {
-        return this.fixedDepositRepository.findAllByStatus(fdStatus);
+    public List<FixedDeposit> getAllFDs() {
+        List<FixedDeposit> allFds = this.fixedDepositRepository.findAll();
+
+
     }
 }
