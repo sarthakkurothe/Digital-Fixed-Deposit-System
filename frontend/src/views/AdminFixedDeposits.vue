@@ -43,13 +43,7 @@
                   <option value="date">Sort by Date</option>
                   <option value="customer">Sort by Customer</option>
                 </select>
-                <button
-                  @click="exportData"
-                  class="flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200"
-                >
-                  <Download class="w-4 h-4 mr-2" />
-                  Export Data
-                </button>
+                
               </div>
 
               <!-- FD Cards Grid (Mobile) -->
@@ -113,7 +107,6 @@
                       <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Interest</th>
                       <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Maturity</th>
                       <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                      <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                     </tr>
                   </thead>
                   <tbody class="bg-white divide-y divide-gray-200">
@@ -121,7 +114,6 @@
                       <td class="px-6 py-4 whitespace-nowrap">
                         <div>
                           <div class="text-sm font-medium text-gray-900">{{ fd.fdNumber }}</div>
-                          <div class="text-sm text-gray-500">{{ fd.scheme }}</div>
                         </div>
                       </td>
                       <td class="px-6 py-4 whitespace-nowrap">
@@ -144,20 +136,7 @@
                           {{ fd.status }}
                         </span>
                       </td>
-                      <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
-                        <button
-                          @click="viewDetails(fd)"
-                          class="text-blue-600 hover:text-blue-900"
-                        >
-                          View
-                        </button>
-                        <button
-                          @click="updateStatus(fd)"
-                          class="text-green-600 hover:text-green-900"
-                        >
-                          Update
-                        </button>
-                      </td>
+                      
                     </tr>
                   </tbody>
                 </table>
@@ -198,6 +177,7 @@ import AdminSidebar from '../components/AdminSidebar.vue'
 import { MenuIcon, Download } from 'lucide-vue-next'
 import { mapGetters, mapActions } from 'vuex'
 import Navbar from '../components/Navbar.vue'
+import axios from '../api'
 
 export default {
   name: 'AdminFixedDeposits',
@@ -217,54 +197,16 @@ export default {
       currentPage: 1,
       pageSize: 10,
       // Mock data - replace with actual data from store
-      mockFDs: [
-        {
-          id: 1,
-          fdNumber: 'FD001',
-          customerName: 'John Doe',
-          customerEmail: 'john@example.com',
-          amount: 50000,
-          interestRate: 7.5,
-          maturityDate: '2024-12-31',
-          status: 'ACTIVE',
-          scheme: 'Regular FD'
-        },
-        {
-          id: 2,
-          fdNumber: 'FD002',
-          customerName: 'Jane Smith',
-          customerEmail: 'jane@example.com',
-          amount: 100000,
-          interestRate: 8.0,
-          maturityDate: '2024-11-15',
-          status: 'PENDING',
-          scheme: 'Senior Citizen FD'
-        },
-        {
-          id: 3,
-          fdNumber: 'FD003',
-          customerName: 'Mike Johnson',
-          customerEmail: 'mike@example.com',
-          amount: 75000,
-          interestRate: 7.8,
-          maturityDate: '2025-01-20',
-          status: 'ACTIVE',
-          scheme: 'Tax Saver FD'
-        }
-      ]
+      allFDs: []
     }
   },
   computed: {
-    ...mapGetters(['allFixedDeposits']),
+    ...mapActions(['allFixedDeposits']),
     mainContentClasses() {
       if (this.isMobile) {
         return 'ml-0'
       }
       return this.sidebarCollapsed ? 'md:ml-0' : 'md:ml-65'
-    },
-    allFDs() {
-      // Use store data if available, otherwise use mock data
-      return this.allFixedDeposits || this.mockFDs
     },
     filteredFDs() {
       let filtered = this.allFDs
@@ -354,7 +296,11 @@ export default {
     // Fetch FDs data
     try {
       if (this.fetchAllFixedDeposits) {
-        await this.fetchAllFixedDeposits()
+        const res = await axios.get('/admin/fds')
+        console.log('Fixed Deposits fetched:', res)
+
+        this.allFds = res;
+
       }
     } catch (error) {
       console.error('Failed to load fixed deposits:', error)
