@@ -295,7 +295,7 @@ export default {
     // Fetch FDs data
     try {
       if (this.fetchAllFixedDeposits) {
-        const res = await this.fetchAllFixedDeposits()
+        const res = await fetchAllFixedDeposits()
 
         this.allFds = res;
 
