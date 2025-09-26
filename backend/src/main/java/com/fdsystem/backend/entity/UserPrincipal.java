@@ -1,4 +1,4 @@
-package com.fdsystem.backend.model;
+package com.fdsystem.backend.entity;
 
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
@@ -19,7 +19,7 @@ public class UserPrincipal implements UserDetails{
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
-    return List.of(new SimpleGrantedAuthority("USER"));
+    return List.of(new SimpleGrantedAuthority(user.getRole().toString()));
   }
 
   @Override
