@@ -5,13 +5,13 @@
     
     <!-- Main Content -->
     <div class="transition-all duration-300 ease-in-out"
-         :class="mainContentClasses">
+         :class="sidebarCollapsed ? 'md:ml-30' : 'md:ml-65'">
 
 
          <Navbar />
 
       <!-- Page Content -->
-      <main class="flex-1 overflow-auto p-6">
+      <main class="flex-1 overflow-auto p-6" :class="sidebarCollapsed">
         <!-- Admin Dashboard Content -->
         <div class="space-y-6">
           <!-- Stats Grid -->
@@ -215,7 +215,7 @@ export default {
       if (this.isMobile) {
         return 'ml-0'
       }
-      return this.sidebarCollapsed ? 'md:ml-0' : 'md:ml-65'
+      return this.sidebarCollapsed ? 'md:ml-30' : 'md:ml-65'
     }
   },
   methods: {
