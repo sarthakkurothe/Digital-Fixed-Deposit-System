@@ -140,7 +140,6 @@ export default createStore({
      * Register a new user
      */
     async register({ commit }, credentials) {
-      try {
         const res = await axios.post("/auth/register", {
           name: credentials.name,
           email: credentials.email,
@@ -148,16 +147,7 @@ export default createStore({
           password: credentials.password,
         });
 
-        if (res.status === 201) {
-          return { success: true };
-        }
-      } catch (err) {
-        return {
-          success: false,
-          status: err.response?.status,
-          error: err.response?.data,
-        };
-      }
+       return res;
     },
 
     /**
@@ -170,6 +160,7 @@ export default createStore({
 
   getters: {
     isAuthenticated: (state) => !!state.token,
+    getFDsCount: (state) => state.fds.length,
     getUser: (state) => state.user,
     getToken: (state) => state.token,
     getFDs: (state) => state.fds,
