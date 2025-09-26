@@ -20,7 +20,7 @@
             Enter your investment details to book a new Fixed Deposit
           </p>
 
-          <!-- Inputs area should grow -->
+          <!-- Inputs area -->
           <div class="flex-grow">
             <!-- Investment Amount -->
             <div class="mb-4">
@@ -39,7 +39,7 @@
               </p>
             </div>
 
-            <!-- Interest Scheme Selection -->
+            <!-- Interest Scheme Dropdown -->
             <div class="mb-4">
               <label class="block text-sm font-medium text-gray-700 mb-2">Interest Scheme</label>
               <SchemeDropdown v-model="selectedScheme" :schemes="schemesToShow" />
@@ -52,9 +52,8 @@
             </div>
           </div>
 
-          <!-- Summary + Button pinned at bottom -->
+          <!-- Summary + Book Button -->
           <div class="mt-auto space-y-4">
-            <!-- Summary Details (left small box; unchanged) -->
             <div v-if="selectedScheme" class="bg-gray-50 rounded-lg p-4">
               <div class="flex items-center justify-between mb-2">
                 <span class="text-sm text-gray-600">Tenure:</span>
@@ -70,12 +69,11 @@
               </div>
             </div>
 
-            <!-- Book FD Button: fixed height for consistency (h-14) -->
             <div class="flex">
               <button
                 @click="bookFD"
                 :disabled="!selectedScheme || loading"
-                class="w-full bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg h-14 flex items-center justify-center"
+                class="w-full bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg h-14 flex items-center justify-center cursor-pointer"
               >
                 <div class="flex items-center justify-center">
                   <span v-if="loading" class="loader mr-2"></span>
@@ -88,7 +86,7 @@
         </div>
       </div>
 
-      <!-- Right Side - Interest Calculation -->
+      <!-- Right Side - Investment Preview -->
       <div class="h-full">
         <div class="bg-white rounded-lg shadow p-6 h-full flex flex-col">
           <div class="flex items-center mb-4">
@@ -98,14 +96,13 @@
             <h3 class="text-lg font-semibold text-gray-800">Preview your investment returns</h3>
           </div>
 
-          <!-- Show Placeholder -->
+          <!-- Placeholder -->
           <div v-if="!selectedScheme" class="flex-1 flex items-center justify-center text-gray-500 text-sm">
             <iframe class="w-full h-full" src="https://lottie.host/embed/82ba37c3-3996-4db1-926c-0686019101de/UGGASiUQnm.lottie"></iframe>
           </div>
 
           <!-- Preview Content -->
           <div v-else class="flex-1 flex flex-col">
-            <!-- Investment Overview -->
             <div class="grid grid-cols-2 gap-4 mb-6">
               <div class="bg-blue-50 rounded-lg p-4 text-center">
                 <div class="text-2xl font-bold text-blue-600 mb-1">₹</div>
@@ -119,7 +116,7 @@
               </div>
             </div>
 
-            <!-- ChartDonut (replaces SVG donut) -->
+            <!-- Donut Chart -->
             <div class="flex flex-col items-center mb-6">
               <ChartDonut
                 :principal="amount"
@@ -149,8 +146,6 @@
                 <span class="text-gray-600">Interest Earned</span>
                 <span class="font-semibold text-green-600">₹{{ formatCurrency(maturityInterest) }}</span>
               </div>
-
-              <!-- TOTAL MATURITY AMOUNT BOX (now same height as Book button) -->
               <div class="flex justify-between items-center h-14 bg-blue-600 text-white px-4 rounded-lg">
                 <span class="font-medium">Total Maturity Amount</span>
                 <span class="font-bold text-lg">₹{{ formatCurrency(maturityAmount) }}</span>
@@ -161,7 +156,7 @@
       </div>
     </div>
 
-    <!-- Schemes Section (unchanged) -->
+    <!-- Schemes Section -->
     <div class="bg-white rounded-lg shadow p-6">
       <div class="flex items-center mb-4">
         <NotebookTabs />
@@ -180,7 +175,7 @@
           <div>
             <div class="flex items-center justify-between mb-2">
               <h3 class="text-base font-semibold text-gray-800">{{ scheme.name }}</h3>
-              <span class="bg-green-100 text-green-800 font-bold text-lg px-2 py-1 rounded-full">  {{ scheme.rate }}% </span>
+              <span class="bg-green-100 text-green-800 font-bold text-lg px-2 py-1 rounded-full"> {{ scheme.rate }}% </span>
             </div>
             <p class="text-xs text-gray-500 mb-4">Tenure: <span class="font-medium">{{ scheme.tenureMonths }} months</span></p>
             <ul class="space-y-2 text-sm text-gray-700">
@@ -207,15 +202,6 @@
         </div>
       </div>
     </div>
-
-    <!-- Toast -->
-    <div v-if="toast.show" :class="toastClass" role="status" aria-live="polite">
-      <div class="flex items-center">
-        <Check v-if="toast.type === 'success'"/>
-        <X v-else />
-        <span class="ml-2">{{ toast.message }}</span>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -224,22 +210,21 @@ import SchemeDropdown from "../components/SchemeDropDown.vue";
 import ChartDonut from "../components/ChartDonut.vue";
 import { mapGetters } from "vuex";
 import axios from "axios";
-import FDCalculator, { STANDARD_FD_SCHEMES } from '../utils/fdCalculations.js';
-import { DotLottieVue } from '@lottiefiles/dotlottie-vue'
-import { IndianRupee,ChartPie,Check,NotebookTabs,X,CirclePlus } from "lucide-vue-next";
+import FDCalculator, { STANDARD_FD_SCHEMES } from "../utils/fdCalculations.js";
+import { DotLottieVue } from "@lottiefiles/dotlottie-vue";
+import { IndianRupee, ChartPie, Check, NotebookTabs, CirclePlus } from "lucide-vue-next";
+import { useToast } from "vue-toastification";
 
 export default {
   name: "BookFD",
-  components: { SchemeDropdown, ChartDonut, DotLottieVue, IndianRupee ,ChartPie,Check,NotebookTabs,X,CirclePlus },
+  components: { SchemeDropdown, ChartDonut, DotLottieVue, IndianRupee, ChartPie, Check, NotebookTabs, CirclePlus },
   data() {
     return {
       amount: 1000,
       minAmount: 1000,
       maxAmount: 1000000,
-      startDate: new Date().toISOString().substr(0, 10),
       selectedScheme: null,
       loading: false,
-      toast: { show: false, message: "", type: "success" },
       baseSchemes: STANDARD_FD_SCHEMES,
     };
   },
@@ -249,55 +234,47 @@ export default {
       return this.getUser?.age >= 60;
     },
     schemesToShow() {
-      return this.baseSchemes.map(scheme => {
+      return this.baseSchemes.map((scheme) => {
         const finalRate = FDCalculator.getApplicableRate(scheme.baseRate, this.getUser?.age || 30);
-        return {
-          ...scheme,
-          rate: Number(finalRate.toFixed(1)),
-          name: scheme.name,
-          tenureMonths: scheme.tenureMonths,
-          baseRate: scheme.baseRate,
-          hasCompound: scheme.hasCompound
-        };
+        return { ...scheme, rate: Number(finalRate.toFixed(1)) };
       });
     },
     effectiveRate() {
-      return this.selectedScheme ? (this.selectedScheme.rate || 0) : 0;
+      return this.selectedScheme ? this.selectedScheme.rate : 0;
     },
     calculationResults() {
-      if (!this.selectedScheme) {
-        return { simple: { interest: 0, maturityAmount: 0 }, compound: { interest: 0, maturityAmount: 0 }, isCompoundEligible: false };
-      }
+      if (!this.selectedScheme) return { simple: { interest: 0, maturityAmount: 0 }, compound: { interest: 0, maturityAmount: 0 }, isCompoundEligible: false };
       return FDCalculator.calculateFDReturns({
         principal: this.amount,
         rate: this.selectedScheme.baseRate,
         tenureMonths: this.selectedScheme.tenureMonths,
-        age: this.getUser?.age || 30
+        age: this.getUser?.age || 30,
       });
     },
     maturityInterest() {
-      const results = this.calculationResults;
-      return results.isCompoundEligible ? results.compound.interest : results.simple.interest;
+      const res = this.calculationResults;
+      return res.isCompoundEligible ? res.compound.interest : res.simple.interest;
     },
     maturityAmount() {
-      const results = this.calculationResults;
-      return results.isCompoundEligible ? results.compound.maturityAmount : results.simple.maturityAmount;
+      const res = this.calculationResults;
+      return res.isCompoundEligible ? res.compound.maturityAmount : res.simple.maturityAmount;
     },
     principalPercentage() {
-      if (!this.selectedScheme || this.maturityAmount === 0) return 0;
-      return (this.amount / this.maturityAmount) * 100;
+      return this.maturityAmount ? (this.amount / this.maturityAmount) * 100 : 0;
     },
     interestPercentage() {
-      if (!this.selectedScheme || this.maturityAmount === 0) return 0;
-      return (this.maturityInterest / this.maturityAmount) * 100;
+      return this.maturityAmount ? (this.maturityInterest / this.maturityAmount) * 100 : 0;
     },
-    toastClass() {
-      return {
-        'fixed top-18 right-6 z-50 px-6 py-4 rounded-lg shadow-lg text-white transition-all duration-300': true,
-        'bg-green-500': this.toast.type === 'success',
-        'bg-red-500': this.toast.type !== 'success'
-      };
-    }
+    formattedMaturityDate() {
+      if (!this.selectedScheme) return "";
+      const today = new Date();
+      today.setMonth(today.getMonth() + this.selectedScheme.tenureMonths);
+      return today.toLocaleDateString();
+    },
+  },
+  setup() {
+    const toast = useToast();
+    return { toast };
   },
   methods: {
     formatCurrency(amount) {
@@ -310,36 +287,25 @@ export default {
         user_id: this.getUser.id,
         amount: this.amount,
         tenure_months: this.selectedScheme.tenureMonths,
-        interest_rate: parseFloat(this.effectiveRate)
+        interest_rate: parseFloat(this.effectiveRate),
       };
       try {
         await axios.post("http://localhost:8080/fd/book", payload, {
           headers: { Authorization: `bearer ${this.getToken}` },
         });
-        this.showToast("Fixed Deposit booked successfully! 🎉", "success");
+        this.toast.success("Fixed Deposit booked successfully! 🎉");
         setTimeout(() => {
           this.selectedScheme = null;
           this.amount = 1000;
         }, 1200);
       } catch (error) {
         console.error(error);
-        this.showToast("Error booking FD. Please try again.", "error");
+        this.toast.error("Error booking FD. Please try again.");
       } finally {
         this.loading = false;
       }
     },
-    showToast(message, type = "success") {
-      this.toast.message = message;
-      this.toast.type = type;
-      this.toast.show = true;
-      setTimeout(() => {
-        this.toast.show = false;
-      }, 4000);
-    },
   },
-  mounted() {
-    this.startDate = new Date().toISOString().substr(0, 10);
-  }
 };
 </script>
 
@@ -358,7 +324,7 @@ export default {
   100% { transform: rotate(360deg); }
 }
 
-/* ensure chart animate */
+/* Donut chart animation */
 circle {
   transition: stroke-dasharray 1s ease-in-out, stroke-dashoffset 1s ease-in-out;
 }
