@@ -1,6 +1,6 @@
 package com.fdsystem.backend.dto;
 
-import com.fdsystem.backend.util.enums.Role;
+import com.fdsystem.backend.entity.enums.Role;
 import lombok.Data;
 
 

@@ -1,8 +1,8 @@
 package com.fdsystem.backend.controller;
 
 import com.fdsystem.backend.dto.UserDashboardDTO;
-import com.fdsystem.backend.model.User;
-import com.fdsystem.backend.model.UserPrincipal;
+import com.fdsystem.backend.entity.User;
+import com.fdsystem.backend.entity.UserPrincipal;
 import com.fdsystem.backend.service.AccruedInterestService;
 import com.fdsystem.backend.service.FixedDepositService;
 import org.springframework.beans.factory.annotation.Autowired;

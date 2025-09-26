@@ -3,7 +3,6 @@ package com.fdsystem.backend.controller;
 
 import com.fdsystem.backend.dto.TicketRequestDTO;
 import com.fdsystem.backend.dto.TicketResponseDTO;
-import com.fdsystem.backend.model.SupportTicket;
 import com.fdsystem.backend.service.SupportTicketService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
