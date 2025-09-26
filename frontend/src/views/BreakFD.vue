@@ -25,7 +25,7 @@
         <div class="flex justify-between px-4"><span>Time Elapsed:</span><span class="font-bold">{{ preview.timeElapsed }} months</span></div>
       </div>
 
-      <!-- Break Calculation -->
+      <!-- Premature Withdrawal Calculation -->
       <div class="bg-red-50 p-4 rounded-lg border border-red-200 text-sm">
         <h4 class="font-medium text-red-600 mb-3">Premature Withdrawal Calculation</h4>
         <div class="space-y-2">
@@ -41,7 +41,7 @@
 
       <!-- Actions -->
       <div class="flex gap-3 pt-4">
-        <button @click="$emit('close')" class="flex-1 border border-gray-300 rounded px-3 py-1 hover:bg-blue-500 hover:text-white cursor-pointer font-bold">Cancel</button>
+        <button @click="$emit('close')" class="flex-1 border border-gray-300 rounded px-3 py-1 hover:bg-gray-100  cursor-pointer font-bold">Cancel</button>
         <button @click="confirmBreakFD" class="flex-1 bg-red-600 text-white hover:bg-red-700 rounded px-3 py-1 cursor-pointer font-bold">Confirm</button>
       </div>
     </div>
@@ -68,7 +68,6 @@ const preview = ref(null);
 
 onMounted(async () => {
   preview.value = await store.dispatch('fetchBreakPreview', props.fdId);
-  console.log(preview.value)
 });
 
 const formatDate = (dateStr) => {

@@ -12,11 +12,7 @@
         <div class="bg-white rounded-lg shadow p-6 h-full flex flex-col">
           <div class="flex items-center mb-4">
             <div class="w-6 h-6 bg-blue-100 rounded mr-3 flex items-center justify-center">
-              <svg class="w-4 h-4 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
-                <path
-                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                ></path>
-              </svg>
+              <IndianRupee class="w-4 h-4 text-blue-600"/>
             </div>
             <h2 class="text-lg font-semibold text-gray-800">FD Details</h2>
           </div>
@@ -36,7 +32,7 @@
               :min="minAmount"
               :max="maxAmount"
               step="1000"
-              placeholder="50000"
+              placeholder="1000"
             />
             <p class="text-gray-500 text-xs mt-1">
               Minimum investment: ₹{{ minAmount.toLocaleString() }}
@@ -79,7 +75,7 @@
         <button
           @click="bookFD"
           :disabled="!selectedScheme || loading"
-          class="w-full bg-blue-600 text-white font-semibold py-4 px-6 rounded-lg hover:bg-blue-700 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
+          class="w-full bg-blue-600 text-white font-semibold py-4 px-6 rounded-lg hover:bg-blue-700 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg mt-6 cursor-pointer"
         >
           <div class="flex items-center justify-center">
             <span v-if="loading" class="loader mr-2"></span>
@@ -257,7 +253,7 @@
           </div>
           <button
             @click="selectedScheme = scheme"
-            class="mt-5 w-full bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors duration-300"
+            class="mt-5 w-full bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors duration-300 cursor-pointer"
           >
             Choose This Plan
           </button>
@@ -303,20 +299,20 @@ import SchemeDropdown from "../components/SchemeDropDown.vue";
 import { mapGetters } from "vuex";
 import axios from "axios";
 import FDCalculator, { STANDARD_FD_SCHEMES } from '../utils/fdCalculations.js';
+import { IndianRupee } from 'lucide-vue-next'
 
 export default {
   name: "BookFD",
-  components: { SchemeDropdown },
+  components: { SchemeDropdown, IndianRupee },
   data() {
     return {
-      amount: 50000,
+      amount: 1000,
       minAmount: 1000,
       maxAmount: 1000000,
       startDate: new Date().toISOString().substr(0, 10),
       selectedScheme: "",
       loading: false,
       toast: { show: false, message: "", type: "success" },
-      // Using standardized schemes from utility
       baseSchemes: STANDARD_FD_SCHEMES,
     };
   },
@@ -407,7 +403,7 @@ export default {
         // Reset form after successful booking
         setTimeout(() => {
           this.selectedScheme = "";
-          this.amount = 50000;
+          this.amount = 1000;
         }, 2000);
       } catch (error) {
         console.error(error);

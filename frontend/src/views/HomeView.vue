@@ -51,9 +51,9 @@ export default {
 
       securityFeatures: [
         { icon: Shield, title: "256-bit SSL Encryption", description: "All data transmission is protected using bank-grade encryption protocols." },
-        { icon: Lock, title: "Credential-based Authentication", description: "Secure login using username and password credentials with enforced complexity rules." },
-        { icon: Eye, title: "Real-time System Monitoring", description: "Continuous monitoring of system performance and activity to ensure reliability and uptime." },
-        { icon: Lock, title: "Secure Data Storage", description: "Sensitive data is stored securely following best practices for encryption and access control." }
+        { icon: Lock, title: "Credential-based Authentication", description: "Secure login with username and password enforcing complexity rules." },
+        { icon: Eye, title: "Real-time System Monitoring", description: "Continuous system monitoring to ensure performance, reliability, and uptime." },
+        { icon: Lock, title: "Secure Data Storage", description: "Secure storage of sensitive data with encryption and access control." }
       ],
 
       compliance: [

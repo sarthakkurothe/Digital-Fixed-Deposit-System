@@ -8,32 +8,44 @@
 
   <!-- Sidebar -->
   <div class="sidebar-container" :class="sidebarClasses">
-    <!-- Sidebar Content -->
     <div class="flex flex-col h-full bg-white border-r border-gray-200">
-        
+
+      <!-- Logo + Collapse -->
+      <div class="flex items-center justify-between p-4 border-b border-gray-200">
+  <router-link 
+    to="/user/dashboard" 
+    class="flex items-center space-x-4"
+  >
+    <div
+      class="w-9 h-9 rounded-lg flex items-center justify-center text-white shadow-sm transform transition-transform duration-200 group-hover:scale-105"
+      style="background: linear-gradient(135deg,#2563eb,#4f46e5)"
+    >
+      <Vault class="w-5 h-5" />
+    </div>
+    <span class="text-xl md:text-2xl font-extrabold text-slate-900">SmartFD</span>
+  </router-link>
+
+        <!-- Collapse Arrow -->
+        <button 
+          @click="toggleSidebar"
+          class="flex items-center justify-center w-8 h-8 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors duration-200"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path v-if="isCollapsed" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            <path v-else stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+          </svg>
+        </button>
+      </div>
 
       <!-- Navigation Menu -->
       <nav class="flex-1 p-4">
         <div class="space-y-1">
 
-            <!-- Logo -->
-          <router-link to="/user/dashboard" class="flex items-center space-x-2 text-gray-800 hover:text-blue-600 transition-colors">
-            <span class="text-3xl">
-             <div
-              class="w-9 h-9 rounded-lg flex items-center justify-center text-white shadow-sm transform transition-transform duration-200 group-hover:scale-105"
-              style="background: linear-gradient(135deg,#2563eb,#4f46e5)"
-            >
-              <Vault class="w-5 h-5" />
-            </div>  
-            </span>
-            <span v-if="!isCollapsed" class="text-xl font-bold">SmartFD</span>
-          </router-link>
-                <br>
-                
+          <!-- Dashboard -->
           <router-link 
             to="/user/dashboard" 
             class="nav-item group"
-            :class="navItemClasses($route.name === 'Dashboard')"
+            :class="[navItemClasses($route.name === 'Dashboard'), { 'nav-item-active': $route.name === 'Dashboard' }]"
           >
             <div class="flex items-center">
               <div class="w-5 h-5 flex items-center justify-center mr-3">
@@ -44,13 +56,14 @@
               </div>
               <span v-if="!isCollapsed" class="font-medium">Dashboard</span>
             </div>
-            <div v-if="$route.name === 'Dashboard'" class="absolute left-0 top-0 bottom-0 w-1 bg-blue-600 rounded-r"></div>
+            <div v-if="$route.name === 'Dashboard'" class="active-indicator"></div>
           </router-link>
-          
+
+          <!-- Book FD -->
           <router-link 
             to="/user/book-fd" 
             class="nav-item group"
-            :class="navItemClasses($route.name === 'BookFD')"
+            :class="[navItemClasses($route.name === 'BookFD'), { 'nav-item-active': $route.name === 'BookFD' }]"
           >
             <div class="flex items-center">
               <div class="w-5 h-5 flex items-center justify-center mr-3">
@@ -60,13 +73,14 @@
               </div>
               <span v-if="!isCollapsed" class="font-medium">Book FD</span>
             </div>
-            <div v-if="$route.name === 'BookFD'" class="absolute left-0 top-0 bottom-0 w-1 bg-blue-600 rounded-r"></div>
+            <div v-if="$route.name === 'BookFD'" class="active-indicator"></div>
           </router-link>
-          
+
+          <!-- My FDs -->
           <router-link 
             to="/user/my-fds" 
             class="nav-item group"
-            :class="navItemClasses($route.name === 'MyFDs')"
+            :class="[navItemClasses($route.name === 'MyFDs'), { 'nav-item-active': $route.name === 'MyFDs' }]"
           >
             <div class="flex items-center">
               <div class="w-5 h-5 flex items-center justify-center mr-3">
@@ -76,13 +90,14 @@
               </div>
               <span v-if="!isCollapsed" class="font-medium">My FDs</span>
             </div>
-            <div v-if="$route.name === 'MyFDs'" class="absolute left-0 top-0 bottom-0 w-1 bg-blue-600 rounded-r"></div>
+            <div v-if="$route.name === 'MyFDs'" class="active-indicator"></div>
           </router-link>
-          
+
+          <!-- Calculator -->
           <router-link 
             to="/user/calculator" 
             class="nav-item group"
-            :class="navItemClasses($route.name === 'Calculator')"
+            :class="[navItemClasses($route.name === 'Calculator'), { 'nav-item-active': $route.name === 'Calculator' }]"
           >
             <div class="flex items-center">
               <div class="w-5 h-5 flex items-center justify-center mr-3">
@@ -92,13 +107,14 @@
               </div>
               <span v-if="!isCollapsed" class="font-medium">Calculator</span>
             </div>
-            <div v-if="$route.name === 'Calculator'" class="absolute left-0 top-0 bottom-0 w-1 bg-blue-600 rounded-r"></div>
+            <div v-if="$route.name === 'Calculator'" class="active-indicator"></div>
           </router-link>
-          
+
+          <!-- Support -->
           <router-link 
             to="/user/support" 
             class="nav-item group"
-            :class="navItemClasses($route.name === 'Support')"
+            :class="[navItemClasses($route.name === 'Support'), { 'nav-item-active': $route.name === 'Support' }]"
           >
             <div class="flex items-center">
               <div class="w-5 h-5 flex items-center justify-center mr-3">
@@ -108,61 +124,34 @@
               </div>
               <span v-if="!isCollapsed" class="font-medium">Support</span>
             </div>
-            <div v-if="$route.name === 'Support'" class="absolute left-0 top-0 bottom-0 w-1 bg-blue-600 rounded-r"></div>
+            <div v-if="$route.name === 'Support'" class="active-indicator"></div>
           </router-link>
+
         </div>
       </nav>
 
-      <!-- User Profile Section -->
-      <div class="p-4 border-t border-gray-200 cursor-pointer">
+      <!-- Logout Button -->
+      <div class="p-4 border-t border-gray-200">
         <button
           @click="signout"
-          class="flex items-center w-full px-4 py-2 text-gray-700 rounded-lg hover:bg-red-50 hover:text-red-600 transition group cursor-pointer"
+          class="flex items-center w-full px-4 py-2 rounded-lg bg-red-100 text-red-700 hover:bg-red-200 hover:text-red-800 transition group cursor-pointer"
         >
-          <!-- Fixed-size icon -->
-          <LogOutIcon
-            class="w-6 h-6 text-gray-500 group-hover:text-red-600"
-          />
-
-          <!-- Only show text if sidebar is expanded -->
-          <span
-            v-if="!isCollapsed"
-            class="ml-3 font-medium whitespace-nowrap"
-          >
-            Logout
-          </span>
+          <LogOutIcon class="w-6 h-6 mr-3"/>
+          <span v-if="!isCollapsed" class="font-medium whitespace-nowrap">Sign out</span>
         </button>
       </div>
 
-      <!-- Bottom Actions -->
-      <div class="p-4 border-t border-gray-100">
-        <button 
-          @click="toggleSidebar"
-          class="hidden md:flex w-full items-center justify-center px-3 py-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors duration-200"
-          :class="{ 'px-2': isCollapsed }"
-        >
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path v-if="isCollapsed" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-            <path v-else stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-          </svg>
-          <span v-if="!isCollapsed" class="ml-2 text-xs font-medium">Collapse</span>
-        </button>
-         
-      </div>
     </div>
   </div>
 </template>
 
 <script>
-//import { ArrowLeftEndOnRectangleIcon } from '@heroicons/vue/24/solid'
-import { ArrowLeft, Vault } from 'lucide-vue-next'
-import {  LogOutIcon } from 'lucide-vue-next'
+import { Vault, LogOutIcon } from 'lucide-vue-next'
 import { mapActions } from 'vuex/dist/vuex.cjs.js'
 
 export default {
   name: 'Sidebar',
-  components: { Vault },
-  components: { LogOutIcon },
+  components: { Vault, LogOutIcon },
 
   data() {
     return {
@@ -176,8 +165,8 @@ export default {
       return [
         'fixed top-0 left-0 h-full shadow-lg z-50 transition-all duration-300',
         {
-          'w-22': this.isCollapsed,
-          'w-64': !this.isCollapsed,
+          'w-30': this.isCollapsed, 
+          'w-65': !this.isCollapsed, 
           'transform -translate-x-full md:translate-x-0': !this.showMobile,
           'transform translate-x-0': this.showMobile
         }
@@ -186,38 +175,31 @@ export default {
   },
 
   methods: {
-
     ...mapActions(['logout']),
     navItemClasses(isActive) {
       return [
-        'flex items-center px-3 py-3 rounded-lg transition-all duration-200 relative text-gray-700 mb-1',
+        'flex items-center px-3 py-3 rounded-lg transition-all duration-300 relative text-gray-700 mb-1 transform',
         {
-          'bg-blue-50 text-blue-700 border-r-2 border-blue-700': isActive,
-          'hover:bg-gray-100 hover:text-gray-900': !isActive,
+          'bg-blue-600/90 text-white shadow-md backdrop-blur-md scale-105': isActive,
+          'hover:bg-gray-100 hover:shadow-lg hover:scale-[1.02] hover:text-gray-900': !isActive,
           'justify-center': this.isCollapsed
         }
       ]
     },
-
     toggleSidebar() {
       if (window.innerWidth < 768) {
-        // On mobile, toggle visibility
         this.showMobile = !this.showMobile
       } else {
-        // On desktop, toggle collapse
         this.isCollapsed = !this.isCollapsed
         this.$emit('sidebar-toggled', this.isCollapsed)
       }
     },
-
     openMobileSidebar() {
       this.showMobile = true
     },
-
     closeMobileSidebar() {
       this.showMobile = false
     },
-
     signout() {
       this.logout()
       this.$router.push('/')
@@ -226,16 +208,19 @@ export default {
 }
 </script>
 
-
 <style scoped>
 .nav-item {
   text-decoration: none;
+  transition: all 0.3s ease-in-out;
 }
 
-/* Custom animations */
-@media (max-width: 768px) {
-  .sidebar-container {
-    width: 16rem !important;
-  }
+/* Smooth pop-out */
+.nav-item:hover {
+  transform: scale(1.02);
+}
+
+/* Extra glowing effect for active tab */
+.nav-item-active {
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
 }
 </style>
