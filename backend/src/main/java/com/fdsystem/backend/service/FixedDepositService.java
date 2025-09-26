@@ -1,6 +1,8 @@
 package com.fdsystem.backend.service;
 
+import com.fdsystem.backend.dto.AdminFixedDepositDto;
 import com.fdsystem.backend.dto.BreakPreviewResponse;
+import com.fdsystem.backend.dto.FixedDepositDTO;
 import com.fdsystem.backend.entity.FixedDeposit;
 import com.fdsystem.backend.entity.SupportTicket;
 import com.fdsystem.backend.entity.User;
@@ -17,6 +19,7 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service public class FixedDepositService {
@@ -92,9 +95,21 @@ import java.util.List;
         this.fixedDepositRepository.save(fixedDeposit);
     }
 
-    public List<FixedDeposit> getAllFDs() {
+    public List<AdminFixedDepositDto> getAllFDs() {
         List<FixedDeposit> allFds = this.fixedDepositRepository.findAll();
+        List<AdminFixedDepositDto> allFdsDto = new ArrayList<>();
+        for(FixedDeposit fixedDeposit: allFds){
+            AdminFixedDepositDto fixedDepositDto = new AdminFixedDepositDto();
+            fixedDepositDto.setFdId(fixedDeposit.getId());
+            fixedDepositDto.setAmount(fixedDeposit.getAmount());
+            fixedDepositDto.setName(fixedDeposit.getUser().getName());
+            fixedDepositDto.setInterest_rate(fixedDeposit.getInterest_rate());
+            fixedDepositDto.setEmail(fixedDeposit.getUser().getEmail());
+            fixedDepositDto.setMature_date(fixedDeposit.getMaturity_date());
+            fixedDepositDto.setFdStatus(fixedDeposit.getStatus().toString());
+            allFdsDto.add(fixedDepositDto);
+        }
 
-
+        return allFdsDto;
     }
 }

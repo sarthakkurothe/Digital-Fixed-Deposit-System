@@ -1,7 +1,11 @@
 package com.fdsystem.backend.dto;
 
-import java.sql.Date;
+import lombok.Data;
 
+import java.util.Date;
+
+
+@Data
 public class AdminFixedDepositDto {
   private Long fdId;
   private String name;

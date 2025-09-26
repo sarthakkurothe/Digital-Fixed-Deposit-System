@@ -1,6 +1,6 @@
 <template>
   <div :style="{ width: size + 'px', height: size + 'px' }" class="relative">
-    <Doughnut :data="chartData" :options="options" :width="size" :height="size" />
+    <Doughnut :data="chartData" :options="options" :width="size" :height="size" :key="chartData.datasets[0].data.join('-')" />
     <!-- center label area -->
     <div class="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
       <div class="text-sm text-gray-600">Tenure</div>

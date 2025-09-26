@@ -196,54 +196,16 @@ export default {
       currentPage: 1,
       pageSize: 10,
       // Mock data - replace with actual data from store
-      mockFDs: [
-        {
-          id: 1,
-          fdNumber: 'FD001',
-          customerName: 'John Doe',
-          customerEmail: 'john@example.com',
-          amount: 50000,
-          interestRate: 7.5,
-          maturityDate: '2024-12-31',
-          status: 'ACTIVE',
-          scheme: 'Regular FD'
-        },
-        {
-          id: 2,
-          fdNumber: 'FD002',
-          customerName: 'Jane Smith',
-          customerEmail: 'jane@example.com',
-          amount: 100000,
-          interestRate: 8.0,
-          maturityDate: '2024-11-15',
-          status: 'PENDING',
-          scheme: 'Senior Citizen FD'
-        },
-        {
-          id: 3,
-          fdNumber: 'FD003',
-          customerName: 'Mike Johnson',
-          customerEmail: 'mike@example.com',
-          amount: 75000,
-          interestRate: 7.8,
-          maturityDate: '2025-01-20',
-          status: 'ACTIVE',
-          scheme: 'Tax Saver FD'
-        }
-      ]
+      allFDs: []
     }
   },
   computed: {
-    ...mapGetters(['allFixedDeposits']),
+    ...mapActions(['allFixedDeposits']),
     mainContentClasses() {
       if (this.isMobile) {
         return 'ml-0'
       }
       return this.sidebarCollapsed ? 'md:ml-0' : 'md:ml-65'
-    },
-    allFDs() {
-      // Use store data if available, otherwise use mock data
-      return this.allFixedDeposits || this.mockFDs
     },
     filteredFDs() {
       let filtered = this.allFDs
@@ -333,7 +295,10 @@ export default {
     // Fetch FDs data
     try {
       if (this.fetchAllFixedDeposits) {
-        await this.fetchAllFixedDeposits()
+        const res = await this.fetchAllFixedDeposits()
+
+        this.allFds = res;
+
       }
     } catch (error) {
       console.error('Failed to load fixed deposits:', error)

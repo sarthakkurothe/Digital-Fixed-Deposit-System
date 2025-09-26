@@ -1,5 +1,6 @@
 package com.fdsystem.backend.controller;
 
+import com.fdsystem.backend.dto.AdminFixedDepositDto;
 import com.fdsystem.backend.dto.AdminTicketDTO;
 import com.fdsystem.backend.entity.FixedDeposit;
 import com.fdsystem.backend.entity.SupportTicket;
@@ -26,8 +27,8 @@ public class AdminController {
   }
 
   @GetMapping("/fds")
-  public ResponseEntity<List<FixedDeposit>> getFds(){
-    return new ResponseEntity<>(this.fixedDepositService.getAllFDsByStatus(FdStatus.PENDING), HttpStatus.FOUND);
+  public ResponseEntity<List<AdminFixedDepositDto>> getFds(){
+    return new ResponseEntity<>(this.fixedDepositService.getAllFDs(), HttpStatus.OK);
   }
 
   @PostMapping("/fd/{id}")
