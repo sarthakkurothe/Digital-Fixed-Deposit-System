@@ -9,11 +9,25 @@ import Login from '../views/Login.vue'
 import Register from '../views/Register.vue'
 import Interface from '../components/Interface.vue'
 import store from '../store'
+import Admin from '../views/Admin.vue'
+import AdminFixedDeposits from '../views/AdminFixedDeposits.vue'
+import AdminSupportTickets from '../views/AdminSupportTickets.vue'
 
 const routes = [
   { path: '/', name: 'Home', component: HomeView },
   { path: '/login', name: 'Login', component: Login },
   { path: '/register', name: 'Register', component: Register },
+
+
+  {
+    path: '/admin',name: 'Admin', component:Admin
+  },
+  {
+    path: '/admin/fds', name: 'AdminFDs', component: AdminFixedDeposits
+  },
+  {
+    path: '/admin/tickets', name: 'AdminTickets', component: AdminSupportTickets
+  },
   {
     path: '/user',
     component: Interface,

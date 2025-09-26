@@ -53,8 +53,7 @@
               <span v-else>Create Account</span>
             </button>
 
-            <!-- Error -->
-            <p v-if="error" class="text-red-500 text-center text-sm mt-2">{{ error }}</p>
+            
           </form>
 
           <div class="text-center text-sm text-gray-600 mt-4">
@@ -79,10 +78,11 @@ import Header from "../components/Header.vue";
 import { mapActions } from "vuex/dist/vuex.cjs.js";
 import { DotLottieVue } from '@lottiefiles/dotlottie-vue'
 import { Eye,EyeOff } from "lucide-vue-next";
+import LoadingSpinner from "../components/LoadingSpinner.vue";
 
 
 export default {
-  components: { Eye, EyeOff, Header,DotLottieVue},
+  components: { Eye, EyeOff,LoadingSpinner, Header,DotLottieVue},
   data() {
     return {
       name: "",
@@ -124,7 +124,6 @@ export default {
           age: this.age,
           password: this.password,
         });
-        console.log("Registration response:", res);
         if (res.status === 201) {
           this.successMessage = "Registration successful! 🎉 You can now log in.";
           this.name = this.email = this.phone = this.age = this.password = this.confirmPassword = "";
