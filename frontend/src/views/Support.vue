@@ -9,7 +9,7 @@
 
       <!-- Gradient Create Ticket Button -->
       <button
-        @click="showNewTicketDialog = true"
+        @click="openModal"
         class="flex items-center gap-2 px-5 py-2 rounded-md bg-blue-600 text-white font-bold hover:bg-blue-700 shadow-md transition-all cursor-pointer"
       >
         <Plus class="w-4 h-4" />
@@ -53,75 +53,103 @@
       </div>
     </div>
 
-    <!-- Modal -->
-    <div
-      v-if="showNewTicketDialog"
-      class="fixed inset-0 w-full h-full z-50 flex items-center justify-center bg-black/40 backdrop-blur-md"
-      @click.self="closeModal"
-    >
-      <div class="bg-white rounded-xl shadow-xl max-w-md w-full p-6">
-        <h2 class="text-xl font-bold mb-1">Create Support Ticket</h2>
-        <p class="text-sm text-gray-500 mb-4">
-          Describe your issue and we'll help you resolve it quickly.
-        </p>
+    <transition name="modal-fade" appear>
+      <div
+        v-if="showNewTicketDialog"
+        class="fixed inset-0 w-full h-full z-50 flex items-center justify-center px-4 py-8"
+        role="dialog"
+        aria-modal="true"
+      >
+        <!-- overlay -->
+        <div
+          class="absolute inset-0 bg-black/50 backdrop-blur-sm"
+          @click.self="closeModal"
+        ></div>
 
-        <form @submit.prevent="handleSubmitTicket" class="space-y-4" novalidate>
-          <!-- FD Dropdown -->
-          <div class="space-y-1">
-            <label class="text-sm font-medium">Related FD</label>
-            <SchemeDropdown
-              v-model="newTicket.fd"
-              :schemes="fixedDeposits"
-              placeholder="Select FD"
-            />
-            <p v-if="errors.fd" class="text-red-500 text-xs mt-1">{{ errors.fd }}</p>
-          </div>
+        <!-- modal card -->
+        <div
+          class="relative bg-white rounded-2xl shadow-2xl max-w-xl w-full mx-auto z-10 overflow-hidden"
+        >
+          <!-- header -->
+          <div class="flex items-center justify-between gap-3 p-5 border-b border-gray-100">
+            <div class="flex items-center gap-3">
+              <div class="flex items-center justify-center w-12 h-12 rounded-xl bg-blue-50 text-blue-600">
+                <Plus class="w-6 h-6" />
+              </div>
+              <div>
+                <h3 class="text-lg font-semibold text-slate-900">Create Support Ticket</h3>
+                <p class="text-sm text-slate-500">Describe your issue and we'll help you resolve it quickly.</p>
+              </div>
+            </div>
 
-          <!-- Subject -->
-          <div class="space-y-1">
-            <label class="text-sm font-medium">Subject</label>
-            <input
-              v-model="newTicket.subject"
-              type="text"
-              placeholder="Brief description of your issue"
-              class="w-full p-2 rounded-md bg-white border border-gray-300 focus:border-gray-500 focus:outline-none"
-            />
-            <p v-if="errors.subject" class="text-red-500 text-xs mt-1">{{ errors.subject }}</p>
-          </div>
-
-          <!-- Description -->
-          <div class="space-y-1">
-            <label class="text-sm font-medium">Description</label>
-            <textarea
-              v-model="newTicket.description"
-              placeholder="Provide detailed information about your query or issue"
-              rows="4"
-              class="w-full p-2 rounded-md bg-white border border-gray-300 focus:border-gray-500 focus:outline-none"
-            ></textarea>
-            <p v-if="errors.description" class="text-red-500 text-xs mt-1">{{ errors.description }}</p>
-          </div>
-
-          <!-- Actions -->
-          <div class="flex gap-3 pt-4">
             <button
-              type="button"
               @click="closeModal"
-              class="flex-1 px-4 py-2 rounded-md bg-white border border-red-500 text-red-600 font-bold hover:bg-red-50 transition-all cursor-pointer"
+              class="p-2 rounded-md text-slate-500 hover:bg-gray-100 hover:text-slate-700 transition cursor-pointer"
+              aria-label="Close create ticket dialog"
             >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              class="flex-1 px-4 py-2 rounded-md bg-blue-600 text-white font-bold hover:bg-blue-700 shadow-md transition-all cursor-pointer"
-            >
-              Confirm
+              <X class="w-5 h-5" />
             </button>
           </div>
-        </form>
-      </div>
-    </div>
 
-    <!-- Tickets List -->
+          <!-- body / form -->
+          <form @submit.prevent="handleSubmitTicket" class="p-6 space-y-4" novalidate>
+            <!-- FD Dropdown -->
+            <div class="space-y-1">
+              <label class="text-sm font-medium">Related FD</label>
+              <SchemeDropdown
+                v-model="newTicket.fd"
+                :schemes="fixedDeposits"
+                placeholder="Select FD"
+              />
+              <p v-if="errors.fd" class="text-red-500 text-xs mt-1">{{ errors.fd }}</p>
+            </div>
+
+            <!-- Subject -->
+            <div class="space-y-1">
+              <label class="text-sm font-medium">Subject</label>
+              <input
+                v-model="newTicket.subject"
+                type="text"
+                placeholder="Brief description of your issue"
+                class="w-full p-2 rounded-md bg-white border border-gray-300 focus:border-gray-500 focus:outline-none"
+              />
+              <p v-if="errors.subject" class="text-red-500 text-xs mt-1">{{ errors.subject }}</p>
+            </div>
+
+            <!-- Description -->
+            <div class="space-y-1">
+              <label class="text-sm font-medium">Description</label>
+              <textarea
+                v-model="newTicket.description"
+                placeholder="Provide detailed information about your query or issue"
+                rows="5"
+                class="w-full p-2 rounded-md bg-white border border-gray-300 focus:border-gray-500 focus:outline-none"
+              ></textarea>
+              <p v-if="errors.description" class="text-red-500 text-xs mt-1">{{ errors.description }}</p>
+            </div>
+
+            <!-- footer actions -->
+            <div class="flex gap-3 pt-4 justify-end">
+              <button
+                type="button"
+                @click="closeModal"
+                class="px-4 py-2 rounded-md bg-white border border-red-500 text-red-600 font-bold hover:bg-red-50 transition-all cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                type="submit"
+                class="px-4 py-2 rounded-md bg-blue-600 text-white font-bold hover:bg-blue-700 shadow-md transition-all cursor-pointer"
+              >
+                Confirm
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </transition>
+
+    <!-- Filter / Tickets List -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
       <div class="lg:col-span-2 space-y-4">
         <div class="flex items-center justify-between mb-2">
@@ -211,7 +239,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> 
 </template>
 
 <script setup>
@@ -220,20 +248,20 @@ import {
   Plus,
   Clock,
   CheckCircle,
-  XCircle,
+  X,
   FileText,
   Phone,
   Mail,
   MessageSquare,
   Search
 } from "lucide-vue-next"
-import { ref, onMounted, computed } from "vue"
+import { ref, onMounted, computed, onUnmounted } from "vue"
 import { useStore } from "vuex"
 import axios from "../api"
 import SchemeDropdown from "../components/SchemeDropdown.vue"
-import { useToast } from "vue-toastification" // <-- import toast
+import { useToast } from "vue-toastification"
 
-const toast = useToast() // <-- initialize toast
+const toast = useToast() 
 
 // store
 const store = useStore()
@@ -250,7 +278,16 @@ const errors = ref({})
 onMounted(async () => {
   await store.dispatch("fetchFDs") // fetch user's FDs
   await fetchTickets()
+  window.addEventListener("keydown", onKeydown) // ESC handler for modal
 })
+
+onUnmounted(() => {
+  window.removeEventListener("keydown", onKeydown)
+})
+
+const onKeydown = (e) => {
+  if (e.key === "Escape" && showNewTicketDialog.value) closeModal()
+}
 
 const userId = computed(() => store.getters.getUser?.id)
 
@@ -265,15 +302,29 @@ const fixedDeposits = computed(() =>
 )
 
 const fetchTickets = async () => {
-  if (!userId.value) return
+  if (!userId.value) {
+    loading.value = false
+    return
+  }
   try {
     const res = await axios.get(`/support/user/${userId.value}`)
     tickets.value = res.data
   } catch (err) {
     console.error("Error fetching tickets:", err)
+    toast.error("Failed to fetch tickets")
   } finally {
     loading.value = false
   }
+}
+
+// open/close modal helpers
+const openModal = () => {
+  showNewTicketDialog.value = true
+}
+const closeModal = () => {
+  showNewTicketDialog.value = false
+  newTicket.value = { fd: null, subject: "", description: "" }
+  errors.value = {}
 }
 
 // submit ticket
@@ -299,13 +350,6 @@ const handleSubmitTicket = async () => {
     console.error("Error creating ticket:", err)
     toast.error("Failed to create support ticket ❌")
   }
-}
-
-// modal close
-const closeModal = () => {
-  showNewTicketDialog.value = false
-  newTicket.value = { fd: null, subject: "", description: "" }
-  errors.value = {}
 }
 
 // filtered tickets
@@ -338,7 +382,7 @@ const statusIcon = (status) => {
     case "RESOLVED":
       return CheckCircle
     case "CLOSED":
-      return XCircle
+      return X
     default:
       return HelpCircle
   }
@@ -351,5 +395,16 @@ const statusIcon = (status) => {
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;  
   overflow: hidden;
+}
+
+/* Modal animation */
+.modal-fade-enter-active,
+.modal-fade-leave-active {
+  transition: opacity 200ms ease, transform 200ms ease;
+}
+.modal-fade-enter-from,
+.modal-fade-leave-to {
+  opacity: 0;
+  transform: translateY(8px) scale(0.995);
 }
 </style>

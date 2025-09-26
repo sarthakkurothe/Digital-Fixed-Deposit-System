@@ -39,15 +39,11 @@
           <!-- Filter Header -->
           <div class="flex items-center justify-between mb-6">
             <h3 class="text-lg font-semibold text-gray-800 flex items-center gap-2">
-              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.207A1 1 0 013 6.5V4z"/>
-              </svg>
-              Filter & Search
+              <Filter class="w-5 h-5 text-gray-600" /> Filter & Search
             </h3>
             <button
               @click="resetFilters"
-              class="text-sm text-gray-600 hover:text-gray-800 px-3 py-1 rounded border border-gray-300 hover:border-gray-400 cursor-pointer
-              transition-colors"
+              class="text-sm text-gray-600 hover:text-gray-800 px-3 py-1 rounded border border-gray-300 hover:border-gray-400 cursor-pointer transition-colors"
             >
               Reset All
             </button>
@@ -65,9 +61,7 @@
                   placeholder="Search by ID, amount, or any detail..."
                   class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                 />
-                <svg class="absolute left-3 top-3 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                </svg>
+                <Search class="absolute left-3 top-3 w-4 h-4 text-gray-400" />
               </div>
             </div>
 
@@ -104,7 +98,6 @@
               </select>
             </div>
           </div>
- 
         </div>
       </div>
 
@@ -155,9 +148,7 @@
 
       <!-- No Results Message -->
       <div v-if="filteredFds.length === 0" class="text-center py-12 bg-white rounded-xl border border-gray-200">
-        <svg class="w-16 h-16 mx-auto text-gray-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-        </svg>
+        <FolderX class="w-16 h-16 mx-auto text-gray-300 mb-4" />
         <h3 class="text-lg font-medium text-gray-700 mb-2">No FDs Found</h3>
         <p class="text-gray-500 mb-4">Try adjusting your filters to see more results</p>
         <button
@@ -181,62 +172,136 @@
       </div>
     </div>
 
-    <!-- Modals (unchanged) -->
-    <!-- View FD Modal -->
-    <div
-      v-if="showModal"
-      class="fixed inset-0 flex items-center justify-center bg-black/40 z-50"
-    >
-      <div class="bg-white p-6 rounded-lg w-100 space-y-4">
-        <h2 class="text-xl md:text-2xl font-semibold text-gray-700 mb-4 text-center">
-          <InfoIcon class="w-5 h-5 text-blue-600" />Fixed Deposit Details</h2>
-        <div class="bg-gray-100 p-4 rounded-lg space-y-2 text-base">
-          <div class="flex justify-between px-4"><span>ID:</span><span class="font-bold">{{ selectedFD.id }}</span></div>
-          <div class="flex justify-between px-4"><span>Amount:</span><span class="font-bold">₹{{ selectedFD.amount.toLocaleString('en-IN') }}</span></div>
-          <div class="flex justify-between px-4"><span>Interest Rate:</span><span class="font-bold">{{ selectedFD.interest_rate }}%</span></div>
-          <div class="flex justify-between px-4"><span>Tenure:</span><span class="font-bold">{{ selectedFD.tenure_months }} months</span></div>
-          <div class="flex justify-between px-4"><span>Start Date:</span><span class="font-bold">{{ formatDate(selectedFD.start_date) }}</span></div>
-          <div class="flex justify-between px-4"><span>Maturity Date:</span><span class="font-bold">{{ formatDate(selectedFD.maturity_date) }}</span></div>
-          <div class="flex justify-between px-4"><span>Accrued Interest:</span><span class="font-bold">₹{{ selectedFD.accrued_interest.toLocaleString('en-IN') }}</span></div>
-          <div class="flex justify-between px-4"><span>Status:</span><span class="font-bold">{{ selectedFD.status }}</span></div>
-        </div>
-        <div class="flex justify-center">
-          <button
-            @click="closeModal"
-            class="w-1/2 bg-blue-600 hover:bg-blue-700 text-white font-bold px-4 py-2 rounded cursor-pointer"
-          >
-          Cancel
-          </button>
+    <!-- Improved View FD Modal (replaced the original) -->
+    <transition name="modal-fade" appear>
+      <div
+        v-if="showModal"
+        class="fixed inset-0 z-50 flex items-center justify-center px-4 py-8"
+        aria-modal="true"
+        role="dialog"
+        @keydown.esc="closeModal"
+      >
+        <!-- overlay: clicking background closes modal -->
+        <div
+          class="absolute inset-0 bg-black/50 backdrop-blur-sm"
+          @click.self="closeModal"
+        ></div>
+
+        <!-- modal card -->
+        <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-3xl mx-auto z-10 overflow-hidden">
+          <!-- header -->
+          <div class="flex items-center gap-3 p-5 border-b border-gray-100">
+            <div class="flex items-center justify-center w-12 h-12 rounded-xl bg-blue-50 text-blue-600">
+              <Info class="w-6 h-6" />
+            </div>
+
+            <div class="flex-1">
+              <h3 class="text-lg font-semibold text-slate-900">Fixed Deposit Details</h3>
+              <p class="text-sm text-slate-500">Quick overview and actions for this FD</p>
+            </div>
+
+            <button
+              class="p-2 rounded-md text-slate-500 hover:bg-gray-100 hover:text-slate-700 transition cursor-pointer"
+              @click="closeModal"
+              aria-label="Close details dialog"
+            >
+              <X class="w-5 h-5" />
+            </button>
+          </div>
+
+          <!-- content -->
+          <div class="p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
+            <!-- left column: big numbers -->
+            <div class="md:col-span-1 bg-gradient-to-br from-white to-blue-50 p-4 rounded-xl flex flex-col gap-3">
+              <div>
+                <div class="text-xs text-slate-400 mb-1">FD ID</div>
+                <div class="flex items-center gap-2">
+                  <div class="font-semibold text-slate-900">#{{ selectedFD?.id ?? '—' }}</div>
+                  <button
+                    v-if="selectedFD?.id != null"
+                    @click="copyToClipboard(String(selectedFD.id), 'FD ID copied')"
+                    class="text-slate-400 hover:text-slate-700 p-1 rounded"
+                    title="Copy FD ID"
+                  >
+                    <Clipboard class="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <div class="text-xs text-slate-400 mb-1">Amount</div>
+                <div class="text-2xl font-bold text-slate-900">₹{{ formattedAmount }}</div>
+              </div>
+
+              <div>
+                <div class="text-xs text-slate-400 mb-1">Estimated Accrued</div>
+                <div class="text-lg font-semibold text-green-600">₹{{ formattedAccrued }}</div>
+              </div>
+
+              <div>
+                <div class="text-xs text-slate-400 mb-1">Status</div>
+                <div>
+                  <span :class="statusBadgeClass" class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium">
+                    <span v-if="selectedFD?.status === 'ACTIVE'">●</span>
+                    <span v-else-if="selectedFD?.status === 'PENDING'">●</span>
+                    <span v-else-if="selectedFD?.status === 'MATURED'">●</span>
+                    {{ selectedFD?.status ?? '—' }}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- right column: details -->
+            <div class="md:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div class="p-4 rounded-xl bg-white border border-gray-100">
+                <div class="text-xs text-slate-400 mb-2 flex items-center gap-2">
+                  <Calendar class="w-4 h-4" /> Start Date
+                </div>
+                <div class="text-sm font-medium text-slate-900">{{ formatDate(selectedFD?.start_date) }}</div>
+              </div>
+
+              <div class="p-4 rounded-xl bg-white border border-gray-100">
+                <div class="text-xs text-slate-400 mb-2 flex items-center gap-2">
+                  <Calendar class="w-4 h-4" /> Maturity Date
+                </div>
+                <div class="text-sm font-medium text-slate-900">{{ formatDate(selectedFD?.maturity_date) }}</div>
+              </div>
+
+              <div class="p-4 rounded-xl bg-white border border-gray-100">
+                <div class="text-xs text-slate-400 mb-2 flex items-center gap-2">
+                  <Percent class="w-4 h-4" /> Interest Rate
+                </div>
+                <div class="text-sm font-medium text-slate-900">{{ selectedFD?.interest_rate ?? '—' }}%</div>
+              </div>
+
+              <div class="p-4 rounded-xl bg-white border border-gray-100">
+                <div class="text-xs text-slate-400 mb-2 flex items-center gap-2">
+                  <Clock class="w-4 h-4" /> Tenure
+                </div>
+                <div class="text-sm font-medium text-slate-900">{{ selectedFD?.tenure_months ?? '—' }} months</div>
+              </div>
+
+              <div class="p-4 rounded-xl bg-white border border-gray-100 sm:col-span-2">
+                <div class="text-xs text-slate-400 mb-2 flex items-center gap-2">
+                  <Tag class="w-4 h-4" /> Remarks
+                </div>
+                <div class="text-sm text-slate-700">
+                  {{ selectedFD?.notes ?? 'No additional remarks' }}
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+    </transition>
 
-    <!-- Break FD Modal -->
+    <!-- Break FD Modal (unchanged) -->
     <BreakFD
       v-if="showBreakModal"
       :fd-id="selectedFD.id"
       @close="closeBreakModal"
       @fdBroken="handleFdBroken"
     />
-
-    <!-- Toast Notification -->
-    <div
-      v-if="toast.show"
-      :class="[
-        'fixed top-16 right-4 px-6 py-4 rounded-lg shadow-lg text-white transition-all duration-300 z-50 font-bold',
-        toast.type === 'success' ? 'bg-blue-500' : 'bg-red-500'
-      ]"
-    >
-      <div class="flex items-center">
-        <svg v-if="toast.type === 'success'" class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-        </svg>
-        <svg v-else class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-        </svg>
-        {{ toast.message }}
-      </div>
-    </div>
   </div>
 </template>
 
@@ -244,17 +309,19 @@
 import { mapState } from "vuex";
 import BreakFD from "./BreakFD.vue";
 import FDCard from "../components/FDCard.vue";
-import { InfoIcon } from 'lucide-vue-next'
+
+// lucide icons (added ones used by modal)
+import { Info, Filter, Search, FolderX, Clipboard, X, Calendar, Percent, Clock, Tag } from "lucide-vue-next";
+import { useToast } from "vue-toastification";
 
 export default {
   name: "MyFDs",
-  components: { BreakFD, FDCard },
+  components: { BreakFD, FDCard, Info, Filter, Search, FolderX, Clipboard, X, Calendar, Percent, Clock, Tag },
   data() {
     return {
       showModal: false,
       showBreakModal: false,
       selectedFD: {},
-      toast: { show: false, message: "", type: "success" },
       quickFilter: '',
       filters: {
         search: '',
@@ -271,11 +338,9 @@ export default {
   },
   computed: {
     ...mapState(["fds", "loading"]),
-    
     filteredFds() {
       let filtered = [...this.fds];
 
-      // Search filter
       if (this.filters.search) {
         const searchLower = this.filters.search.toLowerCase();
         filtered = filtered.filter(fd => 
@@ -287,81 +352,55 @@ export default {
         );
       }
 
-      // Status filter
-      if (this.filters.status) {
-        filtered = filtered.filter(fd => fd.status === this.filters.status);
-      }
+      if (this.filters.status) filtered = filtered.filter(fd => fd.status === this.filters.status);
+      if (this.filters.amountMin != null) filtered = filtered.filter(fd => fd.amount >= this.filters.amountMin);
+      if (this.filters.amountMax != null) filtered = filtered.filter(fd => fd.amount <= this.filters.amountMax);
+      if (this.filters.interestMin != null) filtered = filtered.filter(fd => fd.interest_rate >= this.filters.interestMin);
+      if (this.filters.interestMax != null) filtered = filtered.filter(fd => fd.interest_rate <= this.filters.interestMax);
+      if (this.filters.tenureMin != null) filtered = filtered.filter(fd => fd.tenure_months >= this.filters.tenureMin);
+      if (this.filters.tenureMax != null) filtered = filtered.filter(fd => fd.tenure_months <= this.filters.tenureMax);
 
-      // Amount range filter
-      if (this.filters.amountMin !== null && this.filters.amountMin !== '') {
-        filtered = filtered.filter(fd => fd.amount >= this.filters.amountMin);
-      }
-      if (this.filters.amountMax !== null && this.filters.amountMax !== '') {
-        filtered = filtered.filter(fd => fd.amount <= this.filters.amountMax);
-      }
-
-      // Interest rate filter
-      if (this.filters.interestMin !== null && this.filters.interestMin !== '') {
-        filtered = filtered.filter(fd => fd.interest_rate >= this.filters.interestMin);
-      }
-      if (this.filters.interestMax !== null && this.filters.interestMax !== '') {
-        filtered = filtered.filter(fd => fd.interest_rate <= this.filters.interestMax);
-      }
-
-      // Tenure filter
-      if (this.filters.tenureMin !== null && this.filters.tenureMin !== '') {
-        filtered = filtered.filter(fd => fd.tenure_months >= this.filters.tenureMin);
-      }
-      if (this.filters.tenureMax !== null && this.filters.tenureMax !== '') {
-        filtered = filtered.filter(fd => fd.tenure_months <= this.filters.tenureMax);
-      }
-
-      // Sorting
       filtered.sort((a, b) => {
         switch (this.filters.sortBy) {
-          case 'amount_asc':
-            return a.amount - b.amount;
-          case 'amount_desc':
-            return b.amount - a.amount;
-          case 'interest_asc':
-            return a.interest_rate - b.interest_rate;
-          case 'interest_desc':
-            return b.interest_rate - a.interest_rate;
-          case 'tenure_asc':
-            return a.tenure_months - b.tenure_months;
-          case 'tenure_desc':
-            return b.tenure_months - a.tenure_months;
-          case 'maturity_date_asc':
-            return new Date(a.maturity_date) - new Date(b.maturity_date);
-          case 'maturity_date_desc':
-            return new Date(b.maturity_date) - new Date(a.maturity_date);
-          default:
-            return b.amount - a.amount;
+          case 'amount_asc': return a.amount - b.amount;
+          case 'amount_desc': return b.amount - a.amount;
+          case 'interest_asc': return a.interest_rate - b.interest_rate;
+          case 'interest_desc': return b.interest_rate - a.interest_rate;
+          case 'tenure_asc': return a.tenure_months - b.tenure_months;
+          case 'tenure_desc': return b.tenure_months - a.tenure_months;
+          case 'maturity_date_asc': return new Date(a.maturity_date) - new Date(b.maturity_date);
+          case 'maturity_date_desc': return new Date(b.maturity_date) - new Date(a.maturity_date);
+          default: return b.amount - a.amount;
         }
       });
 
       return filtered;
     },
+    filteredActiveCount() { return this.filteredFds.filter(fd => fd.status === "ACTIVE").length; },
+    filteredMaturedCount() { return this.filteredFds.filter(fd => fd.status === "MATURED").length; },
+    filteredTotalValue() { return this.filteredFds.reduce((sum, fd) => sum + fd.amount, 0); },
 
-    filteredActiveCount() {
-      return this.filteredFds.filter(fd => fd.status === "ACTIVE").length;
+    // Modal-related computed properties
+    formattedAmount() {
+      return this.selectedFD?.amount != null ? Number(this.selectedFD.amount).toLocaleString('en-IN') : '—'
     },
-    
-    filteredMaturedCount() {
-      return this.filteredFds.filter(fd => fd.status === "MATURED").length;
+    formattedAccrued() {
+      return this.selectedFD?.accrued_interest != null ? Number(this.selectedFD.accrued_interest).toLocaleString('en-IN') : '0'
     },
-    
-    filteredTotalValue() {
-      return this.filteredFds.reduce((sum, fd) => sum + fd.amount, 0);
+    statusBadgeClass() {
+      const s = this.selectedFD?.status
+      if (s === 'ACTIVE') return 'bg-green-50 text-green-700'
+      if (s === 'MATURED') return 'bg-blue-50 text-blue-700'
+      if (s === 'PENDING') return 'bg-amber-50 text-amber-700'
+      if (s === 'BROKEN') return 'bg-red-50 text-red-700'
+      return 'bg-gray-100 text-slate-700'
     }
   },
-  
   methods: {
     formatDate(date) {
       if (!date) return "-";
       return new Date(date).toLocaleDateString();
     },
-    
     resetFilters() {
       this.filters = {
         search: '',
@@ -376,83 +415,78 @@ export default {
       };
       this.quickFilter = '';
     },
-
     applyQuickFilter(type) {
       this.resetFilters();
       this.quickFilter = this.quickFilter === type ? '' : type;
-      
       switch (type) {
         case 'high_value':
           if (this.quickFilter === type) {
-            const amounts = this.fds.map(fd => fd.amount);
-            const avgAmount = amounts.reduce((a, b) => a + b, 0) / amounts.length;
+            const avgAmount = this.fds.reduce((a, b) => a + b.amount, 0) / this.fds.length;
             this.filters.amountMin = Math.round(avgAmount);
           }
           break;
         case 'maturing_soon':
           if (this.quickFilter === type) {
-            const threeMonthsFromNow = new Date();
-            threeMonthsFromNow.setMonth(threeMonthsFromNow.getMonth() + 3);
             this.filters.status = 'ACTIVE';
             this.filters.sortBy = 'maturity_date_asc';
           }
           break;
         case 'high_interest':
           if (this.quickFilter === type) {
-            const rates = this.fds.map(fd => fd.interest_rate);
-            const avgRate = rates.reduce((a, b) => a + b, 0) / rates.length;
+            const avgRate = this.fds.reduce((a, b) => a + b.interest_rate, 0) / this.fds.length;
             this.filters.interestMin = Math.round(avgRate * 10) / 10;
             this.filters.sortBy = 'interest_desc';
           }
           break;
       }
-      
-      if (this.quickFilter !== type) {
-        this.quickFilter = '';
-      }
+      if (this.quickFilter !== type) this.quickFilter = '';
     },
 
-    openViewModal(fd) {
-      this.selectedFD = fd;
-      this.showModal = true;
-    },
-    
-    closeModal() {
-      this.showModal = false;
-      this.selectedFD = {};
-    },
-    
-    breakFD(fd) {
-      this.selectedFD = fd;
-      this.showBreakModal = true;
-    },
-    
-    closeBreakModal() {
-      this.showBreakModal = false;
-      this.selectedFD = {};
-    },
-    
-    showToast(message, type = "success") {
-      this.toast.message = message;
-      this.toast.type = type;
-      this.toast.show = true;
-      setTimeout(() => this.toast.show = false, 4000);
-    },
-    
+    // Modal open/close
+    openViewModal(fd) { this.selectedFD = fd; this.showModal = true; },
+    closeModal() { this.showModal = false; this.selectedFD = {}; },
+
+    // Break FD flow (parent already uses this)
+    breakFD(fd) { this.selectedFD = fd; this.showBreakModal = true; },
+    closeBreakModal() { this.showBreakModal = false; this.selectedFD = {}; },
+
     async handleFdBroken(fd) {
+      const toast = useToast();
       try {
         const response = await this.$store.dispatch('breakFD', fd.id);
-        this.showToast(response.message, response.success ? 'success' : 'error');
+        toast[response.success ? 'success' : 'error'](response.message);
         if (response.success) await this.$store.dispatch('fetchFDs');
       } catch (err) {
-        this.showToast("Something went wrong while breaking the FD.", "error");
+        toast.error("Something went wrong while breaking the FD.");
       }
       this.closeBreakModal();
+    },
+
+    // copy to clipboard used in modal
+    async copyToClipboard(text, message = 'Copied') {
+      const toast = useToast();
+      try {
+        await navigator.clipboard.writeText(text);
+        toast.success(message);
+      } catch (e) {
+        toast.error('Copy failed');
+      }
     }
   },
-  
-  mounted() {
-    this.$store.dispatch("fetchFDs");
-  }
+  mounted() { this.$store.dispatch("fetchFDs"); }
 };
 </script>
+
+<style scoped>
+/* Modal enter/leave */
+.modal-fade-enter-active,
+.modal-fade-leave-active {
+  transition: opacity 220ms ease, transform 220ms ease;
+}
+.modal-fade-enter-from,
+.modal-fade-leave-to {
+  opacity: 0;
+  transform: translateY(6px) scale(0.995);
+}
+
+</style>
