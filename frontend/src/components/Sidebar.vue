@@ -12,34 +12,32 @@
 
       <!-- Logo + Collapse -->
       <div class="flex items-center justify-between p-4 border-b border-gray-200 mt-4">
-  <router-link 
-    to="/user/dashboard" 
-    class="flex items-center space-x-4 mb-1 group"
-  >
-    <div v-if="!isCollapsed"
-      class="w-9 h-9 rounded-lg flex items-center justify-center text-white shadow-sm transform transition-transform duration-200 group-hover:scale-105"
-      style="background: linear-gradient(135deg,#2563eb,#4f46e5)"
-    >
-      <Vault class="w-5 h-5" />
-    </div>
-    <div v-if="isCollapsed"
-      class="w-9 h-9 rounded-lg flex items-center justify-center text-white shadow-sm transform transition-transform duration-200 group-hover:scale-105 ml-5"
-      style="background: linear-gradient(135deg,#2563eb,#4f46e5)"
-    >
-      <Vault class="w-5 h-5" />
-    </div>
-    <span v-if="!isCollapsed" class="text-xl md:text-2xl font-extrabold text-slate-900">SmartFD</span>
-  </router-link>
+        <router-link 
+          to="/user/dashboard" 
+          class="flex items-center space-x-4 mb-1 group"
+        >
+          <div v-if="!isCollapsed"
+            class="w-9 h-9 rounded-lg flex items-center justify-center text-white shadow-sm transform transition-transform duration-200 group-hover:scale-105"
+            style="background: linear-gradient(135deg,#2563eb,#4f46e5)"
+          >
+            <Vault class="w-5 h-5" />
+          </div>
+          <div v-if="isCollapsed"
+            class="w-9 h-9 rounded-lg flex items-center justify-center text-white shadow-sm transform transition-transform duration-200 group-hover:scale-105 ml-5"
+            style="background: linear-gradient(135deg,#2563eb,#4f46e5)"
+          >
+            <Vault class="w-5 h-5" />
+          </div>
+          <span v-if="!isCollapsed" class="text-xl md:text-2xl font-extrabold text-slate-900">SmartFD</span>
+        </router-link>
 
         <!-- Collapse Arrow -->
         <button 
           @click="toggleSidebar"
           class="flex items-center justify-center w-8 h-8 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-md transition-colors duration-200"
         >
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path v-if="isCollapsed" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-            <path v-else stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-          </svg>
+          <ChevronRightIcon v-if="isCollapsed" class="w-4 h-4" />
+          <ChevronLeftIcon v-else class="w-4 h-4" />
         </button>
       </div>
 
@@ -55,10 +53,7 @@
           >
             <div class="flex items-center">
               <div class="w-5 h-5 flex items-center justify-center mr-3">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"></path>
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5a2 2 0 012-2h4a2 2 0 012 2v4H8V5z"></path>
-                </svg>
+                <HomeIcon class="w-5 h-5" />
               </div>
               <span v-if="!isCollapsed" class="font-medium">Dashboard</span>
             </div>
@@ -73,9 +68,7 @@
           >
             <div class="flex items-center">
               <div class="w-5 h-5 flex items-center justify-center mr-3">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
-                </svg>
+                <PlusCircleIcon class="w-5 h-5" />
               </div>
               <span v-if="!isCollapsed" class="font-medium">Book FD</span>
             </div>
@@ -90,9 +83,7 @@
           >
             <div class="flex items-center">
               <div class="w-5 h-5 flex items-center justify-center mr-3">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
-                </svg>
+                <FolderIcon class="w-5 h-5" />
               </div>
               <span v-if="!isCollapsed" class="font-medium">My FDs</span>
             </div>
@@ -107,9 +98,7 @@
           >
             <div class="flex items-center">
               <div class="w-5 h-5 flex items-center justify-center mr-3">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
-                </svg>
+                <CalculatorIcon class="w-5 h-5" />
               </div>
               <span v-if="!isCollapsed" class="font-medium">Calculator</span>
             </div>
@@ -124,9 +113,7 @@
           >
             <div class="flex items-center">
               <div class="w-5 h-5 flex items-center justify-center mr-3">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>
+                <HelpCircleIcon class="w-5 h-5" />
               </div>
               <span v-if="!isCollapsed" class="font-medium">Support</span>
             </div>
@@ -143,28 +130,24 @@
           class="flex w-full px-4 py-2 rounded-lg bg-red-100 text-red-700 hover:bg-red-200 hover:text-red-800 transition group cursor-pointer"
           :class="isCollapsed ? 'justify-center' : 'justify-start'"
         >
-          <LogOutIcon  class="w-6 h-6 " :class="isCollapsed? 'scale-x-[-1]':''"/>
-          <span
-            v-if="!isCollapsed"
-            class="ml-3 font-medium whitespace-nowrap"
-          >
+          <LogOutIcon class="w-6 h-6" :class="isCollapsed ? 'scale-x-[-1]' : ''"/>
+          <span v-if="!isCollapsed" class="ml-3 font-medium whitespace-nowrap">
             Sign out
           </span>
         </button>
       </div>
-
 
     </div>
   </div>
 </template>
 
 <script>
-import { Vault, LogOutIcon } from 'lucide-vue-next'
-import { mapActions } from 'vuex/dist/vuex.cjs.js'
+import { Vault, LogOutIcon, ChevronLeftIcon, ChevronRightIcon, HomeIcon, PlusCircleIcon, FolderIcon, CalculatorIcon, HelpCircleIcon } from 'lucide-vue-next'
+import { mapActions } from 'vuex'
 
 export default {
   name: 'Sidebar',
-  components: { Vault, LogOutIcon },
+  components: { Vault, LogOutIcon, ChevronLeftIcon, ChevronRightIcon, HomeIcon, PlusCircleIcon, FolderIcon, CalculatorIcon, HelpCircleIcon },
 
   data() {
     return {
