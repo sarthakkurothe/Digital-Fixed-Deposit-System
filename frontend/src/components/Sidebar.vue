@@ -143,7 +143,7 @@
           class="flex w-full px-4 py-2 rounded-lg bg-red-100 text-red-700 hover:bg-red-200 hover:text-red-800 transition group cursor-pointer"
           :class="isCollapsed ? 'justify-center' : 'justify-start'"
         >
-          <LogOutIcon class="w-6 h-6" />
+          <LogOutIcon  class="w-6 h-6 " :class="isCollapsed? 'scale-x-[-1]':''"/>
           <span
             v-if="!isCollapsed"
             class="ml-3 font-medium whitespace-nowrap"
