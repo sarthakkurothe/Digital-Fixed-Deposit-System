@@ -14,18 +14,18 @@
       <div class="flex items-center justify-between p-4 border-b border-gray-200 mt-4">
         <div class="flex items-center space-x-4 mb-1 group">
           <div v-if="!isCollapsed"
-            class="w-9 h-9 rounded-lg flex items-center justify-center text-white shadow-sm transform transition-transform duration-200 group-hover:scale-105"
-            style="background: linear-gradient(135deg,#dc2626,#ef4444)"
-          >
-            <Shield class="w-5 h-5" />
-          </div>
-          <div v-if="isCollapsed"
-            class="w-9 h-9 rounded-lg flex items-center justify-center text-white shadow-sm transform transition-transform duration-200 group-hover:scale-105 ml-5"
-            style="background: linear-gradient(135deg,#dc2626,#ef4444)"
-          >
-            <Shield class="w-5 h-5" />
-          </div>
-          <span v-if="!isCollapsed" class="text-xl md:text-2xl font-extrabold text-slate-900">Admin</span>
+      class="w-9 h-9 rounded-lg flex items-center justify-center text-white shadow-sm transform transition-transform duration-200 group-hover:scale-105"
+      style="background: linear-gradient(135deg,#2563eb,#4f46e5)"
+    >
+      <Vault class="w-5 h-5" />
+    </div>
+    <div v-if="isCollapsed"
+      class="w-9 h-9 rounded-lg flex items-center justify-center text-white shadow-sm transform transition-transform duration-200 group-hover:scale-105 ml-5"
+      style="background: linear-gradient(135deg,#2563eb,#4f46e5)"
+    >
+      <Vault class="w-5 h-5" />
+    </div>
+          <span v-if="!isCollapsed" class="text-xl md:text-2xl font-extrabold text-slate-900">SmartFD</span>
         </div>
 
         <!-- Collapse Arrow -->
@@ -96,10 +96,16 @@
       <div class="p-4 border-t border-gray-200">
         <button
           @click="signout"
-          class="flex items-center w-full px-4 py-2 rounded-lg bg-red-100 text-red-700 hover:bg-red-200 hover:text-red-800 transition group cursor-pointer"
+          class="flex w-full px-4 py-2 rounded-lg bg-red-100 text-red-700 hover:bg-red-200 hover:text-red-800 transition group cursor-pointer"
+          :class="isCollapsed ? 'justify-center' : 'justify-start'"
         >
-          <LogOutIcon class="w-6 h-6 mr-3"/>
-          <span v-if="!isCollapsed" class="font-medium whitespace-nowrap">Sign out</span>
+          <LogOutIcon  class="w-6 h-6 " :class="isCollapsed? 'scale-x-[-1]':''"/>
+          <span
+            v-if="!isCollapsed"
+            class="ml-3 font-medium whitespace-nowrap"
+          >
+            Sign out
+          </span>
         </button>
       </div>
 
@@ -108,12 +114,12 @@
 </template> 
 
 <script>
-import { Shield, LayoutDashboard, Building, HelpCircle, LogOutIcon } from 'lucide-vue-next'
+import { Shield, LayoutDashboard, Building, HelpCircle, LogOutIcon, Vault } from 'lucide-vue-next'
 import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'AdminSidebar',
-  components: { Shield, LayoutDashboard, Building, HelpCircle, LogOutIcon },
+  components: { Shield, LayoutDashboard, Building, HelpCircle, LogOutIcon, Vault },
 
   data() {
     return {
@@ -146,7 +152,7 @@ export default {
       return [
         'flex items-center px-3 py-3 rounded-lg transition-all duration-300 relative text-gray-700 mb-1 transform',
         {
-          'bg-red-600/90 text-white shadow-md backdrop-blur-md scale-105': isActive,
+          'bg-blue-600/90 text-white shadow-md backdrop-blur-md scale-105': isActive,
           'hover:bg-gray-100 hover:shadow-lg hover:scale-[1.02] hover:text-gray-900': !isActive,
           'justify-center': this.isCollapsed
         }
@@ -187,6 +193,6 @@ export default {
 
 /* Extra glowing effect for active tab */
 .nav-item-active {
-  box-shadow: 0 4px 12px rgba(220, 38, 38, 0.4);
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
 }
 </style>

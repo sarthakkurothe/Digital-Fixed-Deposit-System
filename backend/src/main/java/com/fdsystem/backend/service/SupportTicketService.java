@@ -1,5 +1,7 @@
 package com.fdsystem.backend.service;
 
+import com.fdsystem.backend.dto.AdminFixedDepositDto;
+import com.fdsystem.backend.dto.AdminSupportTicketDto;
 import com.fdsystem.backend.dto.TicketRequestDTO;
 import com.fdsystem.backend.dto.TicketResponseDTO;
 import com.fdsystem.backend.entity.FixedDeposit;
@@ -61,8 +63,23 @@ public class SupportTicketService {
         return responseDTOS;
     }
 
-    public List<SupportTicket> getAllOpenTickets(){
-        return this.supportTicketRepository.findAllByStatus(SupportTicketStatus.OPEN);
+    public List<AdminSupportTicketDto> getAll(){
+        List<SupportTicket> tickets = this.supportTicketRepository.findAll();
+        List<AdminSupportTicketDto> ticketDtos = new ArrayList<>();
+
+        for(SupportTicket ticket: tickets){
+            AdminSupportTicketDto supportTicketDto = new AdminSupportTicketDto();
+            supportTicketDto.setName(ticket.getUser().getName());
+            supportTicketDto.setDescription(ticket.getDescription());
+            supportTicketDto.setSubject(ticket.getSubject());
+            supportTicketDto.setEmail(ticket.getUser().getEmail());
+            supportTicketDto.setCreatedDate(ticket.getCreatedDate());
+            supportTicketDto.setId(ticket.getId());
+            supportTicketDto.setStatus(ticket.getStatus().toString());
+            ticketDtos.add(supportTicketDto);
+        }
+
+        return ticketDtos;
     }
 
     public void setTicketStatusById(long id,String response, SupportTicketStatus status){

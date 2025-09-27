@@ -18,7 +18,7 @@
             
             <div class="p-6">
               <!-- Search and Filter -->
-              <div class="mb-6 grid grid-cols-1 md:grid-cols-4 gap-4">
+              <div class="mb-6 grid grid-cols-1 md:grid-cols-3 gap-5">
                 <input
                   v-model="searchTerm"
                   type="text"
@@ -33,7 +33,7 @@
                   <option value="ACTIVE">Active</option>
                   <option value="MATURED">Matured</option>
                   <option value="PENDING">Pending</option>
-                  <option value="CLOSED">Closed</option>
+                  <option value="BROKEN">Broken</option>
                 </select>
                 <select
                   v-model="sortBy"
@@ -43,13 +43,6 @@
                   <option value="date">Sort by Date</option>
                   <option value="customer">Sort by Customer</option>
                 </select>
-                <button
-                  @click="exportData"
-                  class="flex items-center justify-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200"
-                >
-                  <Download class="w-4 h-4 mr-2" />
-                  Export Data
-                </button>
               </div>
 
               <!-- FD Cards Grid (Mobile) -->
@@ -113,51 +106,37 @@
                       <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Interest</th>
                       <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Maturity</th>
                       <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                      <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+
                     </tr>
                   </thead>
                   <tbody class="bg-white divide-y divide-gray-200">
                     <tr v-for="fd in paginatedFDs" :key="fd.id" class="hover:bg-gray-50">
                       <td class="px-6 py-4 whitespace-nowrap">
                         <div>
-                          <div class="text-sm font-medium text-gray-900">{{ fd.fdNumber }}</div>
-                          <div class="text-sm text-gray-500">{{ fd.scheme }}</div>
+                          <div class="text-sm font-medium text-gray-900">{{ fd.fdId }}</div>
                         </div>
                       </td>
                       <td class="px-6 py-4 whitespace-nowrap">
                         <div>
-                          <div class="text-sm font-medium text-gray-900">{{ fd.customerName }}</div>
-                          <div class="text-sm text-gray-500">{{ fd.customerEmail }}</div>
+                          <div class="text-sm font-medium text-gray-900">{{ fd.name }}</div>
+                          <div class="text-sm text-gray-500">{{ fd.email }}</div>
                         </div>
                       </td>
                       <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                         ₹{{ Number(fd.amount).toLocaleString() }}
                       </td>
                       <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        {{ fd.interestRate }}%
+                        {{ fd.interest_rate }}%
                       </td>
                       <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        {{ formatDate(fd.maturityDate) }}
+                        {{ formatDate(fd.mature_date) }}
                       </td>
                       <td class="px-6 py-4 whitespace-nowrap">
-                        <span class="px-2 py-1 text-xs rounded-full" :class="getStatusClass(fd.status)">
-                          {{ fd.status }}
+                        <span class="px-2 py-1 text-xs rounded-full" :class="getStatusClass(fd.fdStatus)">
+                          {{ fd.fdStatus }}
                         </span>
                       </td>
-                      <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
-                        <button
-                          @click="viewDetails(fd)"
-                          class="text-blue-600 hover:text-blue-900"
-                        >
-                          View
-                        </button>
-                        <button
-                          @click="updateStatus(fd)"
-                          class="text-green-600 hover:text-green-900"
-                        >
-                          Update
-                        </button>
-                      </td>
+                      
                     </tr>
                   </tbody>
                 </table>
@@ -198,6 +177,7 @@ import AdminSidebar from '../components/AdminSidebar.vue'
 import { MenuIcon, Download } from 'lucide-vue-next'
 import { mapGetters, mapActions } from 'vuex'
 import Navbar from '../components/Navbar.vue'
+import axios from '../api'
 
 export default {
   name: 'AdminFixedDeposits',
@@ -251,20 +231,20 @@ export default {
           status: 'ACTIVE',
           scheme: 'Tax Saver FD'
         }
-      ]
+      ],
+      allFixedDeposits: [] // This will hold data from the store
     }
   },
   computed: {
-    ...mapGetters(['allFixedDeposits']),
     mainContentClasses() {
       if (this.isMobile) {
         return 'ml-0'
       }
-      return this.sidebarCollapsed ? 'md:ml-0' : 'md:ml-65'
+      return this.sidebarCollapsed ? 'ml-30' : 'md:ml-65'
     },
     allFDs() {
       // Use store data if available, otherwise use mock data
-      return this.allFixedDeposits || this.mockFDs
+      return this.allFixedDeposits
     },
     filteredFDs() {
       let filtered = this.allFDs
@@ -279,16 +259,16 @@ export default {
       }
       
       if (this.statusFilter) {
-        filtered = filtered.filter(fd => fd.status === this.statusFilter)
+        filtered = filtered.filter(fd => fd.fdStatus === this.statusFilter)
       }
       
       // Sort
       if (this.sortBy === 'amount') {
         filtered.sort((a, b) => b.amount - a.amount)
       } else if (this.sortBy === 'date') {
-        filtered.sort((a, b) => new Date(b.maturityDate) - new Date(a.maturityDate))
+        filtered.sort((a, b) => new Date(b.maturity_date) - new Date(a.maturity_date))
       } else if (this.sortBy === 'customer') {
-        filtered.sort((a, b) => a.customerName.localeCompare(b.customerName))
+        filtered.sort((a, b) => a.name.localeCompare(b.name))
       }
       
       return filtered
@@ -299,7 +279,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['fetchAllFixedDeposits', 'logout']),
+    ...mapActions(['logout']),
     handleToggleSidebar() {
       if (this.$refs.sidebar) {
         this.$refs.sidebar.toggleSidebar()
@@ -353,9 +333,8 @@ export default {
     
     // Fetch FDs data
     try {
-      if (this.fetchAllFixedDeposits) {
-        await this.fetchAllFixedDeposits()
-      }
+      const res = await axios.get('admin/fds')
+      this.allFixedDeposits = res.data
     } catch (error) {
       console.error('Failed to load fixed deposits:', error)
     }
