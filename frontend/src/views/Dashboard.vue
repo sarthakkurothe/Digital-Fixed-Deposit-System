@@ -78,8 +78,11 @@ export default {
   name: 'Dashboard',
   components: { DashboardCards, PieChart, BarChart, ArrowRightIcon, ActivityIcon, CalculatorIcon, HelpCircleIcon },
   mounted() {
-    if(this.$store.getters.getFDs.length === 0)
+    if(this.$store.getters.getFDs.length === 0){
       this.$store.dispatch('fetchFDs');
+      this.$store.dispatch('fetchSummary')
+    }
+
   }
 }
 </script>

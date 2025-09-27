@@ -56,6 +56,16 @@ export default createStore({
       }
     },
 
+    async fetchSummary({ state }) {
+      try {
+        const res = await axios.get(`/user/investments/${state.user.id}`);
+        return res.data;
+      } catch (err) {
+        console.error("Error fetching summary", err);
+        return null;
+      }
+    },
+
     /**
      * Break an FD (set status to BROKEN_PENDING)
      */
