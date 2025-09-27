@@ -13,26 +13,30 @@ import java.util.Optional;
 @Slf4j
 @Service
 public class UserService {
-  private UserRepository userRepository;
-  public UserService(UserRepository userRepository){
-    this.userRepository = userRepository;
-  }
-
-  public boolean addUser(User user){
-    try {
-      userRepository.save(user);
-      return true;
-    } catch (Exception e) {
-      log.error("Error while adding User {}",e.getMessage());
+    private UserRepository userRepository;
+    public UserService(UserRepository userRepository){
+      this.userRepository = userRepository;
     }
-    return false;
-  }
 
-  public boolean isUserExists(String email){
+    public boolean addUser(User user){
+      try {
+        userRepository.save(user);
+        return true;
+      } catch (Exception e) {
+        log.error("Error while adding User {}",e.getMessage());
+      }
+      return false;
+    }
+
+    public boolean isUserExists(String email){
     return userRepository.findByEmail(email) != null;
   }
 
     public Optional<User> getUserById(long userId) {
       return this.userRepository.findById(userId);
     }
+    public Long getAllUsersCount(){
+      return userRepository.findAllUserCount();
+    }
+
 }

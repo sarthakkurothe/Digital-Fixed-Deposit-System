@@ -88,4 +88,8 @@ public class SupportTicketService {
         ticket.setStatus(status);
         this.supportTicketRepository.save(ticket);
     }
+
+    public Long getAllStatusTicketsCount(String status){
+        return this.supportTicketRepository.getAllStatusTicketsCount(status);
+    }
 }
