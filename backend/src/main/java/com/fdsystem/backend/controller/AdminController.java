@@ -1,14 +1,13 @@
 package com.fdsystem.backend.controller;
 
+import com.fdsystem.backend.dto.AdminDashboardDto;
 import com.fdsystem.backend.dto.AdminFixedDepositDto;
 import com.fdsystem.backend.dto.AdminSupportTicketDto;
-import com.fdsystem.backend.dto.AdminTicketDTO;
-import com.fdsystem.backend.entity.FixedDeposit;
-import com.fdsystem.backend.entity.SupportTicket;
 import com.fdsystem.backend.service.FixedDepositService;
 import com.fdsystem.backend.service.SupportTicketService;
 import com.fdsystem.backend.entity.enums.FdStatus;
 import com.fdsystem.backend.entity.enums.SupportTicketStatus;
+import com.fdsystem.backend.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,10 +21,12 @@ public class AdminController {
 
   private FixedDepositService fixedDepositService;
   private SupportTicketService supportTicketService;
+  private UserService   userService;
 
-  public AdminController(FixedDepositService fixedDepositService, SupportTicketService supportTicketService){
+  public AdminController(FixedDepositService fixedDepositService, SupportTicketService supportTicketService, UserService userService){
     this.fixedDepositService = fixedDepositService;
     this.supportTicketService = supportTicketService;
+    this.userService = userService;
   }
 
   @GetMapping("/fds")
@@ -55,10 +56,23 @@ public class AdminController {
   }
 
   @PostMapping("/tickets/{id}")
-  public ResponseEntity<Void> setTicketStatusById(@PathVariable long id,@RequestBody AdminTicketDTO adminTicketDTO){
-    this.supportTicketService.setTicketStatusById(id, adminTicketDTO.getResponse(), SupportTicketStatus.valueOf(adminTicketDTO.getStatus()));
+  public ResponseEntity<Void> setTicketStatusById(@PathVariable long id,@RequestBody String response){
+    this.supportTicketService.setTicketStatusById(id, response, SupportTicketStatus.CLOSED);
 
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
+  @GetMapping("/dashboard/info")
+  public ResponseEntity<AdminDashboardDto> getDashBoardInfo(){
+    AdminDashboardDto dashboardDto = new AdminDashboardDto();
+    long openCount = this.supportTicketService.getAllStatusTicketsCount(SupportTicketStatus.OPEN.toString());
+    long closedCount = this.supportTicketService.getAllStatusTicketsCount(SupportTicketStatus.CLOSED.toString());
+    dashboardDto.setTotalOpenTickets(openCount);
+    dashboardDto.setTotalTickets(openCount+closedCount);
+    dashboardDto.setTotalUsers(this.userService.getAllUsersCount());
+    dashboardDto.setTotalFDs(this.fixedDepositService.getAllFdsCount());
+
+    return new ResponseEntity<>(dashboardDto, HttpStatus.OK);
+
+  }
 }

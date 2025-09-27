@@ -144,4 +144,8 @@ import java.util.List;
 
         return allFdsDto;
     }
+
+    public long getAllFdsCount(){
+        return this.fixedDepositRepository.countTotalFds();
+    }
 }
