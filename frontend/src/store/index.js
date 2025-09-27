@@ -6,10 +6,15 @@ export default createStore({
     user: JSON.parse(localStorage.getItem("user")) || null,
     token: localStorage.getItem("token") || null,
     fds: [],
+    summary: null,
     loading: false,
   },
 
   mutations: {
+
+    SET_SUMMARY(state, summary) {
+    state.summary = summary;
+    },
     // --- AUTH ---
     setUser(state, user) {
       state.user = user;
@@ -56,15 +61,18 @@ export default createStore({
       }
     },
 
-    async fetchSummary({ state }) {
-      try {
-        const res = await axios.get(`/user/investments/${state.user.id}`);
-        return res.data;
-      } catch (err) {
-        console.error("Error fetching summary", err);
-        return null;
-      }
-    },
+    async fetchSummary({ commit, state }) {
+    try {
+      const res = await axios.get(`/user/investments`, {
+      headers: { Authorization: `bearer ${state.token}` },
+    });
+      commit("SET_SUMMARY", res.data);
+      return res.data;
+    } catch (err) {
+      console.error("Error fetching summary", err);
+      return null;
+    }
+  },
 
     /**
      * Break an FD (set status to BROKEN_PENDING)
