@@ -6,7 +6,7 @@ export default createStore({
     user: JSON.parse(localStorage.getItem("user")) || null,
     token: localStorage.getItem("token") || null,
     fds: [],
-    summary: null,
+    summary: {},
     loading: false,
   },
 
@@ -28,6 +28,7 @@ export default createStore({
       state.user = null;
       state.token = null;
       state.fds = [];
+      state.summary = {};
       localStorage.removeItem("user");
       localStorage.removeItem("token");
     },
@@ -38,6 +39,9 @@ export default createStore({
     },
     SET_LOADING(state, loading) {
       state.loading = loading;
+    },
+    SET_SUMMARY(state, summary) {
+      state.summary = summary;
     },
     UPDATE_FD_STATUS(state, { fdId, status }) {
       const fd = state.fds.find((fd) => fd.id === fdId);
@@ -62,15 +66,15 @@ export default createStore({
     },
 
     async fetchSummary({ commit, state }) {
-    try {
-      const res = await axios.get(`/user/investments`);
-      commit("SET_SUMMARY", res.data);
-      return res.data;
-    } catch (err) {
-      console.error("Error fetching summary", err);
-      return null;
-    }
-  },
+      commit("SET_LOADING", true);
+      try {
+        const res = await axios.get(`/user/investments`);
+        commit("SET_SUMMARY", res.data);
+      }
+      catch (err) {
+        console.error("Error fetching summary", err);
+      } 
+    },
 
     /**
      * Break an FD (set status to BROKEN_PENDING)
@@ -187,5 +191,6 @@ export default createStore({
     getFDs: (state) => state.fds,
     isLoading: (state) => state.loading,
     getFDById: (state) => (id) => state.fds.find(fd => fd.id === id),
+    getSummary: (state) => state.summary,
   },
 });

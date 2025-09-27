@@ -63,7 +63,7 @@ export default {
   name: "DashboardCards",
   components: { Wallet,TrendingUp,Building,BarChart2 },
   computed: {
-    ...mapGetters(["getFDs","getFDsCount"]),
+    ...mapGetters(["getFDs","getFDsCount","getSummary"]),
 
     totalAmount() {
       return this.getFDs.reduce((sum, fd) => sum + fd.amount, 0).toLocaleString('en-IN');
@@ -82,7 +82,8 @@ export default {
   
     },
     totalAccuredInterest() {
-      return this.getFDs.reduce((sum, fd) => sum + parseFloat(fd.accrued_interest), 0).toFixed(2).toLocaleString('en-IN');
+      return this.getSummary.interestEarned ? parseFloat(this.getSummary.interestEarned).toLocaleString('en-IN') : '0';
+      // return this.getFDs.reduce((sum, fd) => sum + parseFloat(fd.accrued_interest), 0).toFixed(2).toLocaleString('en-IN');
     },
     averageInterest() {
       if (this.getFDsCount === 0) return 0;

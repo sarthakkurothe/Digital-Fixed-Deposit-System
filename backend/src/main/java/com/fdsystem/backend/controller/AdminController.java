@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/admin")
@@ -33,10 +34,20 @@ public class AdminController {
     return new ResponseEntity<>(this.fixedDepositService.getAllFDs(), HttpStatus.OK);
   }
 
-  @PostMapping("/fd/{id}")
-  public ResponseEntity<Void> setFDStatusById(@PathVariable Long id,@RequestBody String status){
-    this.fixedDepositService.setFixedDepositStatus(id,FdStatus.valueOf(status));
-    return new ResponseEntity<>(HttpStatus.OK);
+  @PutMapping("/fd/{id}")
+  public ResponseEntity<Void> setFDStatusById(@PathVariable Long id, @RequestBody Map<String,String> body) {
+    String status = body.get("status");
+    if(status == null) {
+      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    try {
+      FdStatus fdStatus = FdStatus.valueOf(status);
+      this.fixedDepositService.setFixedDepositStatus(id, fdStatus);
+      return new ResponseEntity<>(HttpStatus.OK);
+    } catch (IllegalArgumentException e) {
+      return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
   }
 
   @GetMapping("/tickets")

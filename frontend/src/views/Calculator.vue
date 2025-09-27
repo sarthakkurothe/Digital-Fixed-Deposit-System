@@ -8,8 +8,8 @@
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
       <!-- Left Side - Calculator Form -->
-      <div class="space-y-6">
-        <div class="bg-white rounded-xl shadow-xl p-6 flex flex-col">
+      <div class="space-y-6 ">
+        <div class="bg-white rounded-xl shadow-xl p-8 flex flex-col">
           <div class="flex items-center mb-4">
             <CircleDollarSign class="w-6 h-6 text-blue-600 mr-3" />
             <h2 class="text-lg font-semibold text-gray-800">FD Calculator</h2>
