@@ -20,7 +20,8 @@ const routes = [
 
 
   {
-    path: '/admin',name: 'Admin', component:Admin
+    path: '/admin',name: 'Admin', component:Admin,
+    
   },
   {
     path: '/admin/fds', name: 'AdminFDs', component: AdminFixedDeposits

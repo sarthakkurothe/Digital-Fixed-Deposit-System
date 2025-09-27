@@ -148,7 +148,7 @@ export default {
         }
       } catch (err) {
         // prefer server message when available, fallback to generic message
-        this.error = err?.response?.data?.message || err.message || 'Invalid credentials'
+        this.error = err?.response?.data?.message || err.message || 'Server error'
         console.error('Login error:', err)
       } finally {
         this.loading = false
