@@ -8,6 +8,13 @@ import com.fdsystem.backend.entity.enums.FdStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
+
 import java.util.List;
 
 
@@ -24,59 +31,88 @@ public class AccruedInterestService {
         List<FixedDeposit> fixedDeposits = fixedDepositRepository.findAllByUser(user);
 
         for (FixedDeposit fd : fixedDeposits) {
-            double interest = 0.0;
             double principal = fd.getAmount();
-            double rate = fd.getInterest_rate();
-            int tenure = fd.getTenure_months();
+            double rate = fd.getInterest_rate();  // in percent, e.g. 7.0
+            int tenureMonths = fd.getTenure_months();
+
+            // Compute elapsed months via java.time
+            LocalDate startDate = fd.getStart_date().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            LocalDate now = LocalDate.now();
+            long monthsElapsed = ChronoUnit.MONTHS.between(startDate, now);
+            if (monthsElapsed < 0) monthsElapsed = 0;
+
+            // Decide how many months to consider
+            int applicableMonths = (int) Math.min(monthsElapsed, tenureMonths);
+
+            // Determine whether compounding is eligible
+            boolean isCompoundEligible = (tenureMonths >= 24);
+
+            double interest = 0.0;
+            double maturityAmount = principal;
 
             switch (fd.getStatus()) {
-                case MATURED:
-                    // Case 1: Calculate for full tenure
-                    interest = (principal * rate * tenure) / (100 * 12);
-                    if (tenure >= 24) {
-                        interest += (interest * rate * (tenure / 12)) / 100;
-                    }
-                    break;
+                // it is calculated only once , when FD is set to matured status taken from Case Active below
+//                case MATURED:
+//                    //case 1: matured - pay interest for the full tenure (calculate full interest based in interest sceheme)
+//
 
-                case BROKEN:
-                    // Case 2: If broken in less than 3 months, interest is 0
-                    int monthsElapsed = (int) ((System.currentTimeMillis() - fd.getStart_date().getTime()) / (1000L * 60 * 60 * 24 * 30));
-                    if (monthsElapsed < 3) {
-                        interest = 0.0;
-                    } else {
-                        interest = (principal * rate * monthsElapsed) / (100 * 12);
-                        if (monthsElapsed >= 24) {
-                            interest += (interest * rate * (monthsElapsed / 12)) / 100;
-                        }
-                    }
-                    break;
+
+                // broken case is removed because we need to do it only once when user breaks the FD (FixedDepositService.setFixedDepositStatus)
+//                case BROKEN:
+//                    //case 2: broken before 3 months - no interest
+//                    //case 3: broken after 3 months but before maturity - simple interest for elapsed
+//                        // compound is actually compounded quaterly(4times) per year ,  based on scheme whose ternue is >= 24 months
+//                        // but if broken before 24 months, then only simple interest is paid for elapsed months
+//
 
                 case ACTIVE:
                 case PENDING:
-                    // Case 3: Calculate till date
-
-                    monthsElapsed = (int) ((System.currentTimeMillis() - fd.getStart_date().getTime()) / (1000L * 60 * 60 * 24 * 30));
-
-                    int applicableMonths = Math.min(tenure, monthsElapsed);
-
-                    //adding new logic to set status to matured if tenure is completed
-                    if (monthsElapsed >= tenure) {
+                    //case 4: active/pending - simple interest for elapsed months, if tenure >= 24 months, compound interest for elapsed months
+                    // also, if elapsed months >= tenure months, set status to matured
+                    if (applicableMonths >= tenureMonths) {
                         fd.setStatus(FdStatus.MATURED);
                     }
-
-                    interest = (principal * rate * applicableMonths) / (100 * 12);
-                    if (applicableMonths >= 24) {
-                        interest += (interest * rate * (applicableMonths / 12)) / 100;
+                    if (isCompoundEligible ) {
+                        interest = computeCompoundInterest(principal, rate, applicableMonths);
+                    } else {
+                        interest = computeSimpleInterest(principal, rate, applicableMonths);
                     }
+
+                    interest = roundTwoDecimals(interest);
+                    maturityAmount = roundTwoDecimals(principal + interest);
+
+                    fd.setAccrued_interest(interest);
                     break;
 
                 default:
-                    // Other statuses, do nothing
+                    // do nothing
                     continue;
             }
 
-            fd.setAccrued_interest(interest);
+
             fixedDepositRepository.save(fd);
         }
     }
+
+    public double computeSimpleInterest(double principal, double ratePercent, int months) {
+        double years = months / 12.0;
+        return (principal * ratePercent * years) / 100.0;
+    }
+
+    public double computeCompoundInterest(double principal, double ratePercent, int months) {
+        double rateDec = ratePercent / 100.0;
+        double years = months / 12.0;
+        int n = 4;  // quarterly
+        double amount = principal * Math.pow(1 + rateDec / n, n * years);
+        return amount - principal;
+    }
+
+    public double roundTwoDecimals(double value) {
+        BigDecimal bd = BigDecimal.valueOf(value);
+        bd = bd.setScale(2, RoundingMode.HALF_UP);
+        return bd.doubleValue();
+    }
+
+
+
 }

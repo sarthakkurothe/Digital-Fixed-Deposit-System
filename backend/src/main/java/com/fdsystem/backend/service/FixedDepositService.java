@@ -31,6 +31,8 @@ import java.util.List;
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired AccruedInterestService accruedInterestService;
+
     public FixedDepositService(FixedDepositRepository fixedDepositRepository){
         this.fixedDepositRepository = fixedDepositRepository;
     }
@@ -92,7 +94,37 @@ import java.util.List;
     public void setFixedDepositStatus(Long id, FdStatus fdStatus) {
         FixedDeposit fixedDeposit = this.fixedDepositRepository.findById(id).get();
         fixedDeposit.setStatus(fdStatus);
+
+        // logic to calculate interest and maturity amount based on status change
+        LocalDate startDate = fixedDeposit.getStart_date().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate now = LocalDate.now();
+        long monthsElapsed = ChronoUnit.MONTHS.between(startDate, now);
+        if (monthsElapsed < 0) monthsElapsed = 0;
+        double principal = fixedDeposit.getAmount();
+        double rate = fixedDeposit.getInterest_rate();  // in percent, e.g. 7.0
+        int tenureMonths = fixedDeposit.getTenure_months();
+        double interest = 0.0;
+        boolean isCompoundEligible = (tenureMonths >= 24);
+        int applicableMonths = (int) Math.min(monthsElapsed, tenureMonths);
+
+        if (applicableMonths < 3) {
+            interest = 0.0;
+        } else {
+            // compound is actually compounded quaterly(4times) per year ,  based on scheme whose ternue is >= 24 months
+            // but if broken before 24 months, then only simple interest is paid for elapsed months
+            if (isCompoundEligible && applicableMonths >= 24) {
+                interest = accruedInterestService.computeCompoundInterest(principal, rate, applicableMonths);
+            } else {
+                interest = accruedInterestService.computeSimpleInterest(principal, rate, applicableMonths);
+            }
+        }
+
+        interest = accruedInterestService.roundTwoDecimals(interest);
+        fixedDeposit.setAccrued_interest(interest);
+        // accured interest is calculated with same interets , but payout is reduced by penalty
+
         this.fixedDepositRepository.save(fixedDeposit);
+
     }
 
     public List<AdminFixedDepositDto> getAllFDs() {
