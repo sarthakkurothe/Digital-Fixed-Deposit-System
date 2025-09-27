@@ -58,7 +58,7 @@ export default createStore({
 
     async fetchSummary({ state }) {
       try {
-        const res = await axios.get(`/user/investments/${state.user.id}`);
+        const res = await axios.get(`/user/investments`);
         return res.data;
       } catch (err) {
         console.error("Error fetching summary", err);

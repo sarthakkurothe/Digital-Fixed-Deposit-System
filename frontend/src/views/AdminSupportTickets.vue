@@ -1,15 +1,4 @@
 <template>
-  <div class="min-h-screen bg-gray-50">
-    <!-- Admin Sidebar -->
-    <AdminSidebar ref="sidebar" @toggle="handleSidebarToggle" />
-    
-    <!-- Main Content -->
-    <div class="transition-all duration-300 ease-in-out" :class="mainContentClasses">
-      
-      <Navbar />
-
-      <!-- Page Content -->
-      <main class="flex-1 overflow-auto p-6">
         <div class="space-y-6">
           <div class="bg-white rounded-lg border border-gray-200">
             <div class="px-6 py-4 border-b border-gray-200">
@@ -179,9 +168,7 @@
             </div>
           </div>
         </div>
-      </main>
-    </div>
-  </div>
+      
 </template>
 
 <script>

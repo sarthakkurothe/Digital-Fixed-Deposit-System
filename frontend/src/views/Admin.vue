@@ -1,17 +1,5 @@
 <template>
-  <div class="min-h-screen bg-gray-50">
-    <!-- Admin Sidebar -->
-    <AdminSidebar ref="sidebar" @toggle="handleSidebarToggle" />
-    
-    <!-- Main Content -->
-    <div class="transition-all duration-300 ease-in-out"
-         :class="sidebarCollapsed ? 'md:ml-30' : 'md:ml-65'">
-
-
-         <Navbar />
-
-      <!-- Page Content -->
-      <main class="flex-1 overflow-auto p-6" :class="sidebarCollapsed">
+  
         <!-- Admin Dashboard Content -->
         <div class="space-y-6">
           <!-- Stats Grid -->
@@ -75,9 +63,6 @@
 
           
         </div>
-      </main>
-    </div>
-  </div>
 </template>
 
 <script>
@@ -89,7 +74,6 @@ import { mapGetters, mapActions } from 'vuex'
 export default {
   name: 'Admin',
   components: {
-    AdminSidebar,
     MenuIcon, 
     Users, 
     Building, 
@@ -97,7 +81,6 @@ export default {
     HelpCircle, 
     ChevronRight, 
     BarChart2,
-    Navbar
   },
   data() {
     return {
