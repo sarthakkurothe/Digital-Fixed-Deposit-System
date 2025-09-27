@@ -103,27 +103,27 @@
                     <tr v-for="fd in paginatedFDs" :key="fd.id" class="hover:bg-gray-50">
                       <td class="px-6 py-4 whitespace-nowrap">
                         <div>
-                          <div class="text-sm font-medium text-gray-900">{{ fd.fdId }}</div>
+                          <div class="text-sm font-medium text-gray-900">{{ fd.fdNumber }}</div>
                         </div>
                       </td>
                       <td class="px-6 py-4 whitespace-nowrap">
                         <div>
-                          <div class="text-sm font-medium text-gray-900">{{ fd.name }}</div>
-                          <div class="text-sm text-gray-500">{{ fd.email }}</div>
+                          <div class="text-sm font-medium text-gray-900">{{ fd.customerName }}</div>
+                          <div class="text-sm text-gray-500">{{ fd.customerEmail }}</div>
                         </div>
                       </td>
                       <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                         ₹{{ Number(fd.amount).toLocaleString() }}
                       </td>
                       <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        {{ fd.interest_rate }}%
+                        {{ fd.interestRate }}%
                       </td>
                       <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        {{ formatDate(fd.mature_date) }}
+                        {{ formatDate(fd.maturityDate) }}
                       </td>
                       <td class="px-6 py-4 whitespace-nowrap">
-                        <span class="px-2 py-1 text-xs rounded-full" :class="getStatusClass(fd.fdStatus)">
-                          {{ fd.fdStatus }}
+                        <span class="px-2 py-1 text-xs rounded-full" :class="getStatusClass(fd.status)">
+                          {{ fd.status }}
                         </span>
                       </td>
                       
@@ -184,42 +184,6 @@ export default {
       sortBy: 'amount',
       currentPage: 1,
       pageSize: 10,
-      // Mock data - replace with actual data from store
-      mockFDs: [
-        {
-          id: 1,
-          fdNumber: 'FD001',
-          customerName: 'John Doe',
-          customerEmail: 'john@example.com',
-          amount: 50000,
-          interestRate: 7.5,
-          maturityDate: '2024-12-31',
-          status: 'ACTIVE',
-          scheme: 'Regular FD'
-        },
-        {
-          id: 2,
-          fdNumber: 'FD002',
-          customerName: 'Jane Smith',
-          customerEmail: 'jane@example.com',
-          amount: 100000,
-          interestRate: 8.0,
-          maturityDate: '2024-11-15',
-          status: 'PENDING',
-          scheme: 'Senior Citizen FD'
-        },
-        {
-          id: 3,
-          fdNumber: 'FD003',
-          customerName: 'Mike Johnson',
-          customerEmail: 'mike@example.com',
-          amount: 75000,
-          interestRate: 7.8,
-          maturityDate: '2025-01-20',
-          status: 'ACTIVE',
-          scheme: 'Tax Saver FD'
-        }
-      ],
       allFixedDeposits: [] // This will hold data from the store
     }
   },
@@ -236,29 +200,28 @@ export default {
     },
     filteredFDs() {
       let filtered = this.allFDs
-      
+
       if (this.searchTerm) {
         const term = this.searchTerm.toLowerCase()
-        filtered = filtered.filter(fd => 
+        filtered = filtered.filter(fd =>
           fd.customerName?.toLowerCase().includes(term) ||
-          fd.fdNumber?.toLowerCase().includes(term) ||
+          fd.fdNumber?.toString().includes(term) ||
           fd.customerEmail?.toLowerCase().includes(term)
         )
       }
-      
+
       if (this.statusFilter) {
-        filtered = filtered.filter(fd => fd.fdStatus === this.statusFilter)
+        filtered = filtered.filter(fd => fd.status === this.statusFilter)
       }
-      
-      // Sort
+
       if (this.sortBy === 'amount') {
         filtered.sort((a, b) => b.amount - a.amount)
       } else if (this.sortBy === 'date') {
-        filtered.sort((a, b) => new Date(b.maturity_date) - new Date(a.maturity_date))
+        filtered.sort((a, b) => new Date(b.maturityDate) - new Date(a.maturityDate))
       } else if (this.sortBy === 'customer') {
-        filtered.sort((a, b) => a.name.localeCompare(b.name))
+        filtered.sort((a, b) => a.customerName.localeCompare(b.customerName))
       }
-      
+
       return filtered
     },
     paginatedFDs() {
@@ -318,13 +281,22 @@ export default {
   async mounted() {
     this.checkMobile()
     window.addEventListener('resize', this.checkMobile)
-    
-    // Fetch FDs data
+
     try {
       const res = await axios.get('admin/fds')
-      this.allFixedDeposits = res.data
+      this.allFixedDeposits = res.data.map(fd => ({
+        id: fd.fdId,
+        fdNumber: fd.fdId,           // keep fdId as display number
+        customerName: fd.name,
+        customerEmail: fd.email,
+        amount: fd.amount,
+        interestRate: fd.interest_rate,
+        maturityDate: fd.mature_date,
+        status: fd.fdStatus
+      }))
     } catch (error) {
       console.error('Failed to load fixed deposits:', error)
+      this.allFixedDeposits = [] // fallback empty
     }
   },
   beforeUnmount() {
