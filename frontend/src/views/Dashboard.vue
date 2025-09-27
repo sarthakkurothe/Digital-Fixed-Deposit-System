@@ -79,6 +79,7 @@ export default {
   components: { DashboardCards, PieChart, BarChart, ArrowRightIcon, ActivityIcon, CalculatorIcon, HelpCircleIcon },
   mounted() {
     this.$store.dispatch('fetchFDs');
+    this.$store.dispatch('fetchSummary')
   }
 }
 </script>
