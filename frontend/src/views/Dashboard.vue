@@ -81,8 +81,7 @@ export default {
     if(this.$store.getters.getFDs.length === 0){
       this.$store.dispatch('fetchFDs');
     }
-    this.$store.dispatch('fetchSummary')
-
+    this.$store.dispatch('fetchSummary');
   }
 }
 </script>
