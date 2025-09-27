@@ -12,6 +12,7 @@ import store from '../store'
 import Admin from '../views/Admin.vue'
 import AdminFixedDeposits from '../views/AdminFixedDeposits.vue'
 import AdminSupportTickets from '../views/AdminSupportTickets.vue'
+import AdminInterface from '../components/AdminInterface.vue'
 
 const routes = [
   { path: '/', name: 'Home', component: HomeView },
@@ -20,13 +21,20 @@ const routes = [
 
 
   {
-    path: '/admin',name: 'Admin', component:Admin
-  },
-  {
-    path: '/admin/fds', name: 'AdminFDs', component: AdminFixedDeposits
-  },
-  {
-    path: '/admin/tickets', name: 'AdminTickets', component: AdminSupportTickets
+    path: '/admin',name: 'AdminInterface', component:AdminInterface, meta: { requiresAuth: true, requiresAdmin: true },
+    children: [
+      {
+        path: '',name: 'Admin', component:Admin,
+    
+      },
+      {
+        path: 'fds', name: 'AdminFDs', component: AdminFixedDeposits
+      },
+      {
+        path: 'tickets', name: 'AdminTickets', component: AdminSupportTickets
+      },
+    
+    ]
   },
   {
     path: '/user',
@@ -46,10 +54,24 @@ const router = createRouter({ history: createWebHistory(), routes })
 
 router.beforeEach((to, from, next) => {
   const isAuthenticated = !!store.state.token
+  const user = store.state.user
+  const isAdmin = user?.role === 'ROLE_ADMIN'
 
-  if (to.meta.requiresAuth && !isAuthenticated) next('/login')
-  else if ((to.name === 'Login' || to.name === 'Register') && isAuthenticated) next('/user/dashboard')
-  else next()
+  // Not logged in → login
+  if (!isAuthenticated && to.meta.requiresAuth) {
+    return next('/login')
+  }
+
+  // Logged in → redirect based on role if going to login/register/home
+  if (isAuthenticated && (to.name === 'Login' || to.name === 'Register' || to.name === 'Home')) {
+    return isAdmin ? next('/admin') : next('/user/dashboard')
+  }
+
+  // Otherwise proceed
+  next()
 })
+
+
+
 
 export default router

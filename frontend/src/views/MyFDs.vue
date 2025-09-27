@@ -455,6 +455,9 @@ export default {
       try {
         const response = await this.$store.dispatch('breakFD', fd.id);
         toast[response.success ? 'success' : 'error'](response.message);
+        if(response.success){
+          this.$store.dispatch("fetchFDs");
+        }
         if (response.success) await this.$store.dispatch('fetchFDs');
       } catch (err) {
         toast.error("Something went wrong while breaking the FD.");
@@ -473,7 +476,10 @@ export default {
       }
     }
   },
-  mounted() { this.$store.dispatch("fetchFDs"); }
+  mounted() {
+    if(this.$store.getters.getFDs.length === 0) 
+      this.$store.dispatch("fetchFDs"); 
+  }
 };
 </script>
 

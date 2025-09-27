@@ -122,7 +122,7 @@ export default {
 
   methods: {
     // mapActions goes in methods
-    ...mapActions(['setToken', 'setUserData', 'login']),
+    ...mapActions(['getToken', 'setUserData', 'login']),
 
     async handleLogin() {
       // start UI loading
@@ -142,13 +142,18 @@ export default {
         if (token) {
           // fetch & set user data (optional)
           await this.setUserData()
-          this.$router.push({ name: 'Dashboard' })
+          const user = this.$store.getters.getUser
+           if (user.role === 'ROLE_ADMIN') {
+            this.$router.push('/admin')
+          } else {
+            this.$router.push('/user/dashboard')
+          }
         } else {
           this.error = 'Invalid credentials'
         }
       } catch (err) {
         // prefer server message when available, fallback to generic message
-        this.error = err?.response?.data?.message || err.message || 'Invalid credentials'
+        this.error = err?.response?.data?.message || err.message || 'Server'
         console.error('Login error:', err)
       } finally {
         this.loading = false
