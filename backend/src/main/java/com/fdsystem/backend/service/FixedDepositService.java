@@ -69,6 +69,7 @@ import java.util.List;
         ticket.setSubject("Break Fixed Deposit");
         ticket.setDescription("Premature Withdrawal");
         ticket.setStatus(SupportTicketStatus.OPEN);
+        ticket.setCreatedDate(Date.valueOf(LocalDate.now()));
         supportTicketRepository.save(ticket);
         fd.setStatus(FdStatus.PENDING);
         fixedDepositRepository.save(fd);
