@@ -63,9 +63,7 @@ export default createStore({
 
     async fetchSummary({ commit, state }) {
     try {
-      const res = await axios.get(`/user/investments`, {
-      headers: { Authorization: `bearer ${state.token}` },
-    });
+      const res = await axios.get(`/user/investments`);
       commit("SET_SUMMARY", res.data);
       return res.data;
     } catch (err) {
