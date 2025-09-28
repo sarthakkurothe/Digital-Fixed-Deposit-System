@@ -29,8 +29,11 @@ public class UserService {
     }
 
     public boolean isUserExists(String email){
-    return userRepository.findByEmail(email) != null;
-  }
+      if(email == null) {
+        throw new IllegalArgumentException("Email must not be null");
+      }
+      return userRepository.findByEmail(email) != null;
+    }
 
     public Optional<User> getUserById(long userId) {
       return this.userRepository.findById(userId);

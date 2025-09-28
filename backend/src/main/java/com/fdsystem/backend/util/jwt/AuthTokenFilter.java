@@ -1,7 +1,7 @@
 package com.fdsystem.backend.util.jwt;
 
 
-import com.fdsystem.backend.service.UserDetailsService;
+import com.fdsystem.backend.service.UserDetailsServiceImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -24,7 +24,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
   private JWTUtils jwtUtil;
 
   @Autowired
-  private UserDetailsService userDetailsService;
+  private UserDetailsServiceImpl userDetailsService;
 
 
   @Override

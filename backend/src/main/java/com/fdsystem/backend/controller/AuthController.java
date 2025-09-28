@@ -93,7 +93,7 @@ public class AuthController {
         User user = principal.getUser();
         UserDTO userDTO = new UserDTO();
 
-        userDTO.setId(user.getUser_id());
+        userDTO.setId(user.getId());
         userDTO.setRole(user.getRole());
         userDTO.setName(user.getName());
         userDTO.setAge(user.getAge());

@@ -149,12 +149,15 @@ export default {
             this.$router.push('/user/dashboard')
           }
         } else {
-          this.error = 'Invalid credentials'
+          this.error = 'Something went wrong. Please try again.'
         }
       } catch (err) {
-        // prefer server message when available, fallback to generic message
-        this.error = err?.response?.data?.message || err.message || 'Server'
-        console.error('Login error:', err)
+    
+        if(err.response.status == 404) {
+          this.error = 'User not found. Please check your email or password'
+        } else{
+          this.error = 'Login failed. Please try again.'
+        }
       } finally {
         this.loading = false
       }

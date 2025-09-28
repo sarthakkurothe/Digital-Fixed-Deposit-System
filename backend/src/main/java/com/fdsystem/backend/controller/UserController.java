@@ -29,7 +29,7 @@ public class UserController {
         UserPrincipal principal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = principal.getUser();
         accruedInterestService.calculateAccruedInterest(user);
-        long userId = user.getUser_id();
+        long userId = user.getId();
 
         double totalInvestment = fixedDepositService.getFdsByUserId(userId).stream().mapToDouble(fd -> fd.getAmount()).sum();
         double interestEarned = fixedDepositService.getFdsByUserId(userId).stream().mapToDouble(fd -> fd.getAccrued_interest()).sum();
