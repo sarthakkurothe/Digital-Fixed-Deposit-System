@@ -1,170 +1,187 @@
 <template>
-        <div class="space-y-6">
-          <div class="bg-white rounded-lg border border-gray-200">
-            <div class="px-6 py-4 border-b border-gray-200">
-              <h1 class="text-lg font-semibold text-gray-900">Support Tickets Management</h1>
+  <div class="space-y-6">
+    <div class="bg-white rounded-lg border border-gray-200">
+      <div class="px-6 py-4 border-b border-gray-200">
+        <h1 class="text-lg font-semibold text-gray-900">Support Tickets Management</h1>
+      </div>
+
+      <div class="p-6">
+        <!-- Search and Filter -->
+        <div class="mb-6 grid grid-cols-1 md:grid-cols-4 gap-4">
+          <input
+            v-model="searchTerm"
+            type="text"
+            placeholder="Search by customer or subject"
+            class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          />
+          <select
+            v-model="statusFilter"
+            class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          >
+            <option value="">All Status</option>
+            <option value="OPEN">Open</option>
+            <option value="CLOSED">CLOSED</option>
+          </select>
+          <select
+            v-model="sortBy"
+            class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+          >
+            <option value="date">Sort by Date</option>
+            <option value="status">Sort by Status</option>
+          </select>
+        </div>
+
+        <!-- Ticket Cards Grid (Mobile) -->
+        <div class="md:hidden space-y-4">
+          <div v-for="ticket in paginatedTickets" :key="ticket.id"
+               class="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-sm transition-shadow">
+            <div class="flex justify-between items-start mb-3">
+              <div>
+                <h3 class="font-medium text-gray-900">{{ ticket.subject }}</h3>
+                <p class="text-sm text-gray-500">{{ ticket.customerName }}</p>
+              </div>
+              <div class="flex flex-col items-end space-y-1">
+                <span class="px-2 py-1 text-xs rounded-full" :class="getStatusClass(ticket.status)">
+                  {{ ticket.status }}
+                </span>
+                <span class="px-2 py-1 text-xs rounded-full" :class="getPriorityClass(ticket.priority)">
+                  {{ ticket.priority }}
+                </span>
+              </div>
             </div>
-            
-            <div class="p-6">
-              <!-- Search and Filter -->
-              <div class="mb-6 grid grid-cols-1 md:grid-cols-4 gap-4">
-                <input
-                  v-model="searchTerm"
-                  type="text"
-                  placeholder="Search by customer or subject"
-                  class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                />
-                <select
-                  v-model="statusFilter"
-                  class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                >
-                  <option value="">All Status</option>
-                  <option value="OPEN">Open</option>
-                  <option value="CLOSED">CLOSED</option>
-                </select>
-                <select
-                  v-model="sortBy"
-                  class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                >
-                  <option value="date">Sort by Date</option>
-                  <option value="status">Sort by Status</option>
-                </select>
-              </div>
 
-              <!-- Ticket Cards Grid (Mobile) -->
-              <div class="md:hidden space-y-4">
-                <div v-for="ticket in paginatedTickets" :key="ticket.id" 
-                     class="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-sm transition-shadow">
-                  <div class="flex justify-between items-start mb-3">
-                    <div>
-                      <h3 class="font-medium text-gray-900">{{ ticket.subject }}</h3>
-                      <p class="text-sm text-gray-500">{{ ticket.customerName }}</p>
-                    </div>
-                    <div class="flex flex-col items-end space-y-1">
-                      <span class="px-2 py-1 text-xs rounded-full" :class="getStatusClass(ticket.status)">
-                        {{ ticket.status }}
-                      </span>
-                      <span class="px-2 py-1 text-xs rounded-full" :class="getPriorityClass(ticket.priority)">
-                        {{ ticket.priority }}
-                      </span>
-                    </div>
-                  </div>
-                  
-                  <div class="text-sm text-gray-600 mb-3 line-clamp-2">
-                    {{ ticket.description }}
-                  </div>
-                  
-                  <div class="grid grid-cols-2 gap-4 text-sm mb-4">
-                    <div>
-                      <p class="text-gray-500">Ticket ID</p>
-                      <p class="font-medium">#{{ ticket.ticketNumber }}</p>
-                    </div>
-                    <div>
-                      <p class="text-gray-500">Created</p>
-                      <p class="font-medium">{{ formatDate(ticket.createdAt) }}</p>
-                    </div>
-                  </div>
-                  
-                  <div class="flex space-x-2">
-                      
-                    <button
-                      @click="replyToTicket(ticket)"
-                      class="flex-1 px-3 py-2 text-purple-600 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors text-sm"
-                    >
-                      Reply
-                    </button>
-                  </div>
-                </div>
-              </div>
+            <div class="text-sm text-gray-600 mb-3 line-clamp-2">
+              {{ ticket.description }}
+            </div>
 
-              <!-- Tickets Table (Desktop) -->
-              <div class="hidden md:block overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200">
-                  <thead class="bg-gray-50">
-                    <tr>
-                      <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ticket ID</th>
-                      <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
-                      <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Subject</th>
-                      <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                      <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created</th>
-                      <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                    </tr>
-                  </thead>
-                  <tbody class="bg-white divide-y divide-gray-200">
-                    <tr v-for="ticket in paginatedTickets" :key="ticket.id" class="hover:bg-gray-50">
-                      <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                        #{{ ticket.id }}
-                      </td>
-                      <td class="px-6 py-4 whitespace-nowrap">
-                        <div>
-                          <div class="text-sm font-medium text-gray-900">{{ ticket.name }}</div>
-                          <div class="text-sm text-gray-500">{{ ticket.email }}</div>
-                        </div>
-                      </td>
-                      <td class="px-6 py-4 max-w-xs">
-                        <div class="text-sm text-gray-900">{{ ticket.subject }}</div>
-                        <div class="text-sm text-gray-500 truncate">{{ ticket.description }}</div>
-                      </td>
-                      <td class="px-6 py-4 whitespace-nowrap">
-                        <span class="px-2 py-1 text-xs rounded-full" :class="getStatusClass(ticket.status)">
-                          {{ ticket.status }}
-                        </span>
-                      </td>
-                      <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        {{ formatDate(ticket.createdDate) }}
-                      </td>
-                      <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
-                        
-                        <button
-                          @click="replyToTicket(ticket)"
-                          class="text-purple-600 hover:text-purple-900"
-                        >
-                          Reply
-                        </button>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
+            <div class="grid grid-cols-2 gap-4 text-sm mb-4">
+              <div>
+                <p class="text-gray-500">Ticket ID</p>
+                <p class="font-medium">#{{ ticket.ticketNumber }}</p>
               </div>
+              <div>
+                <p class="text-gray-500">Created</p>
+                <p class="font-medium">{{ formatDate(ticket.createdAt) }}</p>
+              </div>
+            </div>
 
-              <!-- Pagination -->
-              <div class="mt-6 flex justify-between items-center">
-                <div class="text-sm text-gray-700">
-                  Showing {{ ((currentPage - 1) * pageSize) + 1 }} to {{ Math.min(currentPage * pageSize, filteredTickets.length) }} of {{ filteredTickets.length }} results
-                </div>
-                <div class="flex space-x-2">
-                  <button
-                    @click="currentPage--"
-                    :disabled="currentPage === 1"
-                    class="px-3 py-2 border border-gray-300 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
-                  >
-                    Previous
-                  </button>
-                  <button
-                    @click="currentPage++"
-                    :disabled="currentPage * pageSize >= filteredTickets.length"
-                    class="px-3 py-2 border border-gray-300 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
-                  >
-                    Next
-                  </button>
-                </div>
-              </div>
+            <div class="flex space-x-2">
+              <!-- REPLY button (uppercase) -->
+              <button
+                @click="replyToTicket(ticket)"
+                class="flex-1 px-3 py-2 text-purple-600 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors text-sm cursor-pointer font-semibold"
+              >
+                REPLY
+              </button>
             </div>
           </div>
         </div>
 
-        <!-- Ticket Details Modal -->
-        <div v-if="showTicketModal" class="fixed inset-0 bg-gray-600 bg-opacity-10 overflow-y-auto h-full w-full z-50" @click="closeModal">
-          <div class="relative top-20 mx-auto p-5 border w-11/12 md:w-3/4 lg:w-1/2 shadow-lg rounded-md bg-white" @click.stop>
-            <div class="flex justify-between items-center mb-4">
-              <h3 class="text-lg font-bold text-gray-900">Ticket Details - #{{ selectedTicket?.id }}</h3>
-              <button @click="closeModal" class="text-gray-400 hover:text-gray-600">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-                </svg>
+        <!-- Tickets Table (Desktop) -->
+        <div class="hidden md:block overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ticket ID</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Subject</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created</th>
+                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <tr v-for="ticket in paginatedTickets" :key="ticket.id" class="hover:bg-gray-50">
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                  #{{ ticket.id }}
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <div>
+                    <div class="text-sm font-medium text-gray-900">{{ ticket.name }}</div>
+                    <div class="text-sm text-gray-500">{{ ticket.email }}</div>
+                  </div>
+                </td>
+                <td class="px-6 py-4 max-w-xs">
+                  <div class="text-sm text-gray-900">{{ ticket.subject }}</div>
+                  <div class="text-sm text-gray-500 truncate">{{ ticket.description }}</div>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                  <span class="px-2 py-1 text-xs rounded-full" :class="getStatusClass(ticket.status)">
+                    {{ ticket.status }}
+                  </span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  {{ formatDate(ticket.createdDate) }}
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
+                  <!-- REPLY button as a styled button now -->
+                  <button
+                    @click="replyToTicket(ticket)"
+                    class="px-3 py-2 bg-purple-50 text-purple-600 rounded-lg hover:bg-purple-100 transition-colors cursor-pointer font-semibold"
+                  >
+                    REPLY
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Pagination -->
+        <div class="mt-6 flex justify-between items-center">
+          <div class="text-sm text-gray-700">
+            Showing {{ ((currentPage - 1) * pageSize) + 1 }} to {{ Math.min(currentPage * pageSize, filteredTickets.length) }} of {{ filteredTickets.length }} results
+          </div>
+          <div class="flex space-x-2">
+            <button
+              @click="prevPage"
+              :disabled="currentPage === 1"
+              class="px-3 py-2 border border-gray-300 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 cursor-pointer"
+            >
+              Previous
+            </button>
+            <button
+              @click="nextPage"
+              :disabled="currentPage * pageSize >= filteredTickets.length"
+              class="px-3 py-2 border border-gray-300 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50 cursor-pointer"
+            >
+              Next
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ticket Details Modal (improved: header fixed, body scrollable, footer visible; prevents page scroll) -->
+    <transition name="modal-fade" appear>
+      <div
+        v-if="showTicketModal"
+        class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4"
+        role="dialog"
+        aria-modal="true"
+        @click.self="closeModal"
+      >
+        <!-- modal card (flex column) -->
+        <div
+          class="relative w-full max-w-3xl bg-white rounded-lg shadow-xl overflow-hidden flex flex-col"
+          style="max-height: 90vh;"
+          aria-label="Ticket details"
+        >
+          <!-- header (fixed height) -->
+          <div class="flex items-start justify-between gap-4 p-6 border-b border-gray-100 flex-shrink-0">
+            <div class="min-w-0">
+              <h3 class="text-lg font-bold text-gray-900 truncate">Ticket Details - #{{ selectedTicket?.id ?? '—' }}</h3>
+              <p class="text-sm text-gray-500 mt-1 truncate">{{ selectedTicket?.subject ?? '' }}</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <button @click="closeModal" class="text-gray-400 hover:text-gray-600 p-2 rounded cursor-pointer" aria-label="Close">
+                <X class="w-6 h-6" />
               </button>
             </div>
+          </div>
 
+          <!-- body (scrollable) -->
+          <div class="p-6 space-y-6 overflow-y-auto" style="flex: 1 1 auto;">
             <div v-if="selectedTicket" class="space-y-6">
               <!-- Ticket Information -->
               <div class="bg-gray-50 p-4 rounded-lg">
@@ -196,7 +213,7 @@
               </div>
 
               <!-- FD Details (if applicable) -->
-              <div v-if="selectedTicket.fd.id" class="bg-blue-50 p-4 rounded-lg">
+              <div v-if="selectedTicket.fd?.id" class="bg-blue-50 p-4 rounded-lg">
                 <h4 class="font-semibold text-gray-900 mb-3">Fixed Deposit Details</h4>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                   <div>
@@ -217,54 +234,63 @@
                   </div>
                 </div>
                 <div class="mt-4" v-if="selectedTicket.fd.status !== 'BROKEN'">
-                  <button 
+                  <button
                     @click="breakFD(selectedTicket.fd.id)"
-                    class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
+                    class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors cursor-pointer font-bold"
                   >
                     Break FD
                   </button>
                 </div>
               </div>
 
-              <!-- Response Area -->
+              <!-- Admin Response -->
               <div class="bg-green-50 p-4 rounded-lg">
                 <h4 class="font-semibold text-gray-900 mb-3">Admin Response</h4>
                 <textarea
+                  ref="responseBox"
                   v-model="responseText"
-                  rows="4"
-                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  rows="6"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 min-h-[140px]"
                   placeholder="Enter your response to the customer..."
                 ></textarea>
               </div>
+            </div>
 
-              <!-- Action Buttons -->
-              <div class="flex justify-end space-x-3">
-                <button 
-                  @click="closeModal"
-                  class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
-                >
-                  Cancel
-                </button>
-                <button 
-                  @click="closeTicket"
-                  :disabled="!responseText.trim()"
-                  class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                >
-                  Close Ticket
-                </button>
-              </div>
+            <div v-else class="text-center text-gray-500 py-12">
+              Loading ticket details...
             </div>
           </div>
+
+          <!-- footer (fixed, visible) -->
+          <div class="p-4 border-t border-gray-100 flex items-center justify-end gap-3 flex-shrink-0 bg-white">
+            <button
+              @click="closeModal"
+              class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer font-bold"
+            >
+              Cancel
+            </button>
+            <button
+              @click="closeTicket"
+              :disabled="!responseText.trim()"
+              class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors cursor-pointer font-bold"
+            >
+              Close Ticket
+            </button>
+          </div>
         </div>
-      
+      </div>
+    </transition>
+  </div>
 </template>
 
 <script>
 import AdminSidebar from '../components/AdminSidebar.vue'
-import { MenuIcon, Download } from 'lucide-vue-next'
+import { MenuIcon, Download, X } from 'lucide-vue-next'
 import { mapGetters, mapActions } from 'vuex'
 import Navbar from '../components/Navbar.vue'
-import axios from '../api' 
+import axios from '../api'
+import { nextTick } from 'vue'
+import { useToast } from 'vue-toastification'
 
 export default {
   name: 'AdminSupportTickets',
@@ -272,6 +298,7 @@ export default {
     AdminSidebar,
     MenuIcon,
     Download,
+    X,
     Navbar
   },
   data() {
@@ -291,17 +318,15 @@ export default {
       responseText: ''
     }
   },
-  computed: { 
+  computed: {
     mainContentClasses() {
-      if (this.isMobile) {
-        return 'ml-0'
-      }
+      if (this.isMobile) return 'ml-0'
       return this.sidebarCollapsed ? 'ml-30' : 'md:ml-65'
     },
     allTickets() {
       return this.allSupportTickets
     },
-      filteredTickets() { 
+    filteredTickets() {
       let filtered = this.allTickets
 
       if (this.searchTerm) {
@@ -314,13 +339,9 @@ export default {
         )
       }
 
-      if (this.statusFilter) {
-        filtered = filtered.filter(ticket => ticket.status === this.statusFilter)
-      }
+      if (this.statusFilter) filtered = filtered.filter(ticket => ticket.status === this.statusFilter)
+      if (this.priorityFilter) filtered = filtered.filter(ticket => ticket.priority === this.priorityFilter)
 
-      if (this.priorityFilter) {
-        filtered = filtered.filter(ticket => ticket.priority === this.priorityFilter)
-      }
       if (this.sortBy === 'date') {
         filtered.sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate))
       } else if (this.sortBy === 'status') {
@@ -340,9 +361,7 @@ export default {
   methods: {
     ...mapActions(['logout']),
     handleToggleSidebar() {
-      if (this.$refs.sidebar) {
-        this.$refs.sidebar.toggleSidebar()
-      }
+      if (this.$refs.sidebar) this.$refs.sidebar.toggleSidebar()
     },
     handleSidebarToggle(collapsed) {
       this.sidebarCollapsed = collapsed
@@ -367,9 +386,8 @@ export default {
         'low': 'bg-green-100 text-green-800'
       }
       return classes[priority] || 'bg-gray-100 text-gray-800'
-    }, 
+    },
     replyToTicket(ticket) {
-      console.log('Opening modal for ticket:', ticket)
       this.selectedTicket = ticket
       this.responseText = ''
       this.showTicketModal = true
@@ -379,83 +397,102 @@ export default {
       this.selectedTicket = null
       this.responseText = ''
     },
+    prevPage() {
+      if (this.currentPage > 1) this.currentPage--
+    },
+    nextPage() {
+      if (this.currentPage * this.pageSize < this.filteredTickets.length) this.currentPage++
+    },
     async breakFD(fdId) {
-      console.log('Breaking FD with ID:', fdId)
       try {
         const res = await axios.put(`/admin/fd/${fdId}`, {"status":"BROKEN"});
-        console.log('Break FD API Response:', res)
- 
         if (this.selectedTicket) {
           this.selectedTicket.fd.status = 'BROKEN'
         }
-        
-        alert('FD has been broken successfully')
+        this.toast.success('FD has been broken successfully')
       } catch (error) {
-        console.error('Error breaking FD:', error)
-        alert('Failed to break FD: ' + (error.response?.data?.message || error.message))
+        this.toast.error('Failed to break FD: ' + (error.response?.data?.message || error.message))
       }
     },
     async closeTicket() {
       if (!this.responseText.trim()) {
-        alert('Please enter a response before closing the ticket')
+        this.toast.error('Please enter a response before closing the ticket')
         return
       }
-      
-      console.log('Closing ticket with ID:', this.selectedTicket.id)
-      console.log('Response text:', this.responseText)
-      
+
       try {
         const response = await axios.post(`/admin/tickets/${this.selectedTicket.id}`, this.responseText, {
           headers: {
             'Content-Type': 'text/plain'
           }
         })
-        console.log('Close ticket API Response:', response)
-        
+
         // Update the ticket status locally
         const ticketIndex = this.allSupportTickets.findIndex(t => t.id === this.selectedTicket.id)
         if (ticketIndex !== -1) {
           this.allSupportTickets[ticketIndex].status = 'CLOSED'
         }
-        
+
         this.closeModal()
-        alert('Ticket has been closed successfully')
+        this.toast.success('Ticket has been closed successfully')
       } catch (error) {
-        console.error('Error closing ticket:', error)
-        alert('Failed to close ticket: ' + (error.response?.data?.message || error.message))
+        this.toast.error('Failed to close ticket: ' + (error.response?.data?.message || error.message))
       }
-    }, 
+    },
     async logout() {
       try {
         await this.logout()
         this.$router.push('/login')
       } catch (error) {
-        console.error('Logout error:', error)
+        this.toast.error('Logout error')
       }
+    },
+    /* keyboard handler for ESC to close modal */
+    onKeydown(e) {
+      if (e.key === 'Escape' && this.showTicketModal) this.closeModal()
     }
   },
   async mounted() {
     this.checkMobile()
     window.addEventListener('resize', this.checkMobile)
-    try{
+    window.addEventListener('keydown', this.onKeydown)
+
+    try {
       const res = await axios.get('/fd/fds')
-      // console.log('FDs API Response:', res.data)
       this.allFds = res.data
-      console.log('All FDs:', this.allFds);
-    }catch(error){
-      console.error('Failed to load FDs:', error)
+    } catch (error) {
+      // no console logs by request
     }
+
     // Fetch support tickets data
     try {
       const res = await axios.get('/admin/tickets')
       this.allSupportTickets = res.data
-      console.log('Support Tickets:', this.allSupportTickets)
     } catch (error) {
-      console.error('Failed to load support tickets:', error)
+      // no console logs by request
+    }
+
+    // initialize toast
+    this.toast = useToast()
+  },
+  watch: {
+    showTicketModal(newVal) {
+      // prevent background scrolling while modal is open
+      document.body.style.overflow = newVal ? 'hidden' : ''
+      if (newVal) {
+        // focus textarea next tick
+        nextTick(() => {
+          const el = this.$refs.responseBox
+          if (el && el.focus) el.focus()
+        })
+      }
     }
   },
   beforeUnmount() {
     window.removeEventListener('resize', this.checkMobile)
+    window.removeEventListener('keydown', this.onKeydown)
+    // ensure body scroll is restored
+    document.body.style.overflow = ''
   }
 }
 </script>
@@ -468,4 +505,16 @@ export default {
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+
+/* Modal animation */
+.modal-fade-enter-active,
+.modal-fade-leave-active {
+  transition: opacity 200ms ease, transform 200ms ease;
+}
+.modal-fade-enter-from,
+.modal-fade-leave-to {
+  opacity: 0;
+  transform: translateY(8px) scale(0.995);
+}
 </style>
+
