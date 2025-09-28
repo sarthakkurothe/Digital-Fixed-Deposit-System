@@ -37,7 +37,7 @@
           <p class="text-sm font-bold text-green-800">Resolved Tickets</p>
           <CheckCircle class="w-4 h-4 text-green-800" />
         </div>
-        <div class="text-2xl font-bold text-green-900">{{ tickets.filter(t => t.status === 'RESOLVED').length }}</div>
+        <div class="text-2xl font-bold text-green-900">{{ tickets.filter(t => t.status === 'CLOSED').length }}</div>
         <p class="text-xs text-green-800 mt-1">Issues resolved</p>
       </div>
 
@@ -408,3 +408,4 @@ const statusIcon = (status) => {
   transform: translateY(8px) scale(0.995);
 }
 </style>
+
