@@ -31,10 +31,11 @@ import java.util.List;
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired AccruedInterestService accruedInterestService;
+    private AccruedInterestService accruedInterestService;
 
-    public FixedDepositService(FixedDepositRepository fixedDepositRepository){
+    public FixedDepositService(FixedDepositRepository fixedDepositRepository ,AccruedInterestService accruedInterestService){
         this.fixedDepositRepository = fixedDepositRepository;
+        this.accruedInterestService = accruedInterestService;
     }
 
     public void bookFD(FixedDeposit fixedDeposit){
