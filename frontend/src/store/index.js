@@ -7,6 +7,7 @@ export default createStore({
     token: localStorage.getItem("token") || null,
     fds: [],
     summary: {},
+    dashboardInfo: {},
     loading: false,
   },
 
@@ -47,6 +48,9 @@ export default createStore({
       const fd = state.fds.find((fd) => fd.id === fdId);
       if (fd) fd.status = status;
     },
+    SET_DASHBOARD_INFO(state, info) {
+      state.dashboardInfo = info;
+    }
   },
 
   actions: {
@@ -77,7 +81,7 @@ export default createStore({
     },
 
     /**
-     * Break an FD (set status to BROKEN_PENDING)
+     * Break an FD (set status to PENDING)
      */
     async fetchBreakPreview({ state }, fdId) {
       try {
@@ -98,7 +102,7 @@ export default createStore({
         });
 
         if (res.status === 201) {
-          commit("UPDATE_FD_STATUS", { fdId, status: "BROKEN_PENDING" });
+          commit("UPDATE_FD_STATUS", { fdId, status: "PENDING" });
           return {
             success: true,
             message: "Request for Break FD has been created successfully.",
@@ -114,6 +118,20 @@ export default createStore({
           success: false,
           message: "Failed to submit FD Break Request.",
         };
+      }
+    },
+
+    async fetchDashboardInfo({ commit, state }) {
+      commit("SET_LOADING", true);
+      try {
+        const res = await axios.get('/admin/dashboard/info', {
+          headers: { Authorization: `bearer ${state.token}` }
+        });
+        commit('SET_DASHBOARD_INFO', res.data);
+      } catch (err) {
+        console.error('Error fetching dashboard info:', err);
+      } finally {
+         commit("SET_LOADING", false);
       }
     },
 
@@ -192,5 +210,6 @@ export default createStore({
     isLoading: (state) => state.loading,
     getFDById: (state) => (id) => state.fds.find(fd => fd.id === id),
     getSummary: (state) => state.summary,
+    getDashboardInfo: (state) => state.dashboardInfo,
   },
 });
