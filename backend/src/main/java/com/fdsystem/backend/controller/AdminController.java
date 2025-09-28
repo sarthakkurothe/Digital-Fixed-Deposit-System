@@ -36,6 +36,7 @@ public class AdminController {
 
   @PutMapping("/fd/{id}")
   public ResponseEntity<Void> setFDStatusById(@PathVariable Long id, @RequestBody Map<String,String> body) {
+    //we are always sending BROKEN status from frontend
     String status = body.get("status");
     if(status == null) {
       return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
