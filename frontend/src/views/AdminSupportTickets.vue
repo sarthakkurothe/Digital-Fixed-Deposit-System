@@ -117,7 +117,13 @@
                   <!-- REPLY button as a styled button now -->
                   <button
                     @click="replyToTicket(ticket)"
-                    class="px-3 py-2 bg-purple-50 text-purple-600 rounded-lg hover:bg-purple-100 transition-colors cursor-pointer font-semibold"
+                    :disabled="ticket.status === 'CLOSED'"
+                    :class="[
+                      'px-3 py-2 rounded-lg font-semibold transition-colors',
+                      ticket.status !== 'CLOSED'
+                      ? 'bg-purple-50 text-purple-600 hover:bg-purple-100 cursor-pointer'
+                      : 'bg-purple-50 text-purple-600 cursor-not-allowed opacity-80'
+                    ]"
                   >
                     REPLY
                   </button>
@@ -236,7 +242,13 @@
                 <div class="mt-4" v-if="selectedTicket.fd.status !== 'BROKEN'">
                   <button
                     @click="breakFD(selectedTicket.fd.id)"
-                    class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors cursor-pointer font-bold"
+                    :disabled="selectedTicket.fd.status !== 'PENDING'"
+                    :class="[
+                        'px-4 py-2 rounded-lg font-bold transition-colors',
+                        selectedTicket.fd.status === 'PENDING'
+                        ? 'bg-red-600 text-white hover:bg-red-700 cursor-pointer'
+                        : 'bg-red-400 text-white opacity-70 cursor-not-allowed'
+                    ]"
                   >
                     Break FD
                   </button>
