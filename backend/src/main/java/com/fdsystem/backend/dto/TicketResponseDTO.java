@@ -1,5 +1,6 @@
 package com.fdsystem.backend.dto;
 
+import com.fdsystem.backend.entity.FixedDeposit;
 import lombok.Data;
 
 import java.sql.Date;
