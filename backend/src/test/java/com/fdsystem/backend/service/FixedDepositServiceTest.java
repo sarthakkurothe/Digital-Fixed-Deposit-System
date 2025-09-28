@@ -3,9 +3,12 @@ package com.fdsystem.backend.service;
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 import java.sql.Date; import java.sql.Timestamp;
-import java.time.LocalDate; import java.util.Arrays;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Arrays;
 import java.util.List; import java.util.Optional;
 
+import com.fdsystem.backend.dto.BreakPreviewResponse;
 import com.fdsystem.backend.entity.FixedDeposit;
 import com.fdsystem.backend.entity.User;
 import com.fdsystem.backend.entity.enums.FdStatus;
@@ -89,5 +92,53 @@ public class FixedDepositServiceTest {
         assertEquals(2, result.size(), "Should return 2 fixed deposits");
         verify(userRepository, times(1)).findById(userId);
         verify(fixedDepositRepository, times(1)).findAllByUser(user);
+    }
+
+    @Test
+    void testGetBreakPreview_penaltyFullAccruedInterestIfLessThan3Months() {
+        // Arrange
+        FixedDeposit fd = new FixedDeposit();
+        fd.setId(1L);
+        fd.setStart_date(java.util.Date.from(
+                LocalDate.now().minusMonths(2).atStartOfDay(ZoneId.systemDefault()).toInstant()
+        ));
+        fd.setTenure_months(12);
+        fd.setAmount(10000.0);
+        fd.setAccrued_interest(500.0);
+        fd.setInterest_rate(5.0);
+
+        when(fixedDepositRepository.findById(1L)).thenReturn(Optional.of(fd));
+
+        // Act
+        BreakPreviewResponse response = fixedDepositService.getBreakPreview(1L);
+
+        // Assert
+        assertEquals(500.0, response.getPenalty(), "Penalty should equal full accrued interest");
+        assertEquals(10000.0, response.getPayout(), "Payout should just be the amount");
+        assertEquals(2, response.getTimeElapsed(), "Months elapsed should be 2");
+    }
+
+    @Test
+    void testGetBreakPreview_penaltyPartialIfMidTenure() {
+        // Arrange
+        FixedDeposit fd = new FixedDeposit();
+        fd.setId(2L);
+        fd.setStart_date(java.util.Date.from(
+                LocalDate.now().minusMonths(6).atStartOfDay(ZoneId.systemDefault()).toInstant()
+        ));
+        fd.setTenure_months(12);
+        fd.setAmount(10000.0);
+        fd.setAccrued_interest(600.0);
+        fd.setInterest_rate(6.0); // Penalty = accruedInterest * (1 / interestRate) = 600 * (1/6) = 100
+
+        when(fixedDepositRepository.findById(2L)).thenReturn(Optional.of(fd));
+
+        // Act
+        BreakPreviewResponse response = fixedDepositService.getBreakPreview(2L);
+
+        // Assert
+        assertEquals(100.0, response.getPenalty(), "Penalty should be accrued interest divided by interest rate");
+        assertEquals(10500.0, response.getPayout(), "Payout should be amount + interest - penalty");
+        assertEquals(6, response.getTimeElapsed(), "Months elapsed should be 6");
     }
 }
