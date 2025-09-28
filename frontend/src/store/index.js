@@ -7,7 +7,7 @@ export default createStore({
     token: localStorage.getItem("token") || null,
     fds: [],
     summary: {},
-    dashboardInfo: {},
+    dashboardInfo: {}, 
     loading: false,
   },
 
@@ -133,7 +133,9 @@ export default createStore({
       } finally {
          commit("SET_LOADING", false);
       }
-    },
+    }, 
+
+    
 
     /**
      * Login user -> save token
@@ -210,6 +212,6 @@ export default createStore({
     isLoading: (state) => state.loading,
     getFDById: (state) => (id) => state.fds.find(fd => fd.id === id),
     getSummary: (state) => state.summary,
-    getDashboardInfo: (state) => state.dashboardInfo,
+    getDashboardInfo: (state) => state.dashboardInfo, 
   },
 });
