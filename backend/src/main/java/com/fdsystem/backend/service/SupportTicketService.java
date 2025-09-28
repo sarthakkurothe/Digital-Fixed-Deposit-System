@@ -71,6 +71,9 @@ public class SupportTicketService {
             AdminSupportTicketDto supportTicketDto = new AdminSupportTicketDto();
             supportTicketDto.setName(ticket.getUser().getName());
             supportTicketDto.setDescription(ticket.getDescription());
+
+            supportTicketDto.setFd(ticket.getFixedDeposit());
+
             supportTicketDto.setSubject(ticket.getSubject());
             supportTicketDto.setEmail(ticket.getUser().getEmail());
             supportTicketDto.setCreatedDate(ticket.getCreatedDate());
