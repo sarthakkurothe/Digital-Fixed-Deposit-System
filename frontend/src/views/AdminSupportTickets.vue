@@ -196,53 +196,6 @@ export default {
       sortBy: 'date',
       currentPage: 1,
       pageSize: 10,
-      // Mock data - replace with actual data from store
-      mockTickets: [
-        {
-          id: 1,
-          ticketNumber: 'T001',
-          customerName: 'John Doe',
-          customerEmail: 'john@example.com',
-          subject: 'FD Maturity Query',
-          description: 'I would like to know when my FD will mature and what will be the final amount.',
-          priority: 'high',
-          status: 'open',
-          createdAt: '2024-09-20T10:00:00Z'
-        },
-        {
-          id: 2,
-          ticketNumber: 'T002',
-          customerName: 'Jane Smith',
-          customerEmail: 'jane@example.com',
-          subject: 'Interest Rate Question',
-          description: 'What is the current interest rate for senior citizen FDs?',
-          priority: 'medium',
-          status: 'in-progress',
-          createdAt: '2024-09-19T14:30:00Z'
-        },
-        {
-          id: 3,
-          ticketNumber: 'T003',
-          customerName: 'Mike Johnson',
-          customerEmail: 'mike@example.com',
-          subject: 'Account Update Request',
-          description: 'I need to update my contact information linked to my FD account.',
-          priority: 'low',
-          status: 'resolved',
-          createdAt: '2024-09-18T09:15:00Z'
-        },
-        {
-          id: 4,
-          ticketNumber: 'T004',
-          customerName: 'Sarah Wilson',
-          customerEmail: 'sarah@example.com',
-          subject: 'Premature Closure',
-          description: 'I want to close my FD before maturity. What are the penalty charges?',
-          priority: 'high',
-          status: 'open',
-          createdAt: '2024-09-25T16:45:00Z'
-        }
-      ],
       allSupportTickets: []
     }
   },
@@ -254,37 +207,34 @@ export default {
       return this.sidebarCollapsed ? 'ml-30' : 'md:ml-65'
     },
     allTickets() {
-      // Use store data if available, otherwise use mock data
       return this.allSupportTickets
     },
-    filteredTickets() {
+      filteredTickets() {
       let filtered = this.allTickets
-      
+
       if (this.searchTerm) {
         const term = this.searchTerm.toLowerCase()
-        filtered = filtered.filter(ticket => 
-          ticket.customerName?.toLowerCase().includes(term) ||
+        filtered = filtered.filter(ticket =>
+          ticket.name?.toLowerCase().includes(term) ||
           ticket.subject?.toLowerCase().includes(term) ||
-          ticket.ticketNumber?.toLowerCase().includes(term) ||
-          ticket.customerEmail?.toLowerCase().includes(term)
+          ticket.id?.toString().includes(term) ||
+          ticket.email?.toLowerCase().includes(term)
         )
       }
-      
+
       if (this.statusFilter) {
         filtered = filtered.filter(ticket => ticket.status === this.statusFilter)
       }
-      
+
       if (this.priorityFilter) {
         filtered = filtered.filter(ticket => ticket.priority === this.priorityFilter)
       }
-      
-      // Sort
       if (this.sortBy === 'date') {
-        filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+        filtered.sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate))
       } else if (this.sortBy === 'status') {
         filtered.sort((a, b) => a.status.localeCompare(b.status))
       }
-      
+
       return filtered
     },
     paginatedTickets() {
