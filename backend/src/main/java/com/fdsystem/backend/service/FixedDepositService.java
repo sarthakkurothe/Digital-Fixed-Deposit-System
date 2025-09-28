@@ -24,18 +24,22 @@ import java.util.List;
 
 @Service public class FixedDepositService {
 
-    private FixedDepositRepository fixedDepositRepository;
-    @Autowired
-    private SupportTicketRepository supportTicketRepository;
+    private final FixedDepositRepository fixedDepositRepository;
+    private final SupportTicketRepository supportTicketRepository;
+    private final UserRepository userRepository;
+    private final AccruedInterestService accruedInterestService;
 
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired AccruedInterestService accruedInterestService;
-
-    public FixedDepositService(FixedDepositRepository fixedDepositRepository){
+    public FixedDepositService(FixedDepositRepository fixedDepositRepository,
+                               SupportTicketRepository supportTicketRepository,
+                               UserRepository userRepository,
+                               AccruedInterestService accruedInterestService) {
         this.fixedDepositRepository = fixedDepositRepository;
+        this.supportTicketRepository = supportTicketRepository;
+        this.userRepository = userRepository;
+        this.accruedInterestService = accruedInterestService;
     }
+
 
     public void bookFD(FixedDeposit fixedDeposit){
         int tenure_months=fixedDeposit.getTenure_months();
