@@ -1,75 +1,98 @@
 <template>
-  
-        <!-- Admin Dashboard Content -->
-        <div class="space-y-6">
-          <!-- Stats Grid -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-            <!-- Total Users Card -->
-            <div class="bg-white p-6 rounded-lg border border-gray-200 hover:shadow-sm transition-shadow">
-              <div class="flex items-center justify-between mb-4">
-                <h3 class="text-sm font-medium text-gray-600">Total Users</h3>
-                <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
-                  <Users class="w-5 h-5 text-blue-600" />
-                </div>
-              </div>
-              <div class="space-y-1">
-                <p class="text-2xl font-bold text-gray-900">{{ totalUsers }}</p>
-                <p class="text-sm text-green-600">+12% from last month</p>
-              </div>
-            </div>
-
-            <!-- Total FDs Card -->
-            <div class="bg-gradient-to-r from-green-50 to-green-100 p-6 rounded-lg border border-green-200 hover:shadow-sm transition-shadow">
-              <div class="flex items-center justify-between mb-4">
-                <h3 class="text-sm font-medium text-green-700">Total FDs</h3>
-                <div class="w-8 h-8 bg-green-200 rounded-lg flex items-center justify-center">
-                  <Building class="w-5 h-5 text-green-600" />
-                </div>
-              </div>
-              <div class="space-y-1">
-                <p class="text-2xl font-bold text-green-800">{{ totalFDs }}</p>
-                <p class="text-sm text-green-600">{{ activeFDs }} active</p>
-              </div>
-            </div>
-
-            <!-- Total Investment Card -->
-            <div class="bg-white p-6 rounded-lg border border-gray-200 hover:shadow-sm transition-shadow">
-              <div class="flex items-center justify-between mb-4">
-                <h3 class="text-sm font-medium text-gray-600">Total Investment</h3>
-                <div class="w-8 h-8 bg-yellow-100 rounded-lg flex items-center justify-center">
-                  <IndianRupee class="w-5 h-5 text-yellow-600" />
-                </div>
-              </div>
-              <div class="space-y-1">
-                <p class="text-2xl font-bold text-gray-900">₹{{ totalInvestment }}</p>
-                <p class="text-sm text-gray-600">Across all FDs</p>
-              </div>
-            </div>
-
-            <!-- Support Tickets Card -->
-            <div class="bg-white p-6 rounded-lg border border-gray-200 hover:shadow-sm transition-shadow">
-              <div class="flex items-center justify-between mb-4">
-                <h3 class="text-sm font-medium text-gray-600">Support Tickets</h3>
-                <div class="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center">
-                  <HelpCircle class="w-5 h-5 text-red-600" />
-                </div>
-              </div>
-              <div class="space-y-1">
-                <p class="text-2xl font-bold text-gray-900">{{ openTickets }}</p>
-                <p class="text-sm text-red-600">{{ openTickets }} open</p>
-              </div>
-            </div>
+  <div class="p-6 space-y-10">
+    <!-- Stats Grid -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <!-- Total Users Card -->
+      <div class="bg-white p-4 rounded-lg border border-gray-200 hover:shadow-sm transition-shadow">
+        <div class="flex items-center justify-between">
+          <h3 class="text-sm font-medium text-gray-600">Total Users</h3>
+          <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+            <Users class="w-5 h-5 text-blue-600" />
           </div>
-
-          
         </div>
+        <p class="mt-2 text-2xl font-bold text-gray-900">{{ totalUsers }}</p>
+      </div>
+
+      <!-- Total FDs Card -->
+      <div class="bg-gradient-to-r from-green-50 to-green-100 p-4 rounded-lg border border-green-200 hover:shadow-sm transition-shadow">
+        <div class="flex items-center justify-between">
+          <h3 class="text-sm font-medium text-green-700">Total FDs</h3>
+          <div class="w-8 h-8 bg-green-200 rounded-lg flex items-center justify-center">
+            <Building class="w-5 h-5 text-green-600" />
+          </div>
+        </div>
+        <p class="mt-2 text-2xl font-bold text-green-800">{{ totalFDs }}</p>
+      </div>
+
+      <!-- Total Tickets Card -->
+      <div class="bg-white p-4 rounded-lg border border-gray-200 hover:shadow-sm transition-shadow">
+        <div class="flex items-center justify-between">
+          <h3 class="text-sm font-medium text-gray-600">Total Tickets</h3>
+          <div class="w-8 h-8 bg-yellow-100 rounded-lg flex items-center justify-center">
+            <Inbox class="w-5 h-5 text-yellow-600" />
+          </div>
+        </div>
+        <p class="mt-2 text-2xl font-bold text-gray-900">{{ totalTickets }}</p>
+      </div>
+
+      <!-- Open Tickets Card -->
+      <div class="bg-white p-4 rounded-lg border border-gray-200 hover:shadow-sm transition-shadow">
+        <div class="flex items-center justify-between">
+          <h3 class="text-sm font-medium text-gray-600">Open Tickets</h3>
+          <div class="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center">
+            <HelpCircle class="w-5 h-5 text-red-600" />
+          </div>
+        </div>
+        <p class="mt-2 text-2xl font-bold text-gray-900">{{ openTickets }}</p>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+      <TicketsPieChart :open="openTickets" :closed="totalTickets - openTickets" />
+
+      <!--Quick Actions -->
+      <div class="bg-white p-6 rounded-lg border border-gray-200 shadow-sm space-y-6">
+        <h2 class="text-lg font-semibold text-gray-900 mb-4 text-center">Quick Actions</h2>
+        <!-- Manage FDs -->
+        <router-link
+          to="/admin/fds"
+          class="flex items-center h-[120px] p-4 border border-blue-200 rounded-lg hover:bg-blue-50 transition-colors group"
+        >
+          <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mr-4 group-hover:bg-blue-200 transition-colors">
+            <Building class="w-6 h-6 text-blue-500" />
+          </div>
+          <div>
+            <h3 class="font-medium text-gray-900">Manage FDs</h3>
+            <p class="text-sm text-gray-600">View and manage all deposits</p>
+          </div>
+          <ChevronRight class="w-5 h-5 text-gray-400 ml-auto" />
+        </router-link>
+
+        <!-- Support Tickets -->
+        <router-link
+          to="/admin/tickets"
+          class="flex items-center h-[120px] p-4 border border-green-200 rounded-lg hover:bg-green-50 transition-colors group"
+        >
+          <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mr-4 group-hover:bg-green-200 transition-colors">
+            <HelpCircle class="w-6 h-6 text-green-500" />
+          </div>
+          <div>
+            <h3 class="font-medium text-gray-900">Support Tickets</h3>
+            <p class="text-sm text-gray-600">Handle customer queries</p>
+          </div>
+          <ChevronRight class="w-5 h-5 text-gray-400 ml-auto" />
+        </router-link>
+      </div>
+    </div>
+  </div>
+
 </template>
 
 <script>
-import AdminSidebar from '../components/AdminSidebar.vue'
-import Navbar from '../components/Navbar.vue'
-import { MenuIcon, Users, Building, IndianRupee, HelpCircle, ChevronRight, BarChart2 } from 'lucide-vue-next'
+import { MenuIcon, Users, Building, Inbox, HelpCircle, ChevronRight, BarChart2 } from 'lucide-vue-next'
 import { mapGetters, mapActions } from 'vuex'
+import TicketsPieChart from '../components/TicketsPieChart.vue'
 
 export default {
   name: 'Admin',
@@ -77,35 +100,31 @@ export default {
     MenuIcon, 
     Users, 
     Building, 
-    IndianRupee, 
+    Inbox,
     HelpCircle, 
     ChevronRight, 
-    BarChart2,
+    TicketsPieChart
   },
   data() {
     return {
       sidebarCollapsed: false,
       isMobile: false,
-      // Mock data - replace with actual data from store
-      totalUsers: 1248,
-      totalFDs: 456,
-      activeFDs: 342,
-      totalInvestment: '2,45,67,890',
-      openTickets: 23,
-      recentFDs: [
-        { id: 1, amount: '50,000', customerName: 'John Doe', status: 'Active' },
-        { id: 2, amount: '1,00,000', customerName: 'Jane Smith', status: 'Pending' },
-        { id: 3, amount: '75,000', customerName: 'Mike Johnson', status: 'Active' }
-      ],
-      recentTickets: [
-        { id: 1, subject: 'FD Maturity Query', customerName: 'John Doe', priority: 'high' },
-        { id: 2, subject: 'Interest Rate Question', customerName: 'Jane Smith', priority: 'medium' },
-        { id: 3, subject: 'Account Update', customerName: 'Mike Johnson', priority: 'low' }
-      ]
     }
   },
   computed: {
-    ...mapGetters(['currentUser']),
+    ...mapGetters(['getDashboardInfo']),
+    totalUsers() {
+      return this.getDashboardInfo.totalUsers || 0
+    },
+    totalFDs() {
+      return this.getDashboardInfo.totalFDs || 0
+    },
+    totalTickets() {
+      return this.getDashboardInfo.totalTickets || 0
+    },
+    openTickets() {
+      return this.getDashboardInfo.totalOpenTickets || 0
+    },
     mainContentClasses() {
       if (this.isMobile) {
         return 'ml-0'
@@ -126,14 +145,6 @@ export default {
     checkMobile() {
       this.isMobile = window.innerWidth < 768
     },
-    getPriorityClass(priority) {
-      const classes = {
-        'high': 'bg-red-100 text-red-800',
-        'medium': 'bg-yellow-100 text-yellow-800',
-        'low': 'bg-green-100 text-green-800'
-      }
-      return classes[priority] || 'bg-gray-100 text-gray-800'
-    },
     async logout() {
       try {
         await this.logout()
@@ -146,11 +157,7 @@ export default {
   mounted() {
     this.checkMobile()
     window.addEventListener('resize', this.checkMobile)
-    
-    // Fetch admin dashboard data
-    // this.$store.dispatch('fetchAllUsers')
-    // this.$store.dispatch('fetchAllFDs')
-    // this.$store.dispatch('fetchAllSupportTickets')
+    this.$store.dispatch('fetchDashboardInfo')
   },
   beforeUnmount() {
     window.removeEventListener('resize', this.checkMobile)
