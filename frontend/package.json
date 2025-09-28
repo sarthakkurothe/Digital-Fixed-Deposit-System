@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "serve": "vite preview"
+    "serve": "vite preview",
+    "test": "vitest",
+    "test:ui": "vitest --ui"
   },
   "dependencies": {
     "@lottiefiles/dotlottie-vue": "^0.10.1",
@@ -24,6 +26,7 @@
     "@tailwindcss/vite": "^4.1.13",
     "@vitejs/plugin-vue": "^6.0.1",
     "@vue/test-utils": "^2.4.6",
+    "jsdom": "^27.0.0",
     "tailwindcss": "^4.1.13",
     "vite": "^7.1.6",
     "vitest": "^3.2.4"
