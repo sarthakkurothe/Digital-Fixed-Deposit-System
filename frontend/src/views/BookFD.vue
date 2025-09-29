@@ -81,15 +81,15 @@
 
             <div class="flex">
               <button
-                  @click="openConfirmModal"
-                  :disabled="isBookDisabled"
-                  class="w-full bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg h-14 flex items-center justify-center cursor-pointer"
-                >
-                  <div class="flex items-center justify-center">
-                    <span v-if="loading" class="loader mr-2"></span>
-                    <CirclePlus class="mr-2" />
-                    {{ loading ? 'Booking...' : 'Book Fixed Deposit' }}
-                  </div>
+                @click="openConfirmModal"
+                :disabled="isBookDisabled"
+                class="w-full bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg h-14 flex items-center justify-center cursor-pointer"
+              >
+                <div class="flex items-center justify-center">
+                  <span v-if="loading" class="loader mr-2"></span>
+                  <CirclePlus class="mr-2" />
+                  {{ loading ? 'Booking...' : 'Book Fixed Deposit' }}
+                </div>
               </button>
             </div>
           </div>
@@ -231,56 +231,121 @@
       </div>
     </div>
 
-        <!-- Confirmation Modal -->
+    <!-- Confirmation Modal (refactored with animation, icons, blur backdrop) -->
+    <transition name="modal-scale" appear>
       <div
         v-if="showConfirmModal"
-        class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+        class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm px-4"
+        @click.self="closeConfirmModal"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Confirm fixed deposit"
       >
-        <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6">
-          <h2 class="text-xl font-bold text-gray-800 mb-4">Confirm Fixed Deposit</h2>
-          <div class="space-y-3 text-gray-700">
-            <div class="flex justify-between">
-              <span>Investment Amount:</span>
-              <span>₹{{ formatCurrency(amount) }}</span>
+        <div
+          class="w-full max-w-md bg-white rounded-2xl shadow-2xl overflow-hidden transform transition-all"
+          :class="{ 'scale-100': showConfirmModal }"
+        >
+          <!-- header -->
+          <div class="flex items-center justify-between p-6 border-b border-gray-100">
+            <div class="flex items-center gap-3 min-w-0">
+              <NotebookTabs class="w-6 h-6 text-blue-600 flex-shrink-0" />
+              <div class="min-w-0">
+                <h3 class="text-lg font-bold text-gray-900 truncate">Confirm Fixed Deposit</h3>
+                <p class="text-sm text-gray-500 truncate">Review details before confirming</p>
+              </div>
             </div>
-            <div class="flex justify-between">
-              <span>Tenure:</span>
-              <span>{{ selectedScheme.tenureMonths }} months</span>
-            </div>
-            <div class="flex justify-between">
-              <span>Interest Rate:</span>
-              <span>{{ Number(effectiveRate).toFixed(1) }}% p.a.</span>
-            </div>
-            <div class="flex justify-between">
-              <span>Maturity Date:</span>
-              <span>{{ formattedMaturityDate }}</span>
-            </div>
-            <div class="flex justify-between">
-              <span>Expected Interest:</span>
-              <span>₹{{ formatCurrency(maturityInterest) }}</span>
-            </div>
-            <div class="flex justify-between font-semibold">
-              <span>Total Maturity Amount:</span>
-              <span>₹{{ formatCurrency(maturityAmount) }}</span>
+
+            <div class="flex items-center gap-2">
+              <button
+                @click="closeConfirmModal"
+                class="p-2 rounded hover:bg-gray-100 text-gray-600 cursor-pointer"
+                aria-label="Close modal"
+              >
+                <X class="w-5 h-5" />
+              </button>
             </div>
           </div>
-          <div class="mt-6 flex justify-end space-x-3">
+
+          <!-- body -->
+          <div class="p-6 space-y-4">
+            <div class="space-y-3 text-gray-700">
+              <div class="flex justify-between items-center">
+                <div class="flex items-center gap-2">
+                  <IndianRupee class="w-4 h-4 text-blue-600" />
+                  <span class="text-sm text-gray-600">Investment Amount</span>
+                </div>
+                <div class="font-medium">₹{{ formatCurrency(amount) }}</div>
+              </div>
+
+              <div class="flex justify-between items-center">
+                <div class="flex items-center gap-2">
+                  <Clock class="w-4 h-4 text-purple-600" />
+                  <span class="text-sm text-gray-600">Tenure</span>
+                </div>
+                <div class="font-medium">{{ selectedScheme.tenureMonths }} months</div>
+              </div>
+
+              <div class="flex justify-between items-center">
+                <div class="flex items-center gap-2">
+                  <Percent class="w-4 h-4 text-green-600" />
+                  <span class="text-sm text-gray-600">Interest Rate</span>
+                </div>
+                <div class="font-medium">{{ Number(effectiveRate).toFixed(1) }}% p.a.</div>
+              </div>
+
+              <div class="flex justify-between items-center">
+                <div class="flex items-center gap-2">
+                  <Calendar class="w-4 h-4 text-orange-600" />
+                  <span class="text-sm text-gray-600">Maturity Date</span>
+                </div>
+                <div class="font-medium">{{ formattedMaturityDate }}</div>
+              </div>
+
+              <div class="flex justify-between items-center">
+                <div class="flex items-center gap-2">
+                  <TrendingUp class="w-4 h-4 text-yellow-600" />
+                  <span class="text-sm text-gray-600">Expected Interest</span>
+                </div>
+                <div class="font-semibold text-green-600">
+                  ₹{{ formatCurrency(maturityInterest) }}
+                </div>
+              </div>
+
+              <div
+                class="flex items-center justify-between p-3 rounded-lg bg-blue-50 border border-blue-100"
+              >
+                <div class="flex items-center gap-2 text-blue-700 font-semibold">
+                  <Wallet class="w-4 h-4" />
+                  <span>Total Maturity Amount</span>
+                </div>
+                <div class="text-blue-700 font-bold text-lg">
+                  ₹{{ formatCurrency(maturityAmount) }}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- footer -->
+          <div class="p-4 border-t border-gray-100 flex justify-end gap-3 bg-white">
             <button
               @click="closeConfirmModal"
-              class="px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-100"
+              class="px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-100 transition-colors cursor-pointer font-bold flex items-center gap-2"
             >
+              <XCircle class="w-4 h-4 text-gray-600" />
               Cancel
             </button>
             <button
+              ref="confirmBtn"
               @click="confirmBookFD"
-              class="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700"
+              class="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors cursor-pointer font-bold flex items-center gap-2"
             >
+              <CheckCircle class="w-4 h-4" />
               Confirm
             </button>
           </div>
         </div>
       </div>
-
+    </transition>
   </div>
 </template>
 
@@ -291,8 +356,23 @@ import { mapGetters } from 'vuex';
 import axios from 'axios';
 import FDCalculator, { STANDARD_FD_SCHEMES } from '../utils/fdCalculations.js';
 import { DotLottieVue } from '@lottiefiles/dotlottie-vue';
-import { IndianRupee, ChartPie, Check, NotebookTabs, CirclePlus } from 'lucide-vue-next';
+import {
+  IndianRupee,
+  ChartPie,
+  Check,
+  NotebookTabs,
+  CirclePlus,
+  X,
+  XCircle,
+  CheckCircle,
+  Clock,
+  Percent,
+  Calendar,
+  TrendingUp,
+  Wallet,
+} from 'lucide-vue-next';
 import { useToast } from 'vue-toastification';
+import { nextTick } from 'vue';
 
 export default {
   name: 'BookFD',
@@ -305,6 +385,14 @@ export default {
     Check,
     NotebookTabs,
     CirclePlus,
+    X,
+    XCircle,
+    CheckCircle,
+    Clock,
+    Percent,
+    Calendar,
+    TrendingUp,
+    Wallet,
   },
   data() {
     return {
@@ -326,6 +414,16 @@ export default {
         this.amountError = `Amount must not exceed ₹${this.maxAmount.toLocaleString('en-IN')}`;
       } else {
         this.amountError = '';
+      }
+    },
+    showConfirmModal(newVal) {
+      // focus confirm button when modal opens and prevent body scroll
+      document.body.style.overflow = newVal ? 'hidden' : '';
+      if (newVal) {
+        nextTick(() => {
+          const el = this.$refs.confirmBtn;
+          if (el && el.focus) el.focus();
+        });
       }
     },
   },
@@ -459,5 +557,18 @@ circle {
   transition:
     stroke-dasharray 1s ease-in-out,
     stroke-dashoffset 1s ease-in-out;
+}
+
+/* Modal scale + fade animation */
+.modal-scale-enter-active,
+.modal-scale-leave-active {
+  transition:
+    opacity 220ms ease,
+    transform 220ms cubic-bezier(0.2, 0.9, 0.2, 1);
+}
+.modal-scale-enter-from,
+.modal-scale-leave-to {
+  opacity: 0;
+  transform: translateY(8px) scale(0.98);
 }
 </style>
