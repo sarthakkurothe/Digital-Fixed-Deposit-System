@@ -8,6 +8,7 @@
     >
       <!-- Left Side - Branding -->
       <DotLottieVue
+        class="hidden md:block"
         style="height: 500px; width: 500px"
         autoplay
         loop
@@ -185,6 +186,8 @@ export default {
               this.$router.push('/login');
             }
           }, 1000);
+        } else if (res.data === 'User already exists!') {
+          this.errorMessage = res.data;
         } else {
           this.errorMessage = res.error || 'Registration failed. Please try again.';
         }

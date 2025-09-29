@@ -9,6 +9,7 @@
     >
       <!-- Left Side - Branding & Features -->
       <DotLottieVue
+        class="hidden md:block"
         style="height: 500px; width: 500px"
         autoplay
         loop
