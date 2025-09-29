@@ -137,7 +137,7 @@ export default {
 
   methods: {
     ...mapActions(['setUserData', 'login']),
-    ...mapGetters(['getToken']),
+    ...mapGetters(['getAccessToken']),
 
     async handleLogin() {
       this.loading = true;
@@ -154,11 +154,14 @@ export default {
           password: this.password,
         });
 
-        const token = this.getToken();
+        const token = this.getAccessToken();
+
+      
 
         if (token) {
           await this.setUserData();
           const user = this.$store.getters.getUser;
+          
           if (user.role === 'ROLE_ADMIN') {
             this.$router.push('/admin');
           } else {

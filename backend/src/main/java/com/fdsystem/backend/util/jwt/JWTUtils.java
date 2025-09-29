@@ -1,3 +1,5 @@
+
+
 package com.fdsystem.backend.util.jwt;
 
 import com.fdsystem.backend.exception.TokenExpiredException;
@@ -20,11 +22,14 @@ import java.util.Enumeration;
 @Slf4j
 public class JWTUtils {
 
+  @Value("${spring.app.accessTokenExpireTime}")
+  private int accessTokenExpireTime;
+
+  @Value("${spring.app.refreshTokenExpireTime}")
+  private int refreshTokenExpireTime;
+
   @Value("${spring.app.jwtSecret}")
   private String jwtSecret;
-
-  @Value("${spring.app.jwtExpirationMs}")
-  private int jwtExpirationMs;
 
   public String getJwtFromHeader(HttpServletRequest request){
 
@@ -37,12 +42,20 @@ public class JWTUtils {
   }
 
 
-  public String generateTokenFromUsername(UserDetails userDetails){
-    String username = userDetails.getUsername();
+  public String generateAccessToken(String username) {
     return Jwts.builder()
             .subject(username)
             .issuedAt(new Date())
-            .expiration(new Date(System.currentTimeMillis()+jwtExpirationMs))
+            .expiration(new Date(System.currentTimeMillis() + accessTokenExpireTime))
+            .signWith(key())
+            .compact();
+  }
+
+  public String generateRefreshToken(String username) {
+    return Jwts.builder()
+            .subject(username)
+            .issuedAt(new Date())
+            .expiration(new Date(System.currentTimeMillis() + refreshTokenExpireTime))
             .signWith(key())
             .compact();
   }
@@ -72,3 +85,4 @@ public class JWTUtils {
     }
   }
 }
+

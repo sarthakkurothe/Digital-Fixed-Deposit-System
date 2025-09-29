@@ -10,9 +10,12 @@ axios.defaults.headers.common['Content-Type'] = 'application/json';
 
 axios.interceptors.request.use(
   config => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      config.headers['Authorization'] = `bearer ${token}`;
+    if (config.url.includes("/auth/refresh")) {
+      return config;
+    }
+    const accessToken = localStorage.getItem('accessToken');
+    if (accessToken) {
+      config.headers['Authorization'] = `bearer ${accessToken}`;
     }
     return config;
   },
@@ -25,14 +28,44 @@ const toast = useToast();
 
 axios.interceptors.response.use(
   response => response,
-  error => {
-    if (error.response && error.status === 401) {
-      toast.error('Your session has expired. Please login again.');
-      store.dispatch('logout');
-      router.push('/');
+  async error => {
+    const originalRequest = error.config;
+
+    if (originalRequest.url.includes("/auth/refresh")) {
+      return Promise.reject(error);
     }
+
+    if (error.response && error.response.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true; // avoid retry loop
+
+      
+      try {
+        const res = await axios.post("/auth/refresh", {
+          refreshToken: store.state.refreshToken,
+        });
+
+        if (res.status === 200) {
+          const { accessToken } = res.data;
+
+          store.commit("setTokens", { accessToken, refreshToken: store.state.refreshToken });
+          localStorage.setItem("accessToken", accessToken);
+
+          originalRequest.headers["Authorization"] = `bearer ${accessToken}`;
+
+          return axios(originalRequest);
+        }
+      } catch (err) {
+        // refresh failed → logout user
+        toast.error('Your session has expired. Please login again.');
+        store.dispatch("logout");
+        router.push('/');
+        return Promise.reject(err);
+      }
+    }
+
     return Promise.reject(error);
   }
 );
+
 
 export default axios;

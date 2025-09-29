@@ -3,10 +3,12 @@ package com.fdsystem.backend.controller;
 import com.fdsystem.backend.dto.LoginRequest;
 
 
+import com.fdsystem.backend.dto.RefreshRequest;
 import com.fdsystem.backend.dto.UserDTO;
 import com.fdsystem.backend.dto.UserDashboardDTO;
 import com.fdsystem.backend.entity.User;
 import com.fdsystem.backend.entity.UserPrincipal;
+import com.fdsystem.backend.exception.TokenExpiredException;
 import com.fdsystem.backend.service.AccruedInterestService;
 import com.fdsystem.backend.service.FixedDepositService;
 import com.fdsystem.backend.service.UserService;
@@ -54,8 +56,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
-        log.info("Infol........ ");
+    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest){
         Authentication authentication;
         try{
             authentication = authenticationManager
@@ -72,10 +73,12 @@ public class AuthController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
 
-        String jwtToken = this.jwtUtils.generateTokenFromUsername(userPrincipal);
+        String refreshToken = this.jwtUtils.generateRefreshToken((userPrincipal.getUsername()));
+        String accessToken = this.jwtUtils.generateAccessToken(userPrincipal.getUsername());
 
         Map<String, String> response = new HashMap<>();
-        response.put("token", jwtToken);
+        response.put("refreshToken", refreshToken);
+        response.put("accessToken", accessToken);
         return ResponseEntity.ok(response);
     }
 
@@ -89,8 +92,6 @@ public class AuthController {
         user.setRole(Role.ROLE_USER);
         user.setCreated_at(new Timestamp(System.currentTimeMillis()));
         userService.addUser(user);
-
-        System.out.println(user);
 
         return new ResponseEntity<>("User added successfully!", HttpStatus.CREATED);
     }
@@ -110,4 +111,22 @@ public class AuthController {
 
         return new ResponseEntity<>(userDTO, HttpStatus.ACCEPTED);
     }
+
+    @PostMapping("/refresh")
+    public ResponseEntity<Map<String, String>> refresh(@RequestBody RefreshRequest refreshRequest) throws TokenExpiredException {
+        if (!jwtUtils.isValidJwtToken(refreshRequest.getRefreshToken())) {
+            throw new TokenExpiredException("Refresh Token got expired!");
+        }
+
+        String username = jwtUtils.getUsernameFromJwtToken(refreshRequest.getRefreshToken());
+        String newAccessToken = jwtUtils.generateAccessToken(username);
+
+        Map<String, String> map = new HashMap<>();
+        map.put("accessToken", newAccessToken);
+
+        return ResponseEntity.ok(map);
+    }
+
+
+
 }
