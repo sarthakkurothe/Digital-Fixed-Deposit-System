@@ -275,11 +275,11 @@ export default {
       return this.calculationResults.compound;
     },
   },
-  async mounted() {
-    try {
-      await this.$store.dispatch('loadCurrentUser');
-    } catch {}
-  },
+  // async mounted() {
+  //   try {
+  //     await this.$store.dispatch('loadCurrentUser');
+  //   } catch {}
+  // },
   methods: {
     formatCurrency(amount) {
       return FDCalculator.formatCurrency(amount);
