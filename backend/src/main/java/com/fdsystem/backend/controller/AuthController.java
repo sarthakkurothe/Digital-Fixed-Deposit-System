@@ -20,6 +20,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -50,6 +51,11 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
+
+        System.out.println(userService.isUserExists(loginRequest.getEmail()));
+        if(!userService.isUserExists(loginRequest.getEmail())){
+            throw new UsernameNotFoundException("User Not Found");
+        }
         Authentication authentication;
         try{
             authentication = authenticationManager

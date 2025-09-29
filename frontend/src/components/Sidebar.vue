@@ -167,6 +167,7 @@ import { mapActions } from 'vuex';
 
 export default {
   name: 'Sidebar',
+   emits: ['sidebar-toggled'],
   components: {
     Vault,
     LogOutIcon,

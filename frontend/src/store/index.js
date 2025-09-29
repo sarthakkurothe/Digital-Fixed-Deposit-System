@@ -150,8 +150,9 @@ export default createStore({
         const token = res.data.token;
         commit('setToken', token);
 
-        return res.status;
+        return res;
       } catch (err) {
+        console.log(err)
         throw err;
       }
     },
