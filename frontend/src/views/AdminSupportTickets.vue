@@ -204,10 +204,12 @@
       >
         <div
           class="w-full max-w-3xl bg-white rounded-xl shadow-2xl overflow-hidden flex flex-col"
-          style="max-height: 90vh;"
+          style="max-height: 90vh"
         >
           <!-- Header -->
-          <header class="flex items-start justify-between gap-4 p-5 border-b border-gray-100 flex-shrink-0">
+          <header
+            class="flex items-start justify-between gap-4 p-5 border-b border-gray-100 flex-shrink-0"
+          >
             <div class="min-w-0">
               <h3 class="text-lg font-bold text-gray-900 truncate">
                 Ticket Details - #{{ selectedTicket?.id ?? '—' }}
@@ -228,7 +230,7 @@
           </header>
 
           <!-- Body-->
-          <div class="p-6 space-y-6 overflow-y-auto" style="flex: 1 1 auto;">
+          <div class="p-6 space-y-6 overflow-y-auto" style="flex: 1 1 auto">
             <div v-if="selectedTicket" class="space-y-6">
               <!-- Ticket Information -->
               <section class="bg-gray-50 p-4 rounded-lg">
@@ -248,7 +250,10 @@
                   </div>
                   <div>
                     <p class="text-gray-500">Status:</p>
-                    <span class="px-2 py-1 text-xs rounded-full" :class="getStatusClass(selectedTicket.status)">
+                    <span
+                      class="px-2 py-1 text-xs rounded-full"
+                      :class="getStatusClass(selectedTicket.status)"
+                    >
                       {{ selectedTicket.status }}
                     </span>
                   </div>
@@ -284,12 +289,18 @@
                 <div class="mt-4 flex flex-wrap gap-3">
                   <button
                     @click="breakFD(selectedTicket.fd.id)"
-                    :disabled="!(selectedTicket.fd.status === 'PENDING' || selectedTicket.fd.status === 'ACTIVE')"
+                    :disabled="
+                      !(
+                        selectedTicket.fd.status === 'PENDING' ||
+                        selectedTicket.fd.status === 'ACTIVE'
+                      )
+                    "
                     :class="[
                       'px-4 py-2 rounded-lg font-bold transition-colors',
-                      (selectedTicket.fd.status === 'PENDING' || selectedTicket.fd.status === 'ACTIVE')
+                      selectedTicket.fd.status === 'PENDING' ||
+                      selectedTicket.fd.status === 'ACTIVE'
                         ? 'bg-red-600 text-white hover:bg-red-700 cursor-pointer'
-                        : 'bg-red-400 text-white opacity-70 cursor-not-allowed'
+                        : 'bg-red-400 text-white opacity-70 cursor-not-allowed',
                     ]"
                     type="button"
                   >
@@ -303,7 +314,7 @@
                       'px-4 py-2 rounded-lg font-bold transition-colors',
                       selectedTicket.fd.status === 'BROKEN'
                         ? 'bg-green-600 text-white hover:bg-green-700 cursor-pointer'
-                        : 'bg-green-400 text-white opacity-70 cursor-not-allowed'
+                        : 'bg-green-400 text-white opacity-70 cursor-not-allowed',
                     ]"
                     type="button"
                   >
@@ -329,7 +340,9 @@
           </div>
 
           <!-- Footer (fixed) -->
-          <footer class="p-4 border-t border-gray-100 flex items-center justify-end gap-3 flex-shrink-0 bg-white">
+          <footer
+            class="p-4 border-t border-gray-100 flex items-center justify-end gap-3 flex-shrink-0 bg-white"
+          >
             <button
               @click="closeModal"
               class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer font-bold"
@@ -352,58 +365,57 @@
     </transition>
 
     <!-- Confirm Action Modal -->
-<transition name="modal-fade" appear>
-  <div
-    v-if="showConfirmModal"
-    class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm px-4"
-    @click.self="cancelConfirm"
-    role="dialog"
-    aria-modal="true"
-    aria-label="Confirm action"
-  >
-    <div class="w-full max-w-sm bg-white rounded-xl shadow-2xl overflow-hidden">
-      <!-- Header -->
-      <div class="flex items-center justify-between p-5 border-b border-gray-100">
-        <h4 class="text-lg font-bold text-gray-900">Confirm Action</h4>
-        <button
-          @click="cancelConfirm"
-          class="p-2 rounded hover:bg-gray-100 text-gray-600 cursor-pointer"
-          aria-label="Close confirm modal"
-          type="button"
-        >
-          <X class="w-5 h-5" />
-        </button>
-      </div>
+    <transition name="modal-fade" appear>
+      <div
+        v-if="showConfirmModal"
+        class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm px-4"
+        @click.self="cancelConfirm"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Confirm action"
+      >
+        <div class="w-full max-w-sm bg-white rounded-xl shadow-2xl overflow-hidden">
+          <!-- Header -->
+          <div class="flex items-center justify-between p-5 border-b border-gray-100">
+            <h4 class="text-lg font-bold text-gray-900">Confirm Action</h4>
+            <button
+              @click="cancelConfirm"
+              class="p-2 rounded hover:bg-gray-100 text-gray-600 cursor-pointer"
+              aria-label="Close confirm modal"
+              type="button"
+            >
+              <X class="w-5 h-5" />
+            </button>
+          </div>
 
-      <!-- Body -->
-      <div class="p-6 flex flex-col items-center text-center space-y-4">
-        <div class="w-12 h-12 flex items-center justify-center rounded-full bg-red-100">
-          <CircleAlert class="w-7 h-7 text-red-600" />
+          <!-- Body -->
+          <div class="p-6 flex flex-col items-center text-center space-y-4">
+            <div class="w-12 h-12 flex items-center justify-center rounded-full bg-red-100">
+              <CircleAlert class="w-7 h-7 text-red-600" />
+            </div>
+            <p class="text-gray-700">{{ confirmMessage }}</p>
+          </div>
+
+          <!-- Footer -->
+          <div class="flex justify-end gap-3 px-6 py-4 bg-gray-50 border-t border-gray-100">
+            <button
+              @click="cancelConfirm"
+              class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 font-medium cursor-pointer"
+              type="button"
+            >
+              Cancel
+            </button>
+            <button
+              @click="confirmProceed"
+              class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 font-bold cursor-pointer"
+              type="button"
+            >
+              Confirm
+            </button>
+          </div>
         </div>
-        <p class="text-gray-700">{{ confirmMessage }}</p>
       </div>
-
-      <!-- Footer -->
-      <div class="flex justify-end gap-3 px-6 py-4 bg-gray-50 border-t border-gray-100">
-        <button
-          @click="cancelConfirm"
-          class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 font-medium cursor-pointer"
-          type="button"
-        >
-          Cancel
-        </button>
-        <button
-          @click="confirmProceed"
-          class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 font-bold cursor-pointer"
-          type="button"
-        >
-          Confirm
-        </button>
-      </div>
-    </div>
-  </div>
-</transition>
-
+    </transition>
   </div>
 </template>
 
@@ -559,7 +571,9 @@ export default {
           if (this.selectedTicket) this.selectedTicket.fd.status = 'BROKEN';
           this.toast.success('FD has been broken successfully');
         } catch (error) {
-          this.toast.error('Failed to break FD: ' + (error.response?.data?.message || error.message));
+          this.toast.error(
+            'Failed to break FD: ' + (error.response?.data?.message || error.message)
+          );
         }
       });
     },
@@ -585,15 +599,11 @@ export default {
       }
 
       try {
-        await axios.post(
-          `/admin/tickets/${this.selectedTicket.id}`,
-          this.responseText,
-          {
-            headers: {
-              'Content-Type': 'text/plain',
-            },
-          }
-        );
+        await axios.post(`/admin/tickets/${this.selectedTicket.id}`, this.responseText, {
+          headers: {
+            'Content-Type': 'text/plain',
+          },
+        });
 
         // Update the ticket status locally
         const ticketIndex = this.allSupportTickets.findIndex(t => t.id === this.selectedTicket.id);

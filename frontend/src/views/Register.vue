@@ -61,25 +61,24 @@
             </div>
 
             <!-- Password -->
-          <div class="relative">
-            <input
-              :type="showPassword ? 'text' : 'password'"
-              v-model="password"
-              placeholder="Password"
-              required
-              class="w-full h-11 px-4 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-            <button
-              type="button"
-              @click="showPassword = !showPassword"
-              class="absolute right-3 top-3 text-gray-500 cursor-pointer"
-            >
-              <Eye v-if="!showPassword" class="w-5 h-5" />
-              <EyeOff v-else class="w-5 h-5" />
-            </button>
-            <p v-if="errors.password" class="text-xs text-red-600 mt-1">{{ errors.password }}</p>
-          </div>
-
+            <div class="relative">
+              <input
+                :type="showPassword ? 'text' : 'password'"
+                v-model="password"
+                placeholder="Password"
+                required
+                class="w-full h-11 px-4 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              <button
+                type="button"
+                @click="showPassword = !showPassword"
+                class="absolute right-3 top-3 text-gray-500 cursor-pointer"
+              >
+                <Eye v-if="!showPassword" class="w-5 h-5" />
+                <EyeOff v-else class="w-5 h-5" />
+              </button>
+              <p v-if="errors.password" class="text-xs text-red-600 mt-1">{{ errors.password }}</p>
+            </div>
 
             <!-- Confirm Password -->
             <div class="relative">
@@ -93,15 +92,15 @@
               <button
                 type="button"
                 @click="showConfirmPassword = !showConfirmPassword"
-                class="absolute right-3 top-3  text-gray-500 cursor-pointer"
+                class="absolute right-3 top-3 text-gray-500 cursor-pointer"
               >
                 <Eye v-if="!showConfirmPassword" class="w-5 h-5" />
                 <EyeOff v-else class="w-5 h-5" />
               </button>
-              <p v-if="errors.confirmPassword" class="text-xs text-red-600 mt-1">{{ errors.confirmPassword }}</p>
+              <p v-if="errors.confirmPassword" class="text-xs text-red-600 mt-1">
+                {{ errors.confirmPassword }}
+              </p>
             </div>
-
-
 
             <!-- Success message -->
             <p v-if="successMessage" class="text-sm text-center text-green-600">
@@ -174,15 +173,15 @@ export default {
       this.errors.email = !newEmail
         ? 'Email cannot be empty'
         : !emailRegex.test(newEmail)
-        ? 'Invalid email address'
-        : '';
+          ? 'Invalid email address'
+          : '';
     },
     age(newAge) {
       this.errors.age = !newAge
         ? 'Age cannot be empty'
         : newAge < 18 || newAge > 100
-        ? 'Age must be between 18 and 100'
-        : '';
+          ? 'Age must be between 18 and 100'
+          : '';
     },
     password(newPassword) {
       const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
@@ -203,7 +202,6 @@ export default {
       }
     },
 
-
     confirmPassword(newConfirm) {
       this.errors.confirmPassword =
         newConfirm && newConfirm !== this.password ? 'Passwords do not match' : '';
@@ -213,7 +211,7 @@ export default {
     ...mapActions(['register']),
     async handleRegister() {
       // Prevent submission if any errors
-      const hasErrors = Object.values(this.errors).some((err) => err);
+      const hasErrors = Object.values(this.errors).some(err => err);
       if (hasErrors) return;
 
       this.loading = true;
