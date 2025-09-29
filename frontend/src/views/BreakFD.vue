@@ -167,7 +167,7 @@
 
               <button
                 :disabled="confirming"
-                @click="confirmBreakFD"
+                @click="showConfirmDialog = true"
                 class="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white font-semibold transition disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
               >
                 <span v-if="!confirming">Confirm Break</span>
@@ -180,6 +180,42 @@
           <div v-else class="text-center py-6 text-gray-500">No preview available.</div>
         </div>
       </div>
+
+      <div
+        v-if="showConfirmDialog"
+        class="absolute inset-0 flex items-center justify-center z-50 bg-black/10 backdrop-blur-sm"
+      >
+        <div class="bg-white rounded-lg p-6 w-full max-w-md shadow-lg">
+          <div class="flex items-center gap-3 mb-4">
+            <div
+              class="flex items-center justify-center w-10 h-10 rounded-full bg-red-100 text-red-600"
+            >
+              <CircleAlert class="w-5 h-5" />
+            </div>
+            <h2 class="text-lg font-semibold text-slate-900">Confirm Break Fixed Deposit</h2>
+          </div>
+          <p class="mb-6 text-sm text-gray-600">Are you sure you want to break this FD?</p>
+          <div class="flex justify-end space-x-3">
+            <button
+              @click="showConfirmDialog = false"
+              class="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-gray-800 rounded-lg"
+            >
+              Cancel
+            </button>
+            <button
+              @click="
+                () => {
+                  confirmBreakFD();
+                  showConfirmDialog = false;
+                }
+              "
+              class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg"
+            >
+              Yes, Break FD
+            </button>
+          </div>
+        </div>
+      </div>
     </div>
   </transition>
 </template>
@@ -188,7 +224,7 @@
 import { ref, onMounted, watch, onUnmounted } from 'vue';
 import { useStore } from 'vuex';
 import { useToast } from 'vue-toastification';
-import { AlertTriangle, X, Clipboard } from 'lucide-vue-next';
+import { AlertTriangle, X, Clipboard, CircleAlert } from 'lucide-vue-next';
 
 // props & emits
 const props = defineProps({
@@ -206,6 +242,7 @@ const preview = ref(null);
 const loading = ref(false);
 const error = ref(null);
 const confirming = ref(false);
+const showConfirmDialog = ref(false);
 
 const formatNumber = v => {
   if (v == null || isNaN(Number(v))) return '0';
@@ -317,3 +354,4 @@ watch(
   transform: translateY(6px) scale(0.995);
 }
 </style>
+
