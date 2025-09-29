@@ -181,7 +181,7 @@ export default createStore({
         const res = await axios.post('/auth/register', {
           name: credentials.name,
           email: credentials.email,
-          age: credentials.age,
+          dateOfBirth: credentials.dateOfBirth,
           password: credentials.password,
         });
 

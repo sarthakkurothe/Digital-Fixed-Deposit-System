@@ -143,7 +143,7 @@ export default {
       this.loading = true;
       this.error = null;
 
-      if(this.emailError) {
+      if (this.emailError) {
         this.error = this.emailError;
         this.loading = false;
         return;
