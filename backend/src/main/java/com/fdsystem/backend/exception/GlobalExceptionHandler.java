@@ -19,4 +19,13 @@ public class GlobalExceptionHandler {
     map.put("message", usernameNotFoundException.getMessage());
     return map;
   }
+
+  @ExceptionHandler(InterestCalculationException.class)
+  public Map<String, String> handleFixedDepositOperationException(InterestCalculationException ex){
+    Map<String, String> map = new HashMap<>();
+    map.put("status", String.valueOf(HttpStatus.BAD_REQUEST));
+    map.put("error", "Fixed Deposit Operation Error");
+    map.put("message", ex.getMessage());
+    return map;
+  }
 }
