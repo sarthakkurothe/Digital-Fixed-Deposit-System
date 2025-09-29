@@ -39,6 +39,9 @@
               <p class="text-gray-500 text-xs mt-1">
                 Minimum investment: ₹{{ minAmount.toLocaleString() }}
               </p>
+              <div class="mt-2 text-sm text-red-600" v-if="amountError">
+                {{ amountError }}
+              </div>
             </div>
 
             <!-- Interest Scheme Dropdown -->
@@ -79,7 +82,7 @@
             <div class="flex">
               <button
                 @click="bookFD"
-                :disabled="!selectedScheme || loading"
+                :disabled="isBookDisabled"
                 class="w-full bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg h-14 flex items-center justify-center cursor-pointer"
               >
                 <div class="flex items-center justify-center">
@@ -256,11 +259,23 @@ export default {
     return {
       amount: 1000,
       minAmount: 1000,
-      maxAmount: 1000000,
+      maxAmount: 10000000,
       selectedScheme: null,
       loading: false,
       baseSchemes: STANDARD_FD_SCHEMES,
+      amountError: '',
     };
+  },
+  watch: {
+    amount(newVal) {
+      if (newVal < this.minAmount) {
+        this.amountError = `Amount must be at least ₹${this.minAmount.toLocaleString('en-IN')}`;
+      } else if (newVal > this.maxAmount) {
+        this.amountError = `Amount must not exceed ₹${this.maxAmount.toLocaleString('en-IN')}`;
+      } else {
+        this.amountError = '';
+      }
+    },
   },
   computed: {
     ...mapGetters(['getUser', 'getToken']),
@@ -309,6 +324,14 @@ export default {
       const today = new Date();
       today.setMonth(today.getMonth() + this.selectedScheme.tenureMonths);
       return today.toLocaleDateString();
+    },
+    isBookDisabled() {
+      return (
+        !this.selectedScheme ||
+        this.loading ||
+        this.amount < this.minAmount ||
+        this.amount > this.maxAmount
+      );
     },
   },
   setup() {

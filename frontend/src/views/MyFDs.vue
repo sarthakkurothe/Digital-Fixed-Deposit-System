@@ -17,23 +17,19 @@
           class="bg-white p-4 rounded-lg shadow-sm border border-gray-200 text-center transition-transform transform hover:scale-105 hover:shadow-lg"
         >
           <h3 class="text-sm font-medium text-gray-500 mb-2">Total FDs</h3>
-          <span class="text-2xl md:text-3xl font-bold text-gray-900">{{ filteredFds.length }}</span>
+          <span class="text-lg md:text-xl font-bold text-gray-900">{{ filteredFds.length }}</span>
         </div>
         <div
           class="bg-white p-4 rounded-lg shadow-sm border border-gray-200 text-center transition-transform transform hover:scale-105 hover:shadow-lg"
         >
           <h3 class="text-sm font-medium text-gray-500 mb-2">Active</h3>
-          <span class="text-2xl md:text-3xl font-bold text-green-600">{{
-            filteredActiveCount
-          }}</span>
+          <span class="text-lg md:text-xl font-bold text-green-600">{{ filteredActiveCount }}</span>
         </div>
         <div
           class="bg-white p-4 rounded-lg shadow-sm border border-gray-200 text-center transition-transform transform hover:scale-105 hover:shadow-lg"
         >
           <h3 class="text-sm font-medium text-gray-500 mb-2">Matured</h3>
-          <span class="text-2xl md:text-3xl font-bold text-blue-600">{{
-            filteredMaturedCount
-          }}</span>
+          <span class="text-lg md:text-xl font-bold text-blue-600">{{ filteredMaturedCount }}</span>
         </div>
         <div
           class="bg-white p-4 rounded-lg shadow-sm border border-gray-200 text-center transition-transform transform hover:scale-105 hover:shadow-lg"
@@ -42,7 +38,7 @@
           <span
             class="text-lg md:text-xl font-bold text-green-600 hover:text-green-700 transition-colors"
           >
-            ₹{{ filteredTotalValue.toLocaleString() }}
+            ₹{{ filteredTotalValue.toLocaleString('en-IN') }}
           </span>
         </div>
       </div>
@@ -569,7 +565,7 @@ export default {
     },
   },
   mounted() {
-    if (this.$store.getters.getFDs.length === 0) this.$store.dispatch('fetchFDs');
+    this.$store.dispatch('fetchFDs');
   },
 };
 </script>

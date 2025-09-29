@@ -16,7 +16,9 @@
     <div class="p-5">
       <!-- Principal Amount -->
       <div class="mb-4">
-        <div class="text-2xl font-bold text-slate-900 mb-1">₹{{ fd.amount.toLocaleString() }}</div>
+        <div class="text-2xl font-bold text-slate-900 mb-1">
+          ₹{{ fd.amount.toLocaleString('en-IN') }}
+        </div>
         <div class="flex items-center gap-3 text-sm">
           <span class="flex items-center gap-1 text-emerald-600 font-medium">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
