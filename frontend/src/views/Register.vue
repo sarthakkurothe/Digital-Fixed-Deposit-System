@@ -48,38 +48,39 @@
               <p v-if="errors.email" class="text-xs text-red-600 mt-1">{{ errors.email }}</p>
             </div>
 
-            <!-- Age -->
+            <!-- Date of Birth -->
             <div>
               <input
-                v-model="age"
-                type="number"
-                placeholder="Age"
+                v-model="dob"
+                type="date"
+                placeholder="Date of Birth"
                 required
                 class="w-full h-11 px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                :max="maxDate"
+                :min="minDate"
               />
-              <p v-if="errors.age" class="text-xs text-red-600 mt-1">{{ errors.age }}</p>
+              <p v-if="errors.dob" class="text-xs text-red-600 mt-1">{{ errors.dob }}</p>
             </div>
 
             <!-- Password -->
-          <div class="relative">
-            <input
-              :type="showPassword ? 'text' : 'password'"
-              v-model="password"
-              placeholder="Password"
-              required
-              class="w-full h-11 px-4 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-            <button
-              type="button"
-              @click="showPassword = !showPassword"
-              class="absolute right-3 top-3 text-gray-500 cursor-pointer"
-            >
-              <Eye v-if="!showPassword" class="w-5 h-5" />
-              <EyeOff v-else class="w-5 h-5" />
-            </button>
-            <p v-if="errors.password" class="text-xs text-red-600 mt-1">{{ errors.password }}</p>
-          </div>
-
+            <div class="relative">
+              <input
+                :type="showPassword ? 'text' : 'password'"
+                v-model="password"
+                placeholder="Password"
+                required
+                class="w-full h-11 px-4 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              <button
+                type="button"
+                @click="showPassword = !showPassword"
+                class="absolute right-3 top-3 text-gray-500 cursor-pointer"
+              >
+                <Eye v-if="!showPassword" class="w-5 h-5" />
+                <EyeOff v-else class="w-5 h-5" />
+              </button>
+              <p v-if="errors.password" class="text-xs text-red-600 mt-1">{{ errors.password }}</p>
+            </div>
 
             <!-- Confirm Password -->
             <div class="relative">
@@ -93,15 +94,13 @@
               <button
                 type="button"
                 @click="showConfirmPassword = !showConfirmPassword"
-                class="absolute right-3 top-3  text-gray-500 cursor-pointer"
+                class="absolute right-3 top-3 text-gray-500 cursor-pointer"
               >
                 <Eye v-if="!showConfirmPassword" class="w-5 h-5" />
                 <EyeOff v-else class="w-5 h-5" />
               </button>
               <p v-if="errors.confirmPassword" class="text-xs text-red-600 mt-1">{{ errors.confirmPassword }}</p>
             </div>
-
-
 
             <!-- Success message -->
             <p v-if="successMessage" class="text-sm text-center text-green-600">
@@ -146,10 +145,18 @@ import LoadingSpinner from '../components/LoadingSpinner.vue';
 export default {
   components: { Eye, EyeOff, LoadingSpinner, Header, DotLottieVue },
   data() {
+    const today = new Date();
+    const maxDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate())
+      .toISOString()
+      .split('T')[0];
+    const minDate = new Date(today.getFullYear() - 100, today.getMonth(), today.getDate())
+      .toISOString()
+      .split('T')[0];
+
     return {
       name: '',
       email: '',
-      age: '',
+      dob: '',
       password: '',
       confirmPassword: '',
       loading: false,
@@ -159,10 +166,12 @@ export default {
       errors: {
         name: '',
         email: '',
-        age: '',
+        dob: '',
         password: '',
         confirmPassword: '',
       },
+      maxDate,
+      minDate,
     };
   },
   watch: {
@@ -177,12 +186,23 @@ export default {
         ? 'Invalid email address'
         : '';
     },
-    age(newAge) {
-      this.errors.age = !newAge
-        ? 'Age cannot be empty'
-        : newAge < 18 || newAge > 100
-        ? 'Age must be between 18 and 100'
-        : '';
+    dob(newDob) {
+      if (!newDob) {
+        this.errors.dob = 'Date of Birth cannot be empty';
+      } else {
+        const today = new Date();
+        const dobDate = new Date(newDob);
+        let age = today.getFullYear() - dobDate.getFullYear();
+        const m = today.getMonth() - dobDate.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < dobDate.getDate())) {
+          age--;
+        }
+        if (age < 18 || age > 100) {
+          this.errors.dob = 'Age must be between 18 and 100';
+        } else {
+          this.errors.dob = '';
+        }
+      }
     },
     password(newPassword) {
       const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
@@ -195,15 +215,12 @@ export default {
         this.errors.password = '';
       }
 
-      // Check confirm password match live
       if (this.confirmPassword && this.confirmPassword !== newPassword) {
         this.errors.confirmPassword = 'Passwords do not match';
       } else {
         this.errors.confirmPassword = '';
       }
     },
-
-
     confirmPassword(newConfirm) {
       this.errors.confirmPassword =
         newConfirm && newConfirm !== this.password ? 'Passwords do not match' : '';
@@ -212,7 +229,6 @@ export default {
   methods: {
     ...mapActions(['register']),
     async handleRegister() {
-      // Prevent submission if any errors
       const hasErrors = Object.values(this.errors).some((err) => err);
       if (hasErrors) return;
 
@@ -222,16 +238,15 @@ export default {
         const res = await this.register({
           name: this.name,
           email: this.email,
-          age: this.age,
+          dob: this.dob,
           password: this.password,
         });
 
         if (res.status === 201) {
           this.successMessage = 'Registration successful! 🎉 Redirecting to login in 3 seconds...';
 
-          // Reset fields
-          this.name = this.email = this.age = this.password = this.confirmPassword = '';
-          this.errors = { name: '', email: '', age: '', password: '', confirmPassword: '' };
+          this.name = this.email = this.dob = this.password = this.confirmPassword = '';
+          this.errors = { name: '', email: '', dob: '', password: '', confirmPassword: '' };
 
           let countdown = 3;
           const timer = setInterval(() => {
