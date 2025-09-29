@@ -1,7 +1,7 @@
 <template>
   <Header></Header>
   <div
-    class="min-h-[calc(100vh-200px)] bg-gradient-to-br from-white via-blue-50 to-blue-100 flex items-center justify-center p-6"
+    class="min-h-[calc(100vh-150px)] bg-gradient-to-br from-white via-blue-50 to-blue-100 flex items-center justify-center p-6"
   >
     <div
       class="w-full max-w-6xl mx-auto flex flex-col lg:flex-row items-center justify-between p-6 lg:p-12 gap-5"
@@ -24,48 +24,62 @@
           </p>
 
           <form @submit.prevent="handleRegister" class="space-y-4">
-            <input
-              v-model="name"
-              type="text"
-              placeholder="Full Name"
-              required
-              class="w-full h-11 px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+            <!-- Name -->
+            <div>
+              <input
+                v-model="name"
+                type="text"
+                placeholder="Full Name"
+                required
+                class="w-full h-11 px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              <p v-if="errors.name" class="text-xs text-red-600 mt-1">{{ errors.name }}</p>
+            </div>
 
-            <input
-              v-model="email"
-              type="email"
-              placeholder="Email Address"
-              required
-              class="w-full h-11 px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+            <!-- Email -->
+            <div>
+              <input
+                v-model="email"
+                type="email"
+                placeholder="Email Address"
+                required
+                class="w-full h-11 px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              <p v-if="errors.email" class="text-xs text-red-600 mt-1">{{ errors.email }}</p>
+            </div>
 
-            <input
-              v-model="age"
-              type="number"
-              placeholder="Age"
-              required
-              class="w-full h-11 px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
+            <!-- Age -->
+            <div>
+              <input
+                v-model="age"
+                type="number"
+                placeholder="Age"
+                required
+                class="w-full h-11 px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              />
+              <p v-if="errors.age" class="text-xs text-red-600 mt-1">{{ errors.age }}</p>
+            </div>
 
             <!-- Password -->
-            <div class="relative">
-              <input
-                :type="showPassword ? 'text' : 'password'"
-                v-model="password"
-                placeholder="Password"
-                required
-                class="w-full h-11 px-4 pr-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-              />
-              <button
-                type="button"
-                @click="showPassword = !showPassword"
-                class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 cursor-pointer"
-              >
-                <Eye v-if="!showPassword" class="w-5 h-5" />
-                <EyeOff v-else class="w-5 h-5" />
-              </button>
-            </div>
+          <div class="relative">
+            <input
+              :type="showPassword ? 'text' : 'password'"
+              v-model="password"
+              placeholder="Password"
+              required
+              class="w-full h-11 px-4 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <button
+              type="button"
+              @click="showPassword = !showPassword"
+              class="absolute right-3 top-3 text-gray-500 cursor-pointer"
+            >
+              <Eye v-if="!showPassword" class="w-5 h-5" />
+              <EyeOff v-else class="w-5 h-5" />
+            </button>
+            <p v-if="errors.password" class="text-xs text-red-600 mt-1">{{ errors.password }}</p>
+          </div>
+
 
             <!-- Confirm Password -->
             <div class="relative">
@@ -74,20 +88,22 @@
                 v-model="confirmPassword"
                 placeholder="Confirm Password"
                 required
-                class="w-full h-11 px-4 pr-10 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                class="w-full h-11 px-4 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
               <button
                 type="button"
                 @click="showConfirmPassword = !showConfirmPassword"
-                class="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 cursor-pointer"
+                class="absolute right-3 top-3  text-gray-500 cursor-pointer"
               >
                 <Eye v-if="!showConfirmPassword" class="w-5 h-5" />
                 <EyeOff v-else class="w-5 h-5" />
               </button>
+              <p v-if="errors.confirmPassword" class="text-xs text-red-600 mt-1">{{ errors.confirmPassword }}</p>
             </div>
 
-            <!-- Error / Success messages -->
-            <p v-if="errorMessage" class="text-sm text-center text-red-600">{{ errorMessage }}</p>
+
+
+            <!-- Success message -->
             <p v-if="successMessage" class="text-sm text-center text-green-600">
               {{ successMessage }}
             </p>
@@ -137,37 +153,72 @@ export default {
       password: '',
       confirmPassword: '',
       loading: false,
-      errorMessage: '',
       successMessage: '',
       showPassword: false,
       showConfirmPassword: false,
+      errors: {
+        name: '',
+        email: '',
+        age: '',
+        password: '',
+        confirmPassword: '',
+      },
     };
+  },
+  watch: {
+    name(newName) {
+      this.errors.name = newName ? '' : 'Name cannot be empty';
+    },
+    email(newEmail) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      this.errors.email = !newEmail
+        ? 'Email cannot be empty'
+        : !emailRegex.test(newEmail)
+        ? 'Invalid email address'
+        : '';
+    },
+    age(newAge) {
+      this.errors.age = !newAge
+        ? 'Age cannot be empty'
+        : newAge < 18 || newAge > 100
+        ? 'Age must be between 18 and 100'
+        : '';
+    },
+    password(newPassword) {
+      const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+      if (!newPassword) {
+        this.errors.password = 'Password cannot be empty';
+      } else if (!passwordRegex.test(newPassword)) {
+        this.errors.password =
+          'Password must be at least 8 characters long and include 1 uppercase, 1 number, and 1 special character';
+      } else {
+        this.errors.password = '';
+      }
+
+      // Check confirm password match live
+      if (this.confirmPassword && this.confirmPassword !== newPassword) {
+        this.errors.confirmPassword = 'Passwords do not match';
+      } else {
+        this.errors.confirmPassword = '';
+      }
+    },
+
+
+    confirmPassword(newConfirm) {
+      this.errors.confirmPassword =
+        newConfirm && newConfirm !== this.password ? 'Passwords do not match' : '';
+    },
   },
   methods: {
     ...mapActions(['register']),
     async handleRegister() {
-      this.errorMessage = '';
-      this.successMessage = '';
-
-      if (!this.name || !this.email || !this.age || !this.password || !this.confirmPassword) {
-        this.errorMessage = 'All fields are required.';
-        return;
-      }
-
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(this.email)) {
-        this.errorMessage = 'Please enter a valid email address.';
-        return;
-      }
-
-      if (this.password !== this.confirmPassword) {
-        this.errorMessage = 'Passwords do not match!';
-        return;
-      }
+      // Prevent submission if any errors
+      const hasErrors = Object.values(this.errors).some((err) => err);
+      if (hasErrors) return;
 
       this.loading = true;
+      this.successMessage = '';
       try {
-        this.errorMessage = '';
         const res = await this.register({
           name: this.name,
           email: this.email,
@@ -180,8 +231,8 @@ export default {
 
           // Reset fields
           this.name = this.email = this.age = this.password = this.confirmPassword = '';
+          this.errors = { name: '', email: '', age: '', password: '', confirmPassword: '' };
 
-          // Countdown timer
           let countdown = 3;
           const timer = setInterval(() => {
             countdown--;
@@ -193,13 +244,13 @@ export default {
             }
           }, 1000);
         } else if (res.data === 'User already exists!') {
-          this.errorMessage = res.data;
+          this.errors.email = res.data;
         } else {
-          this.errorMessage = res.error || 'Registration failed. Please try again.';
+          this.errors.email = res.error || 'Registration failed. Please try again.';
         }
       } catch (error) {
         console.error('Registration error:', error);
-        this.errorMessage = error.response?.data || 'Registration failed. Please try again.';
+        this.errors.email = error.response?.data || 'Registration failed. Please try again.';
       } finally {
         this.loading = false;
       }
