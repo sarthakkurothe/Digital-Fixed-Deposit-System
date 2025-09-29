@@ -7,8 +7,8 @@
       fill="none"
       aria-hidden="true"
     >
-      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"/>
-      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"/>
+      <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" />
+      <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
     </svg>
     <span v-if="label" class="sr-only">{{ label }}</span>
   </span>
@@ -19,17 +19,14 @@ export default {
   name: 'LoadingSpinner',
   props: {
     customClass: { type: String, default: 'h-5 w-5' },
-    label: { type: String, default: 'Loading' }
+    label: { type: String, default: 'Loading' },
   },
   computed: {
     computedClass() {
       return `animate-spin ${this.customClass}`.trim();
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
-<!-- optional styles if you want to tweak - remove if not needed -->
-<style scoped>
-/* nothing required here — tailwind supplies .animate-spin and sizing classes */
-</style>
+<style scoped></style>

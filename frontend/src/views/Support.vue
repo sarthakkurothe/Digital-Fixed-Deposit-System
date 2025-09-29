@@ -26,7 +26,9 @@
           <p class="text-sm font-bold text-yellow-800">Open Tickets</p>
           <Clock class="w-4 h-4 text-yellow-800" />
         </div>
-        <div class="text-2xl font-bold text-yellow-900">{{ tickets.filter(t => t.status === 'OPEN').length }}</div>
+        <div class="text-2xl font-bold text-yellow-900">
+          {{ tickets.filter(t => t.status === 'OPEN').length }}
+        </div>
         <p class="text-xs text-yellow-800 mt-1">Awaiting response</p>
       </div>
 
@@ -37,7 +39,9 @@
           <p class="text-sm font-bold text-green-800">Resolved Tickets</p>
           <CheckCircle class="w-4 h-4 text-green-800" />
         </div>
-        <div class="text-2xl font-bold text-green-900">{{ tickets.filter(t => t.status === 'CLOSED').length }}</div>
+        <div class="text-2xl font-bold text-green-900">
+          {{ tickets.filter(t => t.status === 'CLOSED').length }}
+        </div>
         <p class="text-xs text-green-800 mt-1">Issues resolved</p>
       </div>
 
@@ -61,10 +65,7 @@
         aria-modal="true"
       >
         <!-- overlay -->
-        <div
-          class="absolute inset-0 bg-black/50 backdrop-blur-sm"
-          @click.self="closeModal"
-        ></div>
+        <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" @click.self="closeModal"></div>
 
         <!-- modal card -->
         <div
@@ -73,12 +74,16 @@
           <!-- header -->
           <div class="flex items-center justify-between gap-3 p-5 border-b border-gray-100">
             <div class="flex items-center gap-3">
-              <div class="flex items-center justify-center w-12 h-12 rounded-xl bg-blue-50 text-blue-600">
+              <div
+                class="flex items-center justify-center w-12 h-12 rounded-xl bg-blue-50 text-blue-600"
+              >
                 <Plus class="w-6 h-6" />
               </div>
               <div>
                 <h3 class="text-lg font-semibold text-slate-900">Create Support Ticket</h3>
-                <p class="text-sm text-slate-500">Describe your issue and we'll help you resolve it quickly.</p>
+                <p class="text-sm text-slate-500">
+                  Describe your issue and we'll help you resolve it quickly.
+                </p>
               </div>
             </div>
 
@@ -125,7 +130,9 @@
                 rows="5"
                 class="w-full p-2 rounded-md bg-white border border-gray-300 focus:border-gray-500 focus:outline-none"
               ></textarea>
-              <p v-if="errors.description" class="text-red-500 text-xs mt-1">{{ errors.description }}</p>
+              <p v-if="errors.description" class="text-red-500 text-xs mt-1">
+                {{ errors.description }}
+              </p>
             </div>
 
             <!-- footer actions -->
@@ -161,12 +168,16 @@
               placeholder="Search tickets..."
               class="border rounded-xl p-2 pl-10 w-64 border-gray-300"
             />
-            <Search class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <Search
+              class="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400"
+            />
           </div>
         </div>
 
         <div v-if="loading" class="text-gray-500">Loading tickets...</div>
-        <div v-else-if="filteredTickets.length === 0" class="text-gray-500">No support tickets found</div>
+        <div v-else-if="filteredTickets.length === 0" class="text-gray-500">
+          No support tickets found
+        </div>
 
         <div v-else class="space-y-4">
           <div
@@ -239,7 +250,7 @@
         </div>
       </div>
     </div>
-  </div> 
+  </div>
 </template>
 
 <script setup>
@@ -253,43 +264,43 @@ import {
   Phone,
   Mail,
   MessageSquare,
-  Search
-} from "lucide-vue-next"
-import { ref, onMounted, computed, onUnmounted } from "vue"
-import { useStore } from "vuex"
-import axios from "../api"
-import SchemeDropdown from "../components/SchemeDropdown.vue"
-import { useToast } from "vue-toastification"
+  Search,
+} from 'lucide-vue-next';
+import { ref, onMounted, computed, onUnmounted } from 'vue';
+import { useStore } from 'vuex';
+import axios from '../api';
+import SchemeDropdown from '../components/SchemeDropdown.vue';
+import { useToast } from 'vue-toastification';
 
-const toast = useToast() 
+const toast = useToast();
 
 // store
-const store = useStore()
+const store = useStore();
 
 // state
-const tickets = ref([])
-const loading = ref(true)
-const showNewTicketDialog = ref(false)
-const newTicket = ref({ fd: null, subject: "", description: "" })
-const searchTerm = ref("")
-const errors = ref({})
+const tickets = ref([]);
+const loading = ref(true);
+const showNewTicketDialog = ref(false);
+const newTicket = ref({ fd: null, subject: '', description: '' });
+const searchTerm = ref('');
+const errors = ref({});
 
 // fetch tickets from backend
 onMounted(async () => {
-  await store.dispatch("fetchFDs") // fetch user's FDs
-  await fetchTickets()
-  window.addEventListener("keydown", onKeydown) // ESC handler for modal
-})
+  await store.dispatch('fetchFDs');
+  await fetchTickets();
+  window.addEventListener('keydown', onKeydown);
+});
 
 onUnmounted(() => {
-  window.removeEventListener("keydown", onKeydown)
-})
+  window.removeEventListener('keydown', onKeydown);
+});
 
-const onKeydown = (e) => {
-  if (e.key === "Escape" && showNewTicketDialog.value) closeModal()
-}
+const onKeydown = e => {
+  if (e.key === 'Escape' && showNewTicketDialog.value) closeModal();
+};
 
-const userId = computed(() => store.getters.getUser?.id)
+const userId = computed(() => store.getters.getUser?.id);
 
 const fixedDeposits = computed(() =>
   store.getters.getFDs.map(fd => ({
@@ -297,110 +308,113 @@ const fixedDeposits = computed(() =>
     name: `FD #${fd.id} - ₹${fd.amount}`,
     rate: fd.interestRate,
     status: fd.status,
-    created_at: fd.createdDate
+    created_at: fd.createdDate,
   }))
-)
+);
 
 const fetchTickets = async () => {
   if (!userId.value) {
-    loading.value = false
-    return
+    loading.value = false;
+    return;
   }
   try {
-    const res = await axios.get(`/support/user/${userId.value}`)
-    tickets.value = res.data
+    const res = await axios.get(`/support/user/${userId.value}`);
+    tickets.value = res.data;
   } catch (err) {
-    console.error("Error fetching tickets:", err)
-    toast.error("Failed to fetch tickets")
+    console.error('Error fetching tickets:', err);
+    toast.error('Failed to fetch tickets');
   } finally {
-    loading.value = false
+    loading.value = false;
   }
-}
+};
 
 // open/close modal helpers
 const openModal = () => {
-  showNewTicketDialog.value = true
-}
+  showNewTicketDialog.value = true;
+};
 const closeModal = () => {
-  showNewTicketDialog.value = false
-  newTicket.value = { fd: null, subject: "", description: "" }
-  errors.value = {}
-}
+  showNewTicketDialog.value = false;
+  newTicket.value = { fd: null, subject: '', description: '' };
+  errors.value = {};
+};
 
 // submit ticket
 const handleSubmitTicket = async () => {
-  errors.value = {}
-  if (!newTicket.value.fd) errors.value.fd = "Please select a Fixed Deposit."
-  if (!newTicket.value.subject) errors.value.subject = "Subject is required."
-  if (!newTicket.value.description) errors.value.description = "Description is required."
+  errors.value = {};
+  if (!newTicket.value.fd) errors.value.fd = 'Please select a Fixed Deposit.';
+  if (!newTicket.value.subject) errors.value.subject = 'Subject is required.';
+  if (!newTicket.value.description) errors.value.description = 'Description is required.';
 
-  if (Object.keys(errors.value).length) return
+  if (Object.keys(errors.value).length) return;
 
   try {
-    await axios.post("/support", {
+    await axios.post('/support', {
       fdId: newTicket.value.fd?.id || null,
       subject: newTicket.value.subject,
       description: newTicket.value.description,
       userId: userId.value,
-    })
-    toast.success("Support Ticket Created Successfully 🎫") // <-- replaced alert
-    closeModal()
-    await fetchTickets()
+    });
+    toast.success('Support Ticket Created Successfully 🎫'); // <-- replaced alert
+    closeModal();
+    await fetchTickets();
   } catch (err) {
-    console.error("Error creating ticket:", err)
-    toast.error("Failed to create support ticket ❌")
+    console.error('Error creating ticket:', err);
+    toast.error('Failed to create support ticket ❌');
   }
-}
+};
 
 // filtered tickets
 const filteredTickets = computed(() =>
-  tickets.value.filter(ticket =>
-    ticket.subject.toLowerCase().includes(searchTerm.value.toLowerCase()) ||
-    ticket.description.toLowerCase().includes(searchTerm.value.toLowerCase())
+  tickets.value.filter(
+    ticket =>
+      ticket.subject.toLowerCase().includes(searchTerm.value.toLowerCase()) ||
+      ticket.description.toLowerCase().includes(searchTerm.value.toLowerCase())
   )
-)
+);
 
 // utils
-const formatDate = (dateStr) => new Date(dateStr).toLocaleDateString()
+const formatDate = dateStr => new Date(dateStr).toLocaleDateString();
 
-const statusClasses = (status) => {
+const statusClasses = status => {
   switch (status) {
-    case "OPEN":
-      return "bg-yellow-100 text-yellow-800"
-    case "RESOLVED":
-      return "bg-green-100 text-green-800"
-    case "CLOSED":
-      return "bg-red-100 text-red-800"
+    case 'OPEN':
+      return 'bg-yellow-100 text-yellow-800';
+    case 'RESOLVED':
+      return 'bg-green-100 text-green-800';
+    case 'CLOSED':
+      return 'bg-red-100 text-red-800';
     default:
-      return "bg-gray-100 text-gray-800"
+      return 'bg-gray-100 text-gray-800';
   }
-}
-const statusIcon = (status) => {
+};
+const statusIcon = status => {
   switch (status) {
-    case "OPEN":
-      return Clock
-    case "RESOLVED":
-      return CheckCircle
-    case "CLOSED":
-      return X
+    case 'OPEN':
+      return Clock;
+    case 'RESOLVED':
+      return CheckCircle;
+    case 'CLOSED':
+      return X;
     default:
-      return HelpCircle
+      return HelpCircle;
   }
-}
+};
 </script>
 
 <style scoped>
 .line-clamp-2 {
   display: -webkit-box;
   -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;  
+  -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
 /* Modal animation */
 .modal-fade-enter-active,
 .modal-fade-leave-active {
-  transition: opacity 200ms ease, transform 200ms ease;
+  transition:
+    opacity 200ms ease,
+    transform 200ms ease;
 }
 .modal-fade-enter-from,
 .modal-fade-leave-to {
@@ -408,4 +422,3 @@ const statusIcon = (status) => {
   transform: translateY(8px) scale(0.995);
 }
 </style>
-

@@ -13,27 +13,23 @@
       >
         <div
           class="w-9 h-9 rounded-lg flex items-center justify-center text-white shadow-sm transform transition-transform duration-200 group-hover:scale-105"
-          style="background: linear-gradient(135deg,#2563eb,#4f46e5)"
+          style="background: linear-gradient(135deg, #2563eb, #4f46e5)"
         >
           <Vault class="w-5 h-5" />
         </div>
-        <span  class="text-xl md:text-2xl font-extrabold text-slate-900">SmartFD</span>
+        <span class="text-xl md:text-2xl font-extrabold text-slate-900">SmartFD</span>
       </button>
 
       <!-- Nav: only on HomeView -->
       <nav v-if="isHomeView" class="hidden md:block" aria-label="Primary">
-        <div
-          ref="navInner"
-          class="relative flex items-center gap-x-12 h-12"
-        >
+        <div ref="navInner" class="relative flex items-center gap-x-12 h-12">
           <button
             v-for="(item, i) in navItems"
             :key="item.id"
-            :ref="el => tabRefs[i] = el"
+            :ref="el => (tabRefs[i] = el)"
             type="button"
             @click="navClick(item.id)"
-            class="h-full flex items-center px-2 text-sm font-medium text-slate-700 transition-colors duration-150
-                   bg-transparent hover:text-blue-600 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-200"
+            class="h-full flex items-center px-2 text-sm font-medium text-slate-700 transition-colors duration-150 bg-transparent hover:text-blue-600 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-200"
           >
             {{ item.label }}
           </button>
@@ -82,8 +78,16 @@
     </div>
 
     <!-- Mobile menu -->
-    <transition name="mobile-menu" enter-active-class="ease-out duration-200" leave-active-class="ease-in duration-150">
-      <div v-if="isOpen" id="mobile-menu" class="md:hidden border-t border-white/20 bg-white/70 backdrop-blur-sm">
+    <transition
+      name="mobile-menu"
+      enter-active-class="ease-out duration-200"
+      leave-active-class="ease-in duration-150"
+    >
+      <div
+        v-if="isOpen"
+        id="mobile-menu"
+        class="md:hidden border-t border-white/20 bg-white/70 backdrop-blur-sm"
+      >
         <div class="px-4 pt-4 pb-6">
           <nav class="flex flex-col gap-2" aria-label="Mobile primary">
             <button
@@ -125,111 +129,132 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount, nextTick, computed } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
-import { Menu, X, Vault } from 'lucide-vue-next'
+import { ref, onMounted, onBeforeUnmount, nextTick, computed } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
+import { Menu, X, Vault } from 'lucide-vue-next';
 
-const router = useRouter()
-const route = useRoute()
+const router = useRouter();
+const route = useRoute();
 
 const navItems = [
   { id: 'features', label: 'Features' },
-  { id: 'security', label: 'Security' }
-]
+  { id: 'security', label: 'Security' },
+];
 
-const isOpen = ref(false)
-const activeSection = ref('features')
+const isOpen = ref(false);
+const activeSection = ref('features');
 
 // refs for nav & tabs
-const navInner = ref(null)
-const tabRefs = ref([])
+const navInner = ref(null);
+const tabRefs = ref([]);
 
 // underline state
-const underline = ref({ width: 0, left: 0 })
+const underline = ref({ width: 0, left: 0 });
 
 // only show tabs on Home page
-const isHomeView = computed(() => route.name === 'Home')
+const isHomeView = computed(() => route.name === 'Home');
 
 const updateUnderline = async () => {
-  await nextTick()
-  const index = navItems.findIndex(i => i.id === activeSection.value)
-  const tab = tabRefs.value[index]
-  const container = navInner.value
+  await nextTick();
+  const index = navItems.findIndex(i => i.id === activeSection.value);
+  const tab = tabRefs.value[index];
+  const container = navInner.value;
   if (tab && container) {
-    underline.value.width = tab.offsetWidth
-    underline.value.left = tab.offsetLeft
+    underline.value.width = tab.offsetWidth;
+    underline.value.left = tab.offsetLeft;
   } else {
-    underline.value.width = 0
-    underline.value.left = 0
+    underline.value.width = 0;
+    underline.value.left = 0;
   }
-}
+};
 
-const toggleMenu = () => { isOpen.value = !isOpen.value }
-const goToLogin = () => router.push({ name: 'Login' })
-const goToRegister = () => router.push({ name: 'Register' })
+const toggleMenu = () => {
+  isOpen.value = !isOpen.value;
+};
+const goToLogin = () => router.push({ name: 'Login' });
+const goToRegister = () => router.push({ name: 'Register' });
 
-const scrollToSection = (id) => {
-  const el = document.getElementById(id)
-  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
-  else{
-    router.push("/")
+const scrollToSection = id => {
+  const el = document.getElementById(id);
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  else {
+    router.push('/');
   }
-}
+};
 
-const navClick = (id) => {
-  activeSection.value = id
-  scrollToSection(id)
-  updateUnderline()
-  isOpen.value = false
-}
-const navClickMobile = (id) => {
-  activeSection.value = id
-  scrollToSection(id)
-  isOpen.value = false
-  updateUnderline()
-}
+const navClick = id => {
+  activeSection.value = id;
+  scrollToSection(id);
+  updateUnderline();
+  isOpen.value = false;
+};
+const navClickMobile = id => {
+  activeSection.value = id;
+  scrollToSection(id);
+  isOpen.value = false;
+  updateUnderline();
+};
 
-let observer = null
-const onResize = () => updateUnderline()
+let observer = null;
+const onResize = () => updateUnderline();
 
 onMounted(() => {
-  updateUnderline()
+  updateUnderline();
 
-  const sections = navItems.map(i => document.getElementById(i.id)).filter(Boolean)
+  const sections = navItems.map(i => document.getElementById(i.id)).filter(Boolean);
   if (sections.length) {
     observer = new IntersectionObserver(
-      (entries) => {
+      entries => {
         entries.forEach(e => {
           if (e.isIntersecting) {
-            activeSection.value = e.target.id
-            updateUnderline()
+            activeSection.value = e.target.id;
+            updateUnderline();
           }
-        })
+        });
       },
-      { root: null, rootMargin: '-40% 0px -40% 0px', threshold: [0,0.25,0.5,0.75,1] }
-    )
-    sections.forEach(s => observer.observe(s))
+      { root: null, rootMargin: '-40% 0px -40% 0px', threshold: [0, 0.25, 0.5, 0.75, 1] }
+    );
+    sections.forEach(s => observer.observe(s));
   }
 
-  window.addEventListener('resize', onResize)
-})
+  window.addEventListener('resize', onResize);
+});
 
 onBeforeUnmount(() => {
-  if (observer) observer.disconnect()
-  window.removeEventListener('resize', onResize)
-})
+  if (observer) observer.disconnect();
+  window.removeEventListener('resize', onResize);
+});
 </script>
 
 <style scoped>
 /* mobile menu transition */
-.mobile-menu-enter-from { transform: translateY(-6px); opacity: 0; }
-.mobile-menu-enter-to   { transform: translateY(0); opacity: 1; }
-.mobile-menu-leave-from { transform: translateY(0); opacity: 1; }
-.mobile-menu-leave-to   { transform: translateY(-6px); opacity: 0; }
+.mobile-menu-enter-from {
+  transform: translateY(-6px);
+  opacity: 0;
+}
+.mobile-menu-enter-to {
+  transform: translateY(0);
+  opacity: 1;
+}
+.mobile-menu-leave-from {
+  transform: translateY(0);
+  opacity: 1;
+}
+.mobile-menu-leave-to {
+  transform: translateY(-6px);
+  opacity: 0;
+}
 
 /* keep focus visible */
-button:focus { outline: none; }
+button:focus {
+  outline: none;
+}
 
 /* mobile container padding */
-@media (max-width: 767px) { .container { padding-left: 1rem; padding-right: 1rem; } }
+@media (max-width: 767px) {
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
 </style>

@@ -7,10 +7,7 @@
       aria-modal="true"
     >
       <!-- overlay: click outside to close -->
-      <div
-        class="absolute inset-0 bg-black/50 backdrop-blur-sm"
-        @click.self="close"
-      ></div>
+      <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" @click.self="close"></div>
 
       <!-- modal card -->
       <div
@@ -19,7 +16,9 @@
         <!-- header -->
         <div class="flex items-center justify-between gap-3 p-5 border-b border-gray-100">
           <div class="flex items-center gap-3">
-            <div class="flex items-center justify-center w-12 h-12 rounded-xl bg-red-50 text-red-600">
+            <div
+              class="flex items-center justify-center w-12 h-12 rounded-xl bg-red-50 text-red-600"
+            >
               <AlertTriangle class="w-6 h-6" />
             </div>
             <div>
@@ -49,8 +48,15 @@
             <div class="text-red-600 font-semibold mb-2">Failed to load preview</div>
             <div class="text-sm text-gray-500 mb-4">{{ error }}</div>
             <div class="flex justify-center gap-2">
-              <button @click="fetchPreview" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Retry</button>
-              <button @click="close" class="px-4 py-2 bg-gray-100 rounded hover:bg-gray-200">Close</button>
+              <button
+                @click="fetchPreview"
+                class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+              >
+                Retry
+              </button>
+              <button @click="close" class="px-4 py-2 bg-gray-100 rounded hover:bg-gray-200">
+                Close
+              </button>
             </div>
           </div>
 
@@ -75,18 +81,37 @@
 
               <div class="p-4 rounded-lg bg-gray-50 border border-gray-100">
                 <div class="text-xs text-slate-400 mb-1">Principal</div>
-                <div class="font-semibold text-slate-900">₹{{ formatNumber(preview.principalAmount) }}</div>
+                <div class="font-semibold text-slate-900">
+                  ₹{{ formatNumber(preview.principalAmount) }}
+                </div>
               </div>
             </div>
 
             <!-- FD Info -->
             <div class="bg-white p-4 rounded-lg space-y-2 text-sm border border-gray-100 mb-4">
-              <div class="flex justify-between px-4"><span>Amount:</span><span class="font-bold">₹{{ formatNumber(preview.principalAmount) }}</span></div>
-              <div class="flex justify-between px-4"><span>Interest Rate:</span><span class="font-bold">{{ preview.interestRate }}%</span></div>
-              <div class="flex justify-between px-4"><span>Tenure:</span><span class="font-bold">{{ preview.tenure }} months</span></div>
-              <div class="flex justify-between px-4"><span>Start Date:</span><span class="font-bold">{{ formatDate(preview.startDate) }}</span></div>
-              <div class="flex justify-between px-4"><span>Maturity Date:</span><span class="font-bold">{{ formatDate(preview.maturityDate) }}</span></div>
-              <div class="flex justify-between px-4"><span>Time Elapsed:</span><span class="font-bold">{{ preview.timeElapsed }} months</span></div>
+              <div class="flex justify-between px-4">
+                <span>Amount:</span
+                ><span class="font-bold">₹{{ formatNumber(preview.principalAmount) }}</span>
+              </div>
+              <div class="flex justify-between px-4">
+                <span>Interest Rate:</span
+                ><span class="font-bold">{{ preview.interestRate }}%</span>
+              </div>
+              <div class="flex justify-between px-4">
+                <span>Tenure:</span><span class="font-bold">{{ preview.tenure }} months</span>
+              </div>
+              <div class="flex justify-between px-4">
+                <span>Start Date:</span
+                ><span class="font-bold">{{ formatDate(preview.startDate) }}</span>
+              </div>
+              <div class="flex justify-between px-4">
+                <span>Maturity Date:</span
+                ><span class="font-bold">{{ formatDate(preview.maturityDate) }}</span>
+              </div>
+              <div class="flex justify-between px-4">
+                <span>Time Elapsed:</span
+                ><span class="font-bold">{{ preview.timeElapsed }} months</span>
+              </div>
             </div>
 
             <!-- Premature Withdrawal Calculation -->
@@ -94,18 +119,37 @@
               <div class="flex items-center justify-between mb-3">
                 <h4 class="font-medium text-red-600">Premature Withdrawal Calculation</h4>
                 <div class="flex items-center gap-2">
-                  <button @click="copy(preview.payout, 'Payout copied')" class="text-slate-500 hover:text-slate-700 p-1 rounded" title="Copy payout">
+                  <button
+                    @click="copy(preview.payout, 'Payout copied')"
+                    class="text-slate-500 hover:text-slate-700 p-1 rounded"
+                    title="Copy payout"
+                  >
                     <Clipboard class="w-4 h-4" />
                   </button>
                 </div>
               </div>
 
               <div class="space-y-2">
-                <div class="flex justify-between px-4"><span>Principal:</span><span class="font-bold">₹{{ formatNumber(preview.principalAmount) }}</span></div>
-                <div class="flex justify-between px-4"><span>Accrued Interest:</span><span class="text-green-600 font-semibold">₹{{ formatNumber(preview.accruedInterest) }}</span></div>
-                <div class="flex justify-between px-4"><span>Penalty:</span><span class="text-red-600 font-semibold">₹{{ formatNumber(preview.penalty) }}</span></div>
+                <div class="flex justify-between px-4">
+                  <span>Principal:</span
+                  ><span class="font-bold">₹{{ formatNumber(preview.principalAmount) }}</span>
+                </div>
+                <div class="flex justify-between px-4">
+                  <span>Accrued Interest:</span
+                  ><span class="text-green-600 font-semibold"
+                    >₹{{ formatNumber(preview.accruedInterest) }}</span
+                  >
+                </div>
+                <div class="flex justify-between px-4">
+                  <span>Penalty:</span
+                  ><span class="text-red-600 font-semibold"
+                    >₹{{ formatNumber(preview.penalty) }}</span
+                  >
+                </div>
 
-                <div class="w-full flex justify-between py-3 bg-white text-black px-4 rounded-lg mt-2">
+                <div
+                  class="w-full flex justify-between py-3 bg-white text-black px-4 rounded-lg mt-2"
+                >
                   <span class="font-medium">Total Payout</span>
                   <span class="font-bold">₹{{ formatNumber(preview.payout) }}</span>
                 </div>
@@ -133,9 +177,7 @@
           </div>
 
           <!-- fallback if no preview and not loading (shouldn't normally happen) -->
-          <div v-else class="text-center py-6 text-gray-500">
-            No preview available.
-          </div>
+          <div v-else class="text-center py-6 text-gray-500">No preview available.</div>
         </div>
       </div>
     </div>
@@ -143,128 +185,131 @@
 </template>
 
 <script setup>
-
-
-import { ref, onMounted, watch, onUnmounted } from 'vue'
-import { useStore } from 'vuex'
-import { useToast } from 'vue-toastification'
-import { AlertTriangle, X, Clipboard } from 'lucide-vue-next'
+import { ref, onMounted, watch, onUnmounted } from 'vue';
+import { useStore } from 'vuex';
+import { useToast } from 'vue-toastification';
+import { AlertTriangle, X, Clipboard } from 'lucide-vue-next';
 
 // props & emits
 const props = defineProps({
-  fdId: { type: [Number, String], required: true }
-})
-const emit = defineEmits(['close', 'fdBroken'])
+  fdId: { type: [Number, String], required: true },
+});
+const emit = defineEmits(['close', 'fdBroken']);
 
 // store & toast
-const store = useStore()
-const toast = useToast()
+const store = useStore();
+const toast = useToast();
 
 // state
-const visible = ref(true)
-const preview = ref(null)
-const loading = ref(false)
-const error = ref(null)
-const confirming = ref(false)
+const visible = ref(true);
+const preview = ref(null);
+const loading = ref(false);
+const error = ref(null);
+const confirming = ref(false);
 
-const formatNumber = (v) => {
-  if (v == null || isNaN(Number(v))) return '0'
-  return Number(v).toLocaleString('en-IN')
-}
-const formatDate = (dateStr) => {
-  if (!dateStr) return '—'
-  const d = new Date(dateStr)
-  return d.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' })
-}
+const formatNumber = v => {
+  if (v == null || isNaN(Number(v))) return '0';
+  return Number(v).toLocaleString('en-IN');
+};
+const formatDate = dateStr => {
+  if (!dateStr) return '—';
+  const d = new Date(dateStr);
+  return d.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+};
 
 // fetch preview
 const fetchPreview = async () => {
-  loading.value = true
-  error.value = null
-  preview.value = null
+  loading.value = true;
+  error.value = null;
+  preview.value = null;
   try {
-    const res = await store.dispatch('fetchBreakPreview', props.fdId)
-    preview.value = res
+    const res = await store.dispatch('fetchBreakPreview', props.fdId);
+    preview.value = res;
     if (!preview.value) {
-      error.value = 'No preview returned from server.'
+      error.value = 'No preview returned from server.';
     }
   } catch (err) {
-    console.error('Error fetching break preview', err)
-    error.value = err?.response?.data?.message || err?.message || 'Failed to fetch preview.'
-    toast.error(error.value)
+    console.error('Error fetching break preview', err);
+    error.value = err?.response?.data?.message || err?.message || 'Failed to fetch preview.';
+    toast.error(error.value);
   } finally {
-    loading.value = false
+    loading.value = false;
   }
-}
+};
 
 // confirm break (emit to parent)
 const confirmBreakFD = async () => {
-  if (!preview.value || confirming.value) return
+  if (!preview.value || confirming.value) return;
 
-  confirming.value = true
+  confirming.value = true;
   try {
     const payload = {
       id: preview.value.fdId,
       status: 'PENDING',
-      payout: preview.value.payout
-    }
+      payout: preview.value.payout,
+    };
 
-    console.log('BreakFD: emitting fdBroken payload', payload)
-    emit('fdBroken', payload)
-    close()
+    console.log('BreakFD: emitting fdBroken payload', payload);
+    emit('fdBroken', payload);
+    close();
   } catch (e) {
-    console.error('Error confirming break', e)
-    toast.error('Failed to submit break request')
+    console.error('Error confirming break', e);
+    toast.error('Failed to submit break request');
   } finally {
-    confirming.value = false
+    confirming.value = false;
   }
-}
+};
 
 // copy helper
 const copy = async (val, message = 'Copied') => {
   try {
-    await navigator.clipboard.writeText(String(val))
-    toast.success(message)
+    await navigator.clipboard.writeText(String(val));
+    toast.success(message);
   } catch (e) {
-    toast.error('Copy failed')
+    toast.error('Copy failed');
   }
-}
+};
 
 // close helper
 const close = () => {
-  visible.value = false
+  visible.value = false;
   // emit to parent - parent should set showBreakModal false
-  emit('close')
-}
+  emit('close');
+};
 
 // handle esc key to close
-const onKey = (e) => {
-  if (e.key === 'Escape') close()
-}
+const onKey = e => {
+  if (e.key === 'Escape') close();
+};
 
 onMounted(() => {
-  fetchPreview()
-  window.addEventListener('keydown', onKey)
-})
+  fetchPreview();
+  window.addEventListener('keydown', onKey);
+});
 
 onUnmounted(() => {
-  window.removeEventListener('keydown', onKey)
-})
+  window.removeEventListener('keydown', onKey);
+});
 
 // watch fdId changes (parent might reuse component)
-watch(() => props.fdId, (n) => {
-  if (n) {
-    visible.value = true
-    fetchPreview()
+watch(
+  () => props.fdId,
+  n => {
+    if (n) {
+      visible.value = true;
+      fetchPreview();
+    }
   }
-})
+);
 </script>
 
 <style scoped>
 /* Simple enter/leave animation */
 .fd-modal-enter-active,
 .fd-modal-leave-active {
-  transition: opacity 180ms ease, transform 180ms ease;
+  transition:
+    opacity 180ms ease,
+    transform 180ms ease;
 }
 .fd-modal-enter-from,
 .fd-modal-leave-to {

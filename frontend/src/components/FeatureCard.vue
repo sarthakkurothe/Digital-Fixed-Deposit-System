@@ -22,9 +22,9 @@
 
 <script>
 export default {
-  name: "FeatureCard",
+  name: 'FeatureCard',
   props: {
-    icon:{ type: [Object, Function], required: true },
+    icon: { type: [Object, Function], required: true },
     title: { type: String, required: true },
     description: { type: String, required: true },
     badge: { type: String, default: null },

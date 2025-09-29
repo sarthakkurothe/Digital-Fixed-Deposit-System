@@ -7,7 +7,11 @@
       class="w-full p-3 border border-gray-300 rounded-md text-left focus:outline-none focus:border-gray-400 flex justify-between items-center cursor-pointer bg-white"
     >
       <span>
-        {{ selectedScheme ? selectedScheme.name + (selectedScheme.rate ? ' - ' + selectedScheme.rate + '%' : '') : placeholder }}
+        {{
+          selectedScheme
+            ? selectedScheme.name + (selectedScheme.rate ? ' - ' + selectedScheme.rate + '%' : '')
+            : placeholder
+        }}
       </span>
       <svg
         class="w-4 h-4 transform transition-transform duration-200"
@@ -45,11 +49,11 @@
 
 <script>
 export default {
-  name: "SchemeDropdown",
+  name: 'SchemeDropdown',
   props: {
     schemes: { type: Array, required: true },
-    modelValue: { type: Object, default: null }, // v-model binding
-    placeholder: { type: String, default: "Select FD" },
+    modelValue: { type: Object, default: null },
+    placeholder: { type: String, default: 'Select FD' },
   },
   data() {
     return {
@@ -68,10 +72,10 @@ export default {
     },
   },
   mounted() {
-    document.addEventListener("click", this.handleClickOutside);
+    document.addEventListener('click', this.handleClickOutside);
   },
   beforeUnmount() {
-    document.removeEventListener("click", this.handleClickOutside);
+    document.removeEventListener('click', this.handleClickOutside);
   },
   methods: {
     toggleDropdown() {
@@ -79,7 +83,7 @@ export default {
     },
     selectScheme(scheme) {
       this.selectedSchemeInternal = scheme;
-      this.$emit("update:modelValue", scheme);
+      this.$emit('update:modelValue', scheme);
       this.dropdownOpen = false;
     },
     handleClickOutside(e) {
@@ -96,7 +100,7 @@ ul::-webkit-scrollbar {
   width: 6px;
 }
 ul::-webkit-scrollbar-thumb {
-  background-color: rgba(0,0,0,0.2);
+  background-color: rgba(0, 0, 0, 0.2);
   border-radius: 3px;
 }
 </style>

@@ -24,7 +24,9 @@
           <div class="flex-grow">
             <!-- Investment Amount -->
             <div class="mb-4">
-              <label class="block text-sm font-medium text-gray-700 mb-2">Investment Amount (₹)</label>
+              <label class="block text-sm font-medium text-gray-700 mb-2"
+                >Investment Amount (₹)</label
+              >
               <input
                 type="number"
                 class="w-full p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -46,7 +48,10 @@
               <p v-if="isSenior" class="text-green-600 text-xs mt-1">
                 ✓ Senior citizen benefits applicable (+0.5% on all rates)
               </p>
-              <p v-if="selectedScheme && selectedScheme.hasCompound" class="text-green-600 text-xs mt-1">
+              <p
+                v-if="selectedScheme && selectedScheme.hasCompound"
+                class="text-green-600 text-xs mt-1"
+              >
                 ✓ Compound Interest benefits applicable
               </p>
             </div>
@@ -61,7 +66,9 @@
               </div>
               <div class="flex items-center justify-between mb-2">
                 <span class="text-sm text-gray-600">Interest Rate:</span>
-                <span class="font-semibold text-blue-600">{{ Number(effectiveRate).toFixed(1) }}% p.a.</span>
+                <span class="font-semibold text-blue-600"
+                  >{{ Number(effectiveRate).toFixed(1) }}% p.a.</span
+                >
               </div>
               <div class="flex items-center justify-between">
                 <span class="text-sm text-gray-600">Maturity Date:</span>
@@ -78,7 +85,7 @@
                 <div class="flex items-center justify-center">
                   <span v-if="loading" class="loader mr-2"></span>
                   <CirclePlus class="mr-2" />
-                  {{ loading ? "Booking..." : "Book Fixed Deposit" }}
+                  {{ loading ? 'Booking...' : 'Book Fixed Deposit' }}
                 </div>
               </button>
             </div>
@@ -97,8 +104,14 @@
           </div>
 
           <!-- Placeholder -->
-          <div v-if="!selectedScheme" class="flex-1 flex items-center justify-center text-gray-500 text-sm">
-            <iframe class="w-full h-full" src="https://lottie.host/embed/82ba37c3-3996-4db1-926c-0686019101de/UGGASiUQnm.lottie"></iframe>
+          <div
+            v-if="!selectedScheme"
+            class="flex-1 flex items-center justify-center text-gray-500 text-sm"
+          >
+            <iframe
+              class="w-full h-full"
+              src="https://lottie.host/embed/82ba37c3-3996-4db1-926c-0686019101de/UGGASiUQnm.lottie"
+            ></iframe>
           </div>
 
           <!-- Preview Content -->
@@ -112,7 +125,9 @@
               <div class="bg-green-50 rounded-lg p-4 text-center">
                 <div class="text-2xl font-bold text-green-600 mb-1">💰</div>
                 <div class="text-sm text-gray-600 mb-1">Interest Earned</div>
-                <div class="text-xl font-bold text-gray-800">₹{{ formatCurrency(maturityInterest) }}</div>
+                <div class="text-xl font-bold text-gray-800">
+                  ₹{{ formatCurrency(maturityInterest) }}
+                </div>
               </div>
             </div>
 
@@ -127,7 +142,9 @@
               <div class="flex space-x-4 text-sm mt-3">
                 <div class="flex items-center">
                   <div class="w-3 h-3 bg-blue-500 rounded-full mr-2"></div>
-                  <span class="text-gray-600">Principal ({{ principalPercentage.toFixed(1) }}%)</span>
+                  <span class="text-gray-600"
+                    >Principal ({{ principalPercentage.toFixed(1) }}%)</span
+                  >
                 </div>
                 <div class="flex items-center">
                   <div class="w-3 h-3 bg-green-500 rounded-full mr-2"></div>
@@ -144,9 +161,13 @@
               </div>
               <div class="flex justify-between py-2 border-b border-gray-100">
                 <span class="text-gray-600">Interest Earned</span>
-                <span class="font-semibold text-green-600">₹{{ formatCurrency(maturityInterest) }}</span>
+                <span class="font-semibold text-green-600"
+                  >₹{{ formatCurrency(maturityInterest) }}</span
+                >
               </div>
-              <div class="flex justify-between items-center h-14 bg-blue-600 text-white px-4 rounded-lg">
+              <div
+                class="flex justify-between items-center h-14 bg-blue-600 text-white px-4 rounded-lg"
+              >
                 <span class="font-medium">Total Maturity Amount</span>
                 <span class="font-bold text-lg">₹{{ formatCurrency(maturityAmount) }}</span>
               </div>
@@ -163,8 +184,8 @@
         <h2 class="text-lg font-semibold text-gray-800">Our Fixed Deposit Schemes</h2>
       </div>
       <p class="text-gray-600 text-sm mb-6">
-        Choose from flexible tenures and competitive rates. Senior citizens automatically receive
-        an extra <span class="font-semibold">0.5% interest</span>.
+        Choose from flexible tenures and competitive rates. Senior citizens automatically receive an
+        extra <span class="font-semibold">0.5% interest</span>.
       </p>
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         <div
@@ -175,9 +196,13 @@
           <div>
             <div class="flex items-center justify-between mb-2">
               <h3 class="text-base font-semibold text-gray-800">{{ scheme.name }}</h3>
-              <span class="bg-green-100 text-green-800 font-bold text-lg px-2 py-1 rounded-full"> {{ scheme.rate }}% </span>
+              <span class="bg-green-100 text-green-800 font-bold text-lg px-2 py-1 rounded-full">
+                {{ scheme.rate }}%
+              </span>
             </div>
-            <p class="text-xs text-gray-500 mb-4">Tenure: <span class="font-medium">{{ scheme.tenureMonths }} months</span></p>
+            <p class="text-xs text-gray-500 mb-4">
+              Tenure: <span class="font-medium">{{ scheme.tenureMonths }} months</span>
+            </p>
             <ul class="space-y-2 text-sm text-gray-700">
               <li class="flex items-start">
                 <Check class="text-green-500 w-5 h-4" />
@@ -206,18 +231,27 @@
 </template>
 
 <script>
-import SchemeDropdown from "../components/SchemeDropDown.vue";
-import ChartDonut from "../components/ChartDonut.vue";
-import { mapGetters } from "vuex";
-import axios from "axios";
-import FDCalculator, { STANDARD_FD_SCHEMES } from "../utils/fdCalculations.js";
-import { DotLottieVue } from "@lottiefiles/dotlottie-vue";
-import { IndianRupee, ChartPie, Check, NotebookTabs, CirclePlus } from "lucide-vue-next";
-import { useToast } from "vue-toastification";
+import SchemeDropdown from '../components/SchemeDropDown.vue';
+import ChartDonut from '../components/ChartDonut.vue';
+import { mapGetters } from 'vuex';
+import axios from 'axios';
+import FDCalculator, { STANDARD_FD_SCHEMES } from '../utils/fdCalculations.js';
+import { DotLottieVue } from '@lottiefiles/dotlottie-vue';
+import { IndianRupee, ChartPie, Check, NotebookTabs, CirclePlus } from 'lucide-vue-next';
+import { useToast } from 'vue-toastification';
 
 export default {
-  name: "BookFD",
-  components: { SchemeDropdown, ChartDonut, DotLottieVue, IndianRupee, ChartPie, Check, NotebookTabs, CirclePlus },
+  name: 'BookFD',
+  components: {
+    SchemeDropdown,
+    ChartDonut,
+    DotLottieVue,
+    IndianRupee,
+    ChartPie,
+    Check,
+    NotebookTabs,
+    CirclePlus,
+  },
   data() {
     return {
       amount: 1000,
@@ -229,12 +263,12 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(["getUser", "getToken"]),
+    ...mapGetters(['getUser', 'getToken']),
     isSenior() {
       return this.getUser?.age >= 60;
     },
     schemesToShow() {
-      return this.baseSchemes.map((scheme) => {
+      return this.baseSchemes.map(scheme => {
         const finalRate = FDCalculator.getApplicableRate(scheme.baseRate, this.getUser?.age || 30);
         return { ...scheme, rate: Number(finalRate.toFixed(1)) };
       });
@@ -243,7 +277,12 @@ export default {
       return this.selectedScheme ? this.selectedScheme.rate : 0;
     },
     calculationResults() {
-      if (!this.selectedScheme) return { simple: { interest: 0, maturityAmount: 0 }, compound: { interest: 0, maturityAmount: 0 }, isCompoundEligible: false };
+      if (!this.selectedScheme)
+        return {
+          simple: { interest: 0, maturityAmount: 0 },
+          compound: { interest: 0, maturityAmount: 0 },
+          isCompoundEligible: false,
+        };
       return FDCalculator.calculateFDReturns({
         principal: this.amount,
         rate: this.selectedScheme.baseRate,
@@ -266,7 +305,7 @@ export default {
       return this.maturityAmount ? (this.maturityInterest / this.maturityAmount) * 100 : 0;
     },
     formattedMaturityDate() {
-      if (!this.selectedScheme) return "";
+      if (!this.selectedScheme) return '';
       const today = new Date();
       today.setMonth(today.getMonth() + this.selectedScheme.tenureMonths);
       return today.toLocaleDateString();
@@ -290,18 +329,18 @@ export default {
         interest_rate: parseFloat(this.effectiveRate),
       };
       try {
-        await axios.post("http://localhost:8080/fd/book", payload, {
+        await axios.post('http://localhost:8080/fd/book', payload, {
           headers: { Authorization: `bearer ${this.getToken}` },
         });
-        await this.$store.dispatch("fetchFDs");
-        this.toast.success("Fixed Deposit booked successfully! 🎉");
+        await this.$store.dispatch('fetchFDs');
+        this.toast.success('Fixed Deposit booked successfully! 🎉');
         setTimeout(() => {
           this.selectedScheme = null;
           this.amount = 1000;
         }, 1200);
       } catch (error) {
         console.error(error);
-        this.toast.error("Error booking FD. Please try again.");
+        this.toast.error('Error booking FD. Please try again.');
       } finally {
         this.loading = false;
       }
@@ -321,12 +360,18 @@ export default {
   animation: spin 1s linear infinite;
 }
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* Donut chart animation */
 circle {
-  transition: stroke-dasharray 1s ease-in-out, stroke-dashoffset 1s ease-in-out;
+  transition:
+    stroke-dasharray 1s ease-in-out,
+    stroke-dashoffset 1s ease-in-out;
 }
 </style>

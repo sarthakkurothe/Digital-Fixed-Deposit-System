@@ -13,21 +13,35 @@
     <div v-else>
       <!-- Summary Cards -->
       <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200 text-center transition-transform transform hover:scale-105 hover:shadow-lg">
+        <div
+          class="bg-white p-4 rounded-lg shadow-sm border border-gray-200 text-center transition-transform transform hover:scale-105 hover:shadow-lg"
+        >
           <h3 class="text-sm font-medium text-gray-500 mb-2">Total FDs</h3>
           <span class="text-2xl md:text-3xl font-bold text-gray-900">{{ filteredFds.length }}</span>
         </div>
-        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200 text-center transition-transform transform hover:scale-105 hover:shadow-lg">
+        <div
+          class="bg-white p-4 rounded-lg shadow-sm border border-gray-200 text-center transition-transform transform hover:scale-105 hover:shadow-lg"
+        >
           <h3 class="text-sm font-medium text-gray-500 mb-2">Active</h3>
-          <span class="text-2xl md:text-3xl font-bold text-green-600">{{ filteredActiveCount }}</span>
+          <span class="text-2xl md:text-3xl font-bold text-green-600">{{
+            filteredActiveCount
+          }}</span>
         </div>
-        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200 text-center transition-transform transform hover:scale-105 hover:shadow-lg">
+        <div
+          class="bg-white p-4 rounded-lg shadow-sm border border-gray-200 text-center transition-transform transform hover:scale-105 hover:shadow-lg"
+        >
           <h3 class="text-sm font-medium text-gray-500 mb-2">Matured</h3>
-          <span class="text-2xl md:text-3xl font-bold text-blue-600">{{ filteredMaturedCount }}</span>
+          <span class="text-2xl md:text-3xl font-bold text-blue-600">{{
+            filteredMaturedCount
+          }}</span>
         </div>
-        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200 text-center transition-transform transform hover:scale-105 hover:shadow-lg">
+        <div
+          class="bg-white p-4 rounded-lg shadow-sm border border-gray-200 text-center transition-transform transform hover:scale-105 hover:shadow-lg"
+        >
           <h3 class="text-sm font-medium text-gray-500 mb-2">Total Value</h3>
-          <span class="text-lg md:text-xl font-bold text-green-600 hover:text-green-700 transition-colors">
+          <span
+            class="text-lg md:text-xl font-bold text-green-600 hover:text-green-700 transition-colors"
+          >
             ₹{{ filteredTotalValue.toLocaleString() }}
           </span>
         </div>
@@ -107,16 +121,16 @@
           Fixed Deposits
           <span class="text-lg font-normal text-gray-600">({{ filteredFds.length }} found)</span>
         </h2>
-        
+
         <!-- Quick Filters -->
         <div class="flex gap-2">
           <button
             @click="applyQuickFilter('high_value')"
             :class="[
               'px-3 py-1.5 text-sm rounded-lg border cursor-pointer transition-colors',
-              quickFilter === 'high_value' 
-                ? 'bg-blue-100 text-blue-700 border-blue-300' 
-                : 'bg-white text-gray-600 border-gray-300 hover:bg-gray-50'
+              quickFilter === 'high_value'
+                ? 'bg-blue-100 text-blue-700 border-blue-300'
+                : 'bg-white text-gray-600 border-gray-300 hover:bg-gray-50',
             ]"
           >
             High Value
@@ -125,9 +139,9 @@
             @click="applyQuickFilter('maturing_soon')"
             :class="[
               'px-3 py-1.5 text-sm rounded-lg border cursor-pointer transition-colors',
-              quickFilter === 'maturing_soon' 
-                ? 'bg-amber-100 text-amber-700 border-amber-300' 
-                : 'bg-white text-gray-600 border-gray-300 hover:bg-gray-50'
+              quickFilter === 'maturing_soon'
+                ? 'bg-amber-100 text-amber-700 border-amber-300'
+                : 'bg-white text-gray-600 border-gray-300 hover:bg-gray-50',
             ]"
           >
             Maturing Soon
@@ -136,9 +150,9 @@
             @click="applyQuickFilter('high_interest')"
             :class="[
               'px-3 py-1.5 text-sm rounded-lg border cursor-pointer transition-colors',
-              quickFilter === 'high_interest' 
-                ? 'bg-green-100 text-green-700 border-green-300' 
-                : 'bg-white text-gray-600 border-gray-300 hover:bg-gray-50'
+              quickFilter === 'high_interest'
+                ? 'bg-green-100 text-green-700 border-green-300'
+                : 'bg-white text-gray-600 border-gray-300 hover:bg-gray-50',
             ]"
           >
             High Interest
@@ -147,7 +161,10 @@
       </div>
 
       <!-- No Results Message -->
-      <div v-if="filteredFds.length === 0" class="text-center py-12 bg-white rounded-xl border border-gray-200">
+      <div
+        v-if="filteredFds.length === 0"
+        class="text-center py-12 bg-white rounded-xl border border-gray-200"
+      >
         <FolderX class="w-16 h-16 mx-auto text-gray-300 mb-4" />
         <h3 class="text-lg font-medium text-gray-700 mb-2">No FDs Found</h3>
         <p class="text-gray-500 mb-4">Try adjusting your filters to see more results</p>
@@ -172,7 +189,6 @@
       </div>
     </div>
 
-    <!-- Improved View FD Modal (replaced the original) -->
     <transition name="modal-fade" appear>
       <div
         v-if="showModal"
@@ -182,16 +198,17 @@
         @keydown.esc="closeModal"
       >
         <!-- overlay: clicking background closes modal -->
-        <div
-          class="absolute inset-0 bg-black/50 backdrop-blur-sm"
-          @click.self="closeModal"
-        ></div>
+        <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" @click.self="closeModal"></div>
 
         <!-- modal card -->
-        <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-3xl mx-auto z-10 overflow-hidden">
+        <div
+          class="relative bg-white rounded-2xl shadow-2xl w-full max-w-3xl mx-auto z-10 overflow-hidden"
+        >
           <!-- header -->
           <div class="flex items-center gap-3 p-5 border-b border-gray-100">
-            <div class="flex items-center justify-center w-12 h-12 rounded-xl bg-blue-50 text-blue-600">
+            <div
+              class="flex items-center justify-center w-12 h-12 rounded-xl bg-blue-50 text-blue-600"
+            >
               <Info class="w-6 h-6" />
             </div>
 
@@ -212,7 +229,9 @@
           <!-- content -->
           <div class="p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
             <!-- left column: big numbers -->
-            <div class="md:col-span-1 bg-gradient-to-br from-white to-blue-50 p-4 rounded-xl flex flex-col gap-3">
+            <div
+              class="md:col-span-1 bg-gradient-to-br from-white to-blue-50 p-4 rounded-xl flex flex-col gap-3"
+            >
               <div>
                 <div class="text-xs text-slate-400 mb-1">FD ID</div>
                 <div class="flex items-center gap-2">
@@ -241,7 +260,10 @@
               <div>
                 <div class="text-xs text-slate-400 mb-1">Status</div>
                 <div>
-                  <span :class="statusBadgeClass" class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium">
+                  <span
+                    :class="statusBadgeClass"
+                    class="inline-flex items-center gap-2 px-3 py-1 rounded-full text-sm font-medium"
+                  >
                     <span v-if="selectedFD?.status === 'ACTIVE'">●</span>
                     <span v-else-if="selectedFD?.status === 'PENDING'">●</span>
                     <span v-else-if="selectedFD?.status === 'MATURED'">●</span>
@@ -257,28 +279,36 @@
                 <div class="text-xs text-slate-400 mb-2 flex items-center gap-2">
                   <Calendar class="w-4 h-4" /> Start Date
                 </div>
-                <div class="text-sm font-medium text-slate-900">{{ formatDate(selectedFD?.start_date) }}</div>
+                <div class="text-sm font-medium text-slate-900">
+                  {{ formatDate(selectedFD?.start_date) }}
+                </div>
               </div>
 
               <div class="p-4 rounded-xl bg-white border border-gray-100">
                 <div class="text-xs text-slate-400 mb-2 flex items-center gap-2">
                   <Calendar class="w-4 h-4" /> Maturity Date
                 </div>
-                <div class="text-sm font-medium text-slate-900">{{ formatDate(selectedFD?.maturity_date) }}</div>
+                <div class="text-sm font-medium text-slate-900">
+                  {{ formatDate(selectedFD?.maturity_date) }}
+                </div>
               </div>
 
               <div class="p-4 rounded-xl bg-white border border-gray-100">
                 <div class="text-xs text-slate-400 mb-2 flex items-center gap-2">
                   <Percent class="w-4 h-4" /> Interest Rate
                 </div>
-                <div class="text-sm font-medium text-slate-900">{{ selectedFD?.interest_rate ?? '—' }}%</div>
+                <div class="text-sm font-medium text-slate-900">
+                  {{ selectedFD?.interest_rate ?? '—' }}%
+                </div>
               </div>
 
               <div class="p-4 rounded-xl bg-white border border-gray-100">
                 <div class="text-xs text-slate-400 mb-2 flex items-center gap-2">
                   <Clock class="w-4 h-4" /> Tenure
                 </div>
-                <div class="text-sm font-medium text-slate-900">{{ selectedFD?.tenure_months ?? '—' }} months</div>
+                <div class="text-sm font-medium text-slate-900">
+                  {{ selectedFD?.tenure_months ?? '—' }} months
+                </div>
               </div>
 
               <div class="p-4 rounded-xl bg-white border border-gray-100 sm:col-span-2">
@@ -306,17 +336,41 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
-import BreakFD from "./BreakFD.vue";
-import FDCard from "../components/FDCard.vue";
+import { mapState } from 'vuex';
+import BreakFD from './BreakFD.vue';
+import FDCard from '../components/FDCard.vue';
 
 // lucide icons (added ones used by modal)
-import { Info, Filter, Search, FolderX, Clipboard, X, Calendar, Percent, Clock, Tag } from "lucide-vue-next";
-import { useToast } from "vue-toastification";
+import {
+  Info,
+  Filter,
+  Search,
+  FolderX,
+  Clipboard,
+  X,
+  Calendar,
+  Percent,
+  Clock,
+  Tag,
+} from 'lucide-vue-next';
+import { useToast } from 'vue-toastification';
 
 export default {
-  name: "MyFDs",
-  components: { BreakFD, FDCard, Info, Filter, Search, FolderX, Clipboard, X, Calendar, Percent, Clock, Tag },
+  name: 'MyFDs',
+  components: {
+    BreakFD,
+    FDCard,
+    Info,
+    Filter,
+    Search,
+    FolderX,
+    Clipboard,
+    X,
+    Calendar,
+    Percent,
+    Clock,
+    Tag,
+  },
   data() {
     return {
       showModal: false,
@@ -332,73 +386,99 @@ export default {
         interestMin: null,
         interestMax: null,
         tenureMin: null,
-        tenureMax: null
-      }
+        tenureMax: null,
+      },
     };
   },
   computed: {
-    ...mapState(["fds", "loading"]),
+    ...mapState(['fds', 'loading']),
     filteredFds() {
       let filtered = [...this.fds];
 
       if (this.filters.search) {
         const searchLower = this.filters.search.toLowerCase();
-        filtered = filtered.filter(fd => 
-          fd.id.toString().includes(searchLower) ||
-          fd.amount.toString().includes(searchLower) ||
-          fd.interest_rate.toString().includes(searchLower) ||
-          fd.status.toLowerCase().includes(searchLower) ||
-          fd.tenure_months.toString().includes(searchLower)
+        filtered = filtered.filter(
+          fd =>
+            fd.id.toString().includes(searchLower) ||
+            fd.amount.toString().includes(searchLower) ||
+            fd.interest_rate.toString().includes(searchLower) ||
+            fd.status.toLowerCase().includes(searchLower) ||
+            fd.tenure_months.toString().includes(searchLower)
         );
       }
 
       if (this.filters.status) filtered = filtered.filter(fd => fd.status === this.filters.status);
-      if (this.filters.amountMin != null) filtered = filtered.filter(fd => fd.amount >= this.filters.amountMin);
-      if (this.filters.amountMax != null) filtered = filtered.filter(fd => fd.amount <= this.filters.amountMax);
-      if (this.filters.interestMin != null) filtered = filtered.filter(fd => fd.interest_rate >= this.filters.interestMin);
-      if (this.filters.interestMax != null) filtered = filtered.filter(fd => fd.interest_rate <= this.filters.interestMax);
-      if (this.filters.tenureMin != null) filtered = filtered.filter(fd => fd.tenure_months >= this.filters.tenureMin);
-      if (this.filters.tenureMax != null) filtered = filtered.filter(fd => fd.tenure_months <= this.filters.tenureMax);
+      if (this.filters.amountMin != null)
+        filtered = filtered.filter(fd => fd.amount >= this.filters.amountMin);
+      if (this.filters.amountMax != null)
+        filtered = filtered.filter(fd => fd.amount <= this.filters.amountMax);
+      if (this.filters.interestMin != null)
+        filtered = filtered.filter(fd => fd.interest_rate >= this.filters.interestMin);
+      if (this.filters.interestMax != null)
+        filtered = filtered.filter(fd => fd.interest_rate <= this.filters.interestMax);
+      if (this.filters.tenureMin != null)
+        filtered = filtered.filter(fd => fd.tenure_months >= this.filters.tenureMin);
+      if (this.filters.tenureMax != null)
+        filtered = filtered.filter(fd => fd.tenure_months <= this.filters.tenureMax);
 
       filtered.sort((a, b) => {
         switch (this.filters.sortBy) {
-          case 'amount_asc': return a.amount - b.amount;
-          case 'amount_desc': return b.amount - a.amount;
-          case 'interest_asc': return a.interest_rate - b.interest_rate;
-          case 'interest_desc': return b.interest_rate - a.interest_rate;
-          case 'tenure_asc': return a.tenure_months - b.tenure_months;
-          case 'tenure_desc': return b.tenure_months - a.tenure_months;
-          case 'maturity_date_asc': return new Date(a.maturity_date) - new Date(b.maturity_date);
-          case 'maturity_date_desc': return new Date(b.maturity_date) - new Date(a.maturity_date);
-          default: return b.amount - a.amount;
+          case 'amount_asc':
+            return a.amount - b.amount;
+          case 'amount_desc':
+            return b.amount - a.amount;
+          case 'interest_asc':
+            return a.interest_rate - b.interest_rate;
+          case 'interest_desc':
+            return b.interest_rate - a.interest_rate;
+          case 'tenure_asc':
+            return a.tenure_months - b.tenure_months;
+          case 'tenure_desc':
+            return b.tenure_months - a.tenure_months;
+          case 'maturity_date_asc':
+            return new Date(a.maturity_date) - new Date(b.maturity_date);
+          case 'maturity_date_desc':
+            return new Date(b.maturity_date) - new Date(a.maturity_date);
+          default:
+            return b.amount - a.amount;
         }
       });
 
       return filtered;
     },
-    filteredActiveCount() { return this.filteredFds.filter(fd => fd.status === "ACTIVE").length; },
-    filteredMaturedCount() { return this.filteredFds.filter(fd => fd.status === "MATURED").length; },
-    filteredTotalValue() { return this.filteredFds.reduce((sum, fd) => sum + fd.amount, 0); },
+    filteredActiveCount() {
+      return this.filteredFds.filter(fd => fd.status === 'ACTIVE').length;
+    },
+    filteredMaturedCount() {
+      return this.filteredFds.filter(fd => fd.status === 'MATURED').length;
+    },
+    filteredTotalValue() {
+      return this.filteredFds.reduce((sum, fd) => sum + fd.amount, 0);
+    },
 
     // Modal-related computed properties
     formattedAmount() {
-      return this.selectedFD?.amount != null ? Number(this.selectedFD.amount).toLocaleString('en-IN') : '—'
+      return this.selectedFD?.amount != null
+        ? Number(this.selectedFD.amount).toLocaleString('en-IN')
+        : '—';
     },
     formattedAccrued() {
-      return this.selectedFD?.accrued_interest != null ? Number(this.selectedFD.accrued_interest).toLocaleString('en-IN') : '0'
+      return this.selectedFD?.accrued_interest != null
+        ? Number(this.selectedFD.accrued_interest).toLocaleString('en-IN')
+        : '0';
     },
     statusBadgeClass() {
-      const s = this.selectedFD?.status
-      if (s === 'ACTIVE') return 'bg-green-50 text-green-700'
-      if (s === 'MATURED') return 'bg-blue-50 text-blue-700'
-      if (s === 'PENDING') return 'bg-amber-50 text-amber-700'
-      if (s === 'BROKEN') return 'bg-red-50 text-red-700'
-      return 'bg-gray-100 text-slate-700'
-    }
+      const s = this.selectedFD?.status;
+      if (s === 'ACTIVE') return 'bg-green-50 text-green-700';
+      if (s === 'MATURED') return 'bg-blue-50 text-blue-700';
+      if (s === 'PENDING') return 'bg-amber-50 text-amber-700';
+      if (s === 'BROKEN') return 'bg-red-50 text-red-700';
+      return 'bg-gray-100 text-slate-700';
+    },
   },
   methods: {
     formatDate(date) {
-      if (!date) return "-";
+      if (!date) return '-';
       return new Date(date).toLocaleDateString();
     },
     resetFilters() {
@@ -411,7 +491,7 @@ export default {
         interestMin: null,
         interestMax: null,
         tenureMin: null,
-        tenureMax: null
+        tenureMax: null,
       };
       this.quickFilter = '';
     },
@@ -443,24 +523,36 @@ export default {
     },
 
     // Modal open/close
-    openViewModal(fd) { this.selectedFD = fd; this.showModal = true; },
-    closeModal() { this.showModal = false; this.selectedFD = {}; },
+    openViewModal(fd) {
+      this.selectedFD = fd;
+      this.showModal = true;
+    },
+    closeModal() {
+      this.showModal = false;
+      this.selectedFD = {};
+    },
 
     // Break FD flow (parent already uses this)
-    breakFD(fd) { this.selectedFD = fd; this.showBreakModal = true; },
-    closeBreakModal() { this.showBreakModal = false; this.selectedFD = {}; },
+    breakFD(fd) {
+      this.selectedFD = fd;
+      this.showBreakModal = true;
+    },
+    closeBreakModal() {
+      this.showBreakModal = false;
+      this.selectedFD = {};
+    },
 
     async handleFdBroken(fd) {
       const toast = useToast();
       try {
         const response = await this.$store.dispatch('breakFD', fd.id);
         toast[response.success ? 'success' : 'error'](response.message);
-        if(response.success){
-          this.$store.dispatch("fetchFDs");
+        if (response.success) {
+          this.$store.dispatch('fetchFDs');
         }
         if (response.success) await this.$store.dispatch('fetchFDs');
       } catch (err) {
-        toast.error("Something went wrong while breaking the FD.");
+        toast.error('Something went wrong while breaking the FD.');
       }
       this.closeBreakModal();
     },
@@ -474,12 +566,11 @@ export default {
       } catch (e) {
         toast.error('Copy failed');
       }
-    }
+    },
   },
   mounted() {
-    if(this.$store.getters.getFDs.length === 0) 
-      this.$store.dispatch("fetchFDs"); 
-  }
+    if (this.$store.getters.getFDs.length === 0) this.$store.dispatch('fetchFDs');
+  },
 };
 </script>
 
@@ -487,12 +578,13 @@ export default {
 /* Modal enter/leave */
 .modal-fade-enter-active,
 .modal-fade-leave-active {
-  transition: opacity 220ms ease, transform 220ms ease;
+  transition:
+    opacity 220ms ease,
+    transform 220ms ease;
 }
 .modal-fade-enter-from,
 .modal-fade-leave-to {
   opacity: 0;
   transform: translateY(6px) scale(0.995);
 }
-
 </style>

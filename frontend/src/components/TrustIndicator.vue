@@ -10,7 +10,7 @@ export default {
   name: 'TrustIndicator',
   props: {
     number: { type: String, required: true },
-    label: { type: String, required: true }
-  }
+    label: { type: String, required: true },
+  },
 };
 </script>

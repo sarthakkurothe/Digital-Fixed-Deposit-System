@@ -1,19 +1,15 @@
-
 <template>
   <div id="app" class="min-h-screen bg-gray-50">
     <!-- Main Layout -->
     <div class="flex h-screen">
       <!-- Sidebar -->
-      <Sidebar 
-        ref="sidebar" 
-        @sidebar-toggled="handleSidebarToggle"
-      />
-      
+      <Sidebar ref="sidebar" @sidebar-toggled="handleSidebarToggle" />
+
       <!-- Main Content Area -->
       <div class="flex-1 flex flex-col transition-all duration-300" :class="mainContentClasses">
         <!-- Navbar -->
         <Navbar @toggle-sidebar="handleToggleSidebar" />
-        
+
         <!-- Page Content -->
         <main class="flex-1 overflow-auto bg-gray-50">
           <router-view />
@@ -24,51 +20,50 @@
 </template>
 
 <script>
-import Navbar from './Navbar.vue'
-import Sidebar from './Sidebar.vue'
+import Navbar from './Navbar.vue';
+import Sidebar from './Sidebar.vue';
 
 export default {
   name: 'Interface',
   components: {
     Navbar,
-    Sidebar
+    Sidebar,
   },
   data() {
     return {
       sidebarCollapsed: false,
-      isMobile: false
-    }
+      isMobile: false,
+    };
   },
   computed: {
     mainContentClasses() {
       if (this.isMobile) {
-        return 'ml-0'
+        return 'ml-0';
       }
-      return this.sidebarCollapsed ? 'ml-30' : 'ml-64'
-    }
-
+      return this.sidebarCollapsed ? 'ml-30' : 'ml-64';
+    },
   },
   methods: {
     handleToggleSidebar() {
       if (this.$refs.sidebar) {
-        this.$refs.sidebar.toggleSidebar()
+        this.$refs.sidebar.toggleSidebar();
       }
     },
     handleSidebarToggle(collapsed) {
-      this.sidebarCollapsed = collapsed
+      this.sidebarCollapsed = collapsed;
     },
     checkMobile() {
-      this.isMobile = window.innerWidth < 768
-    }
+      this.isMobile = window.innerWidth < 768;
+    },
   },
   mounted() {
-    this.checkMobile()
-    window.addEventListener('resize', this.checkMobile)
+    this.checkMobile();
+    window.addEventListener('resize', this.checkMobile);
   },
   beforeUnmount() {
-    window.removeEventListener('resize', this.checkMobile)
-  }
-}
+    window.removeEventListener('resize', this.checkMobile);
+  },
+};
 </script>
 
 <style>
@@ -76,8 +71,18 @@ export default {
 body {
   margin: 0;
   padding: 0;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  font-family:
+    'Inter',
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    'Roboto',
+    'Oxygen',
+    'Ubuntu',
+    'Cantarell',
+    'Fira Sans',
+    'Droid Sans',
+    'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;

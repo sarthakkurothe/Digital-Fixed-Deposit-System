@@ -12,11 +12,7 @@
             <span
               class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800"
             >
-              <svg
-                class="w-3 h-3 mr-1"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-              >
+              <svg class="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
                 <path
                   fill-rule="evenodd"
                   d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
@@ -40,9 +36,8 @@
 
             <!-- Subtext -->
             <p class="text-xl text-gray-600 max-w-[600px]">
-              Book, track, and manage your Fixed Deposits with ease. Calculate
-              returns, view maturity dates, and handle premature withdrawals -
-              all from one secure platform.
+              Book, track, and manage your Fixed Deposits with ease. Calculate returns, view
+              maturity dates, and handle premature withdrawals - all from one secure platform.
             </p>
           </div>
 
@@ -79,38 +74,45 @@
 </template>
 
 <script>
-import FeatureCard from "./FeatureCard.vue";
-import { ChartLine, Clock4, Calculator } from "lucide-vue-next";
+import FeatureCard from './FeatureCard.vue';
+import { ChartLine, Clock4, Calculator } from 'lucide-vue-next';
 
 export default {
-  name: "HeroSection",
+  name: 'HeroSection',
   components: { FeatureCard },
   data() {
     return {
-      words: ["Digitally", "Securely", "Seamlessly"],
+      words: ['Digitally', 'Securely', 'Seamlessly'],
       currentWordIndex: 0,
       activeFeature: 0,
       heroFeatures: [
         {
           icon: ChartLine,
-          title: "Smart Interest Calculation",
-          description: "Real-time interest tracking with compound calculations",
+          title: 'Smart Interest Calculation',
+          description: 'Real-time interest tracking with compound calculations',
         },
         {
           icon: Clock4,
-          title: "Flexible Tenure Options",
-          description: "Choose from 6 months to 10 years with competitive rates",
+          title: 'Flexible Tenure Options',
+          description: 'Choose from 6 months to 10 years with competitive rates',
         },
         {
           icon: Calculator,
-          title: "Premature Withdrawal",
-          description: "Break FDs early with transparent penalty calculations",
+          title: 'Premature Withdrawal',
+          description: 'Break FDs early with transparent penalty calculations',
         },
       ],
       stats: [
-        { value: 8, suffix: "%", color: "text-blue-600", label: "Max Interest", displayValue: 0 },
-        { value: 1000, prefix: "₹", suffix: "+", color: "text-green-600", label: "Min Amount", displayValue: 0 },
-        { value: 24, suffix: "/7", color: "text-blue-600", label: "Support", displayValue: 0 },
+        { value: 8, suffix: '%', color: 'text-blue-600', label: 'Max Interest', displayValue: 0 },
+        {
+          value: 1000,
+          prefix: '₹',
+          suffix: '+',
+          color: 'text-green-600',
+          label: 'Min Amount',
+          displayValue: 0,
+        },
+        { value: 24, suffix: '/7', color: 'text-blue-600', label: 'Support', displayValue: 0 },
       ],
     };
   },
@@ -120,30 +122,25 @@ export default {
     },
   },
   mounted() {
-    // Cycle text
     setInterval(() => {
-      this.currentWordIndex =
-        (this.currentWordIndex + 1) % this.words.length;
+      this.currentWordIndex = (this.currentWordIndex + 1) % this.words.length;
     }, 3000);
 
-    // Glow animation for features
     setInterval(() => {
-      this.activeFeature =
-        (this.activeFeature + 1) % this.heroFeatures.length;
+      this.activeFeature = (this.activeFeature + 1) % this.heroFeatures.length;
     }, 2500);
 
-    // Animate stats
     this.stats.forEach((stat, i) => {
-      this.animateValue(i, stat.value, 1500); // 1.5s duration
+      this.animateValue(i, stat.value, 1500);
     });
   },
   methods: {
     animateValue(index, endValue, duration) {
       const startTime = performance.now();
-      const step = (currentTime) => {
+      const step = currentTime => {
         const progress = Math.min((currentTime - startTime) / duration, 1);
         const currentValue = Math.floor(progress * endValue);
-        this.stats[index].displayValue = currentValue; // ✅ only number, no prefix/suffix
+        this.stats[index].displayValue = currentValue;
         if (progress < 1) requestAnimationFrame(step);
       };
       requestAnimationFrame(step);
