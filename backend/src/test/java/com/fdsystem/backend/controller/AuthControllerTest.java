@@ -50,25 +50,25 @@ public class AuthControllerTest {
 
     @Mock
     private UserService userService;
-    
+
     @Mock
     private PasswordEncoder passwordEncoder;
-    
+
     @Mock
     private AuthenticationManager authenticationManager;
-    
+
     @Mock
     private JWTUtils jwtUtils;
-    
+
     @Mock(lenient = true)
     private Authentication authentication;
-    
+
     @Mock(lenient = true)
     private SecurityContext securityContext;
-    
+
     @InjectMocks
     private AuthController authController;
-    
+
     // Test data
     private User testUser;
     private LoginRequest loginRequest;
@@ -78,39 +78,40 @@ public class AuthControllerTest {
     public void setup() {
         // Initialize mocks
         MockitoAnnotations.openMocks(this);
-        
+
         // Set up test data
         testUser = createTestUser();
         userPrincipal = new UserPrincipal(testUser);
         loginRequest = createLoginRequest();
-        
+
         // Set up mock MVC
         mockMvc = MockMvcBuilders.standaloneSetup(authController).build();
-        
+
         // Set up security context
         when(securityContext.getAuthentication()).thenReturn(authentication);
         when(authentication.getPrincipal()).thenReturn(userPrincipal);
         SecurityContextHolder.setContext(securityContext);
     }
-    
+
     @AfterEach
     public void tearDown() {
         // Clear SecurityContextHolder after each test
         SecurityContextHolder.clearContext();
     }
-    
+
     private User createTestUser() {
         User user = new User();
         user.setId(1L);
         user.setName("Test User");
         user.setEmail("test@example.com");
         user.setPassword("encodedPassword");
-        user.setAge(30);
         user.setRole(Role.ROLE_USER);
         user.setCreated_at(new Timestamp(System.currentTimeMillis()));
+        // Add date of birth to avoid NullPointerException
+        user.setDateOfBirth(new java.sql.Date(System.currentTimeMillis() - 25L * 365 * 24 * 60 * 60 * 1000)); // 25 years ago
         return user;
     }
-    
+
     private LoginRequest createLoginRequest() {
         LoginRequest request = new LoginRequest();
         request.setEmail("test@example.com");
@@ -118,39 +119,41 @@ public class AuthControllerTest {
         return request;
     }
 
-    
+
+
     @Test
     @DisplayName("Get User Success")
     public void testGetUserSuccess() throws Exception {
         // Act & Assert
         mockMvc.perform(get("/auth/me"))
-            .andExpect(status().isAccepted())
-            .andExpect(jsonPath("$.id").value(testUser.getId()))
-            .andExpect(jsonPath("$.name").value(testUser.getName()))
-            .andExpect(jsonPath("$.email").value(testUser.getEmail()))
-            .andExpect(jsonPath("$.age").value(testUser.getAge()))
-            .andExpect(jsonPath("$.role").value(testUser.getRole().toString()));
+                .andExpect(status().isAccepted())
+                .andExpect(jsonPath("$.id").value(testUser.getId()))
+                .andExpect(jsonPath("$.name").value(testUser.getName()))
+                .andExpect(jsonPath("$.email").value(testUser.getEmail()))
+                .andExpect(jsonPath("$.role").value(testUser.getRole().toString()));
     }
-    
+
     @Test
     @DisplayName("Get User - Direct Controller Method Test")
     public void testGetUserDirectCall() {
         // Given
         // Security context already set up in setUp()
-        
+
         // When
         ResponseEntity<?> response = authController.getUser();
-        
+
         // Then
         assertEquals(HttpStatus.ACCEPTED, response.getStatusCode());
         assertTrue(response.getBody() instanceof UserDTO);
-        
+
         UserDTO returnedUser = (UserDTO) response.getBody();
         assertEquals(testUser.getId(), returnedUser.getId());
         assertEquals(testUser.getName(), returnedUser.getName());
         assertEquals(testUser.getEmail(), returnedUser.getEmail());
-        assertEquals(testUser.getAge(), returnedUser.getAge());
         assertEquals(testUser.getRole(), returnedUser.getRole());
     }
+
+
+
 
 }

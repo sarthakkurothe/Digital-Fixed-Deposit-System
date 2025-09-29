@@ -175,6 +175,51 @@ public class AdminControllerTest {
 
         verify(supportTicketService, times(1)).getAll();
     }
+    
+    @Test
+    @DisplayName("Get Tickets - With Data")
+    public void getAllTickets_returnsOkAndData_whenTicketsExist() throws Exception {
+        // Prepare test data
+        List<AdminSupportTicketDto> mockTickets = new ArrayList<>();
+        
+        AdminSupportTicketDto ticket1 = new AdminSupportTicketDto();
+        ticket1.setId(1L);
+        ticket1.setName("John Doe");
+        ticket1.setEmail("john@example.com");
+        ticket1.setSubject("Issue with deposit");
+        ticket1.setDescription("My deposit is not showing up");
+        ticket1.setStatus(SupportTicketStatus.OPEN.toString());
+        
+        AdminSupportTicketDto ticket2 = new AdminSupportTicketDto();
+        ticket2.setId(2L);
+        ticket2.setName("Jane Smith");
+        ticket2.setEmail("jane@example.com");
+        ticket2.setSubject("Interest calculation");
+        ticket2.setDescription("Interest not calculated correctly");
+        ticket2.setStatus(SupportTicketStatus.CLOSED.toString());
+        
+        mockTickets.add(ticket1);
+        mockTickets.add(ticket2);
+        
+        when(supportTicketService.getAll()).thenReturn(mockTickets);
+        
+        // Execute and verify
+        mockMvc.perform(get("/admin/tickets"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$", hasSize(2)))
+                .andExpect(jsonPath("$[0].id").value(1))
+                .andExpect(jsonPath("$[0].name").value("John Doe"))
+                .andExpect(jsonPath("$[0].email").value("john@example.com"))
+                .andExpect(jsonPath("$[0].subject").value("Issue with deposit"))
+                .andExpect(jsonPath("$[0].status").value("OPEN"))
+                .andExpect(jsonPath("$[1].id").value(2))
+                .andExpect(jsonPath("$[1].name").value("Jane Smith"))
+                .andExpect(jsonPath("$[1].subject").value("Interest calculation"))
+                .andExpect(jsonPath("$[1].status").value("CLOSED"));
+                
+        verify(supportTicketService, times(1)).getAll();
+    }
 
     @Test
     public void setTicketStatusById_callsServiceAndReturnsOk() throws Exception {

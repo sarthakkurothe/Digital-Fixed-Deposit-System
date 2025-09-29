@@ -93,9 +93,10 @@ public class UserControllerTest {
         user.setName("Test User");
         user.setEmail("test@example.com");
         user.setPassword("password");
-        user.setAge(30);
         user.setRole(Role.ROLE_USER);
         user.setCreated_at(new Timestamp(System.currentTimeMillis()));
+        // Add date of birth to avoid potential NullPointerException in other parts of the code
+        user.setDateOfBirth(new java.sql.Date(System.currentTimeMillis() - 25L * 365 * 24 * 60 * 60 * 1000)); // 25 years ago
         return user;
     }
     
@@ -121,7 +122,9 @@ public class UserControllerTest {
         double expectedTotalInvestment = 45000.0; // 10000 + 20000 + 15000
         double expectedInterestEarned = 1800.0;   // 500 + 1000 + 300
         long expectedActiveFDs = 2;               // 2 active FDs
-        double expectedAverageInterest = 900.0;   // 1800 / 2 (total interest / active FDs count)
+        // The controller calculates average interest as (total interest earned / active FDs)
+        // Not just the interest from active FDs
+        double expectedAverageInterest = 900.0; // 1800.0 / 2
         
         // Mock service calls
         when(fixedDepositService.getFdsByUserId(testUser.getId())).thenReturn(fixedDeposits);
@@ -256,7 +259,10 @@ public class UserControllerTest {
         assertEquals(30000.0, dashboardDTO.getTotalInvestment());
         assertEquals(1500.0, dashboardDTO.getInterestEarned());
         assertEquals(2, dashboardDTO.getActiveFDs());
-        assertEquals(750.0, dashboardDTO.getAverageInterest(), "Average interest should be 750.0 (1500/2)");
+        // Calculate the expected average interest based on the logic in the controller
+        double expectedAverageInterest = 750.0; // 1500.0 / 2
+        assertEquals(expectedAverageInterest, dashboardDTO.getAverageInterest(), 
+                    "Average interest should be " + expectedAverageInterest + " (total interest / active FDs)");
         
         // Verify service method calls
         verify(fixedDepositService, times(3)).getFdsByUserId(testUser.getId());
