@@ -119,24 +119,21 @@ export default {
     };
   },
 
-  computed: {
-    ...mapGetters(['getToken']),
-  },
-
   methods: {
-    ...mapActions(['getToken', 'setUserData', 'login']),
+    ...mapActions([ 'setUserData', 'login']),
+    ...mapGetters(['getToken']),
 
     async handleLogin() {
       this.loading = true;
       this.error = null;
 
       try {
-        await this.login({
+        const res = await this.login({
           email: this.email,
           password: this.password,
         });
 
-        const token = this.getToken;
+        const token = this.getToken();
 
         if (token) {
           await this.setUserData();
@@ -146,11 +143,15 @@ export default {
           } else {
             this.$router.push('/user/dashboard');
           }
-        } else {
-          this.error = 'Something went wrong. Please try again.';
+        } 
+        else if(res.data.status === 404) {
+          this.error = 'User not found. Please check your email or password';
+        }
+        else{
+          this.error = 'Login failed. Please try again.';
         }
       } catch (err) {
-        if (err.response.status == 404) {
+        if (err?.response?.status == 404) {
           this.error = 'User not found. Please check your email or password';
         } else {
           this.error = 'Login failed. Please try again.';
