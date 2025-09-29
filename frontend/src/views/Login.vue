@@ -120,7 +120,7 @@ export default {
   },
 
   methods: {
-    ...mapActions([ 'setUserData', 'login']),
+    ...mapActions(['setUserData', 'login']),
     ...mapGetters(['getToken']),
 
     async handleLogin() {
@@ -143,11 +143,9 @@ export default {
           } else {
             this.$router.push('/user/dashboard');
           }
-        } 
-        else if(res.data.status === 404) {
+        } else if (res.data.status === 404) {
           this.error = 'User not found. Please check your email or password';
-        }
-        else{
+        } else {
           this.error = 'Login failed. Please try again.';
         }
       } catch (err) {

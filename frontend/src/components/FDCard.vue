@@ -5,7 +5,7 @@
     <!-- Header -->
     <div class="bg-gradient-to-r from-slate-50 to-gray-50 px-5 py-4 border-b border-gray-100">
       <div class="flex justify-between items-center">
-        <h3 class="text-lg font-semibold text-slate-800">FD #{{ fd.id  }}</h3>
+        <h3 class="text-lg font-semibold text-slate-800">FD #{{ fd.id }}</h3>
         <span :class="statusBadgeClass" class="text-xs font-medium px-3 py-1.5 rounded-full border">
           {{ fd.status }}
         </span>
