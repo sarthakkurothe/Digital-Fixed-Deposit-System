@@ -62,7 +62,7 @@ export default createStore({
         const res = await axios.get(`/fd/user/${state.user.id}`);
         commit('SET_FDS', res.data);
       } catch (err) {
-        console.error('Error fetching FDs', err);
+        throw err;
       } finally {
         commit('SET_LOADING', false);
       }
@@ -74,7 +74,7 @@ export default createStore({
         const res = await axios.get(`/user/investments`);
         commit('SET_SUMMARY', res.data);
       } catch (err) {
-        console.error('Error fetching summary', err);
+        throw err;
       }
     },
 
@@ -88,7 +88,6 @@ export default createStore({
         });
         return res.data;
       } catch (err) {
-        console.error('Error fetching break preview', err);
         return null;
       }
     },
@@ -131,7 +130,7 @@ export default createStore({
         });
         commit('SET_DASHBOARD_INFO', res.data);
       } catch (err) {
-        console.error('Error fetching dashboard info:', err);
+        throw err;
       } finally {
         commit('SET_LOADING', false);
       }
@@ -169,7 +168,7 @@ export default createStore({
         });
         commit('setUser', res.data);
       } catch (err) {
-        console.error('Error fetching user data', err);
+        throw err;
       }
     },
 

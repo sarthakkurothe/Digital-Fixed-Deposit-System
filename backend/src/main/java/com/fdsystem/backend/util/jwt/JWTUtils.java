@@ -1,5 +1,8 @@
 package com.fdsystem.backend.util.jwt;
 
+import com.fdsystem.backend.exception.TokenExpiredException;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -15,7 +18,6 @@ import java.util.Date;
 import java.util.Enumeration;
 
 @Slf4j
-@Component
 public class JWTUtils {
 
   @Value("${spring.app.jwtSecret}")
@@ -58,14 +60,15 @@ public class JWTUtils {
 
 
 
-  public boolean isValidJwtToken(String authToken){
+  public boolean isValidJwtToken(String authToken) throws TokenExpiredException {
     try{
       Jwts.parser().verifyWith((SecretKey)key()).build()
               .parseSignedClaims(authToken);
       return true;
-    }catch(Exception e){
-      System.out.println(e.getMessage());
+    } catch (ExpiredJwtException e) {
+      throw new TokenExpiredException("JWT token is expired");
+    } catch (JwtException e) {
+      throw new RuntimeException("Invalid JWT token");
     }
-    return false;
   }
 }
