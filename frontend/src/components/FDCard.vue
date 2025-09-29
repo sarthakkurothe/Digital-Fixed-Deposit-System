@@ -5,7 +5,7 @@
     <!-- Header -->
     <div class="bg-gradient-to-r from-slate-50 to-gray-50 px-5 py-4 border-b border-gray-100">
       <div class="flex justify-between items-center">
-        <h3 class="text-lg font-semibold text-slate-800">FD #{{ index + 1 }}</h3>
+        <h3 class="text-lg font-semibold text-slate-800">FD #{{ fd.id }}</h3>
         <span :class="statusBadgeClass" class="text-xs font-medium px-3 py-1.5 rounded-full border">
           {{ fd.status }}
         </span>
@@ -16,7 +16,9 @@
     <div class="p-5">
       <!-- Principal Amount -->
       <div class="mb-4">
-        <div class="text-2xl font-bold text-slate-900 mb-1">₹{{ fd.amount.toLocaleString() }}</div>
+        <div class="text-2xl font-bold text-slate-900 mb-1">
+          ₹{{ fd.amount.toLocaleString('en-IN') }}
+        </div>
         <div class="flex items-center gap-3 text-sm">
           <span class="flex items-center gap-1 text-emerald-600 font-medium">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
