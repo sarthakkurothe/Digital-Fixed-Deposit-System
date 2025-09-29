@@ -27,9 +27,9 @@
           <form @submit.prevent="handleLogin" class="space-y-5">
             <!-- Email -->
             <div class="space-y-2">
-              <label for="email" class="block text-base font-medium text-gray-700"
-                >Email Address</label
-              >
+              <label for="email" class="block text-base font-medium text-gray-700">
+                Email Address
+              </label>
               <input
                 v-model="email"
                 type="email"
@@ -38,6 +38,7 @@
                 required
                 class="w-full h-11 px-4 rounded-xl border border-gray-300 bg-white shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
               />
+              <p v-if="emailError" class="text-red-500 text-sm mt-1">{{ emailError }}</p>
             </div>
 
             <!-- Password -->
@@ -117,7 +118,21 @@ export default {
       loading: false,
       error: null,
       showPassword: false,
+      emailError: null,
     };
+  },
+
+  watch: {
+    email(newEmail) {
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!newEmail) {
+        this.emailError = 'Email is required';
+      } else if (!emailPattern.test(newEmail)) {
+        this.emailError = 'Please enter a valid email address';
+      } else {
+        this.emailError = null;
+      }
+    },
   },
 
   methods: {
@@ -128,6 +143,11 @@ export default {
       this.loading = true;
       this.error = null;
 
+      if(this.emailError) {
+        this.error = this.emailError;
+        this.loading = false;
+        return;
+      }
       try {
         const res = await this.login({
           email: this.email,
