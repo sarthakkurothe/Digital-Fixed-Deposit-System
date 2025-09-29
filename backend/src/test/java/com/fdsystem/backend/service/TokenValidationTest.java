@@ -26,8 +26,10 @@ public class TokenValidationTest {
 
   @Mock
   private UserDetailsServiceImpl userDetailsService;
-
-  @InjectMocks
+  
+  @Mock
+  private org.springframework.web.servlet.HandlerExceptionResolver exceptionResolver;
+  
   private AuthTokenFilter authTokenFilter;
 
   @Mock
@@ -42,6 +44,15 @@ public class TokenValidationTest {
   @AfterEach
   void clearContext() {
     SecurityContextHolder.clearContext();
+  }
+  
+  @org.junit.jupiter.api.BeforeEach
+  void setUp() {
+    // Manually create AuthTokenFilter with mocked HandlerExceptionResolver
+    authTokenFilter = new AuthTokenFilter(exceptionResolver);
+    // Set the mocked dependencies that would normally be autowired
+    org.springframework.test.util.ReflectionTestUtils.setField(authTokenFilter, "jwtUtil", jwtUtils);
+    org.springframework.test.util.ReflectionTestUtils.setField(authTokenFilter, "userDetailsService", userDetailsService);
   }
 
   @Test
