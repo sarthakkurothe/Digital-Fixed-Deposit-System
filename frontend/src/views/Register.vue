@@ -167,16 +167,24 @@ export default {
           age: this.age,
           password: this.password,
         });
+
         if (res.status === 201) {
-          this.successMessage = 'Registration successful! 🎉 You can now log in.';
-          this.name =
-            this.email =
-            this.phone =
-            this.age =
-            this.password =
-            this.confirmPassword =
-              '';
-          this.agreeTerms = false;
+          this.successMessage = 'Registration successful! 🎉 Redirecting to login in 3 seconds...';
+
+          // Reset fields
+          this.name = this.email = this.age = this.password = this.confirmPassword = '';
+
+          // Countdown timer
+          let countdown = 3;
+          const timer = setInterval(() => {
+            countdown--;
+            if (countdown > 0) {
+              this.successMessage = `Registration successful! 🎉 Redirecting to login in ${countdown} seconds...`;
+            } else {
+              clearInterval(timer);
+              this.$router.push('/login');
+            }
+          }, 1000);
         } else {
           this.errorMessage = res.error || 'Registration failed. Please try again.';
         }
