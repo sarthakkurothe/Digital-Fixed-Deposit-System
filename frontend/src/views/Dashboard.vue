@@ -22,7 +22,9 @@
           to="book-fd"
           class="flex items-center p-4 border border-blue-200 rounded-lg hover:bg-blue-50 transition-colors group"
         >
-          <div class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mr-4 group-hover:bg-blue-200 transition-colors">
+          <div
+            class="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center mr-4 group-hover:bg-blue-200 transition-colors"
+          >
             <ActivityIcon class="w-6 h-6 text-blue-500" />
           </div>
           <div>
@@ -37,7 +39,9 @@
           to="calculator"
           class="flex items-center p-4 border border-green-200 rounded-lg hover:bg-green-50 transition-colors group"
         >
-          <div class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center mr-4 group-hover:bg-green-200 transition-colors">
+          <div
+            class="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center mr-4 group-hover:bg-green-200 transition-colors"
+          >
             <CalculatorIcon class="w-6 h-6 text-green-500" />
           </div>
           <div>
@@ -52,7 +56,9 @@
           to="support"
           class="flex items-center p-4 border border-orange-200 rounded-lg hover:bg-orange-50 transition-colors group"
         >
-          <div class="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center mr-4 group-hover:bg-orange-200 transition-colors">
+          <div
+            class="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center mr-4 group-hover:bg-orange-200 transition-colors"
+          >
             <HelpCircleIcon class="w-6 h-6 text-orange-500" />
           </div>
           <div>
@@ -72,18 +78,26 @@ import PieChart from '../components/PieChart.vue';
 import BarChart from '../components/BarChart.vue';
 
 // Import Lucide Icons
-import { ArrowRightIcon, ActivityIcon, CalculatorIcon, HelpCircleIcon } from 'lucide-vue-next'
+import { ArrowRightIcon, ActivityIcon, CalculatorIcon, HelpCircleIcon } from 'lucide-vue-next';
 
 export default {
   name: 'Dashboard',
-  components: { DashboardCards, PieChart, BarChart, ArrowRightIcon, ActivityIcon, CalculatorIcon, HelpCircleIcon },
+  components: {
+    DashboardCards,
+    PieChart,
+    BarChart,
+    ArrowRightIcon,
+    ActivityIcon,
+    CalculatorIcon,
+    HelpCircleIcon,
+  },
   mounted() {
-    if(this.$store.getters.getFDs.length === 0){
+    if (this.$store.getters.getFDs.length === 0) {
       this.$store.dispatch('fetchFDs');
     }
     this.$store.dispatch('fetchSummary');
-  }
-}
+  },
+};
 </script>
 
 <style scoped>

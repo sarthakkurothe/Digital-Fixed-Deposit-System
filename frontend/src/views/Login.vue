@@ -1,9 +1,12 @@
 <template>
   <Header />
 
-  <div class="min-h-[calc(100vh-64px)] bg-gradient-to-br from-white via-blue-50 to-blue-100 flex items-center justify-center p-3">
-    <div class="w-full max-w-6xl mx-auto flex flex-col lg:flex-row items-center justify-between p-6 lg:p-12 gap-12">
-      
+  <div
+    class="min-h-[calc(100vh-64px)] bg-gradient-to-br from-white via-blue-50 to-blue-100 flex items-center justify-center p-3"
+  >
+    <div
+      class="w-full max-w-6xl mx-auto flex flex-col lg:flex-row items-center justify-between p-6 lg:p-12 gap-12"
+    >
       <!-- Left Side - Branding & Features -->
       <DotLottieVue
         style="height: 500px; width: 500px"
@@ -23,7 +26,9 @@
           <form @submit.prevent="handleLogin" class="space-y-5">
             <!-- Email -->
             <div class="space-y-2">
-              <label for="email" class="block text-base font-medium text-gray-700">Email Address</label>
+              <label for="email" class="block text-base font-medium text-gray-700"
+                >Email Address</label
+              >
               <input
                 v-model="email"
                 type="email"
@@ -36,7 +41,9 @@
 
             <!-- Password -->
             <div class="space-y-2">
-              <label for="password" class="block text-base font-medium text-gray-700">Password</label>
+              <label for="password" class="block text-base font-medium text-gray-700"
+                >Password</label
+              >
               <div class="relative">
                 <input
                   v-model="password"
@@ -80,20 +87,17 @@
           </div>
         </div>
       </div>
-
     </div>
   </div>
 </template>
 
-
-
 <script>
-import { Eye, EyeOff } from 'lucide-vue-next'
-import { mapActions, mapGetters } from 'vuex'
-import { DotLottieVue } from '@lottiefiles/dotlottie-vue'
-import LoadingSpinner from '../components/LoadingSpinner.vue'
+import { Eye, EyeOff } from 'lucide-vue-next';
+import { mapActions, mapGetters } from 'vuex';
+import { DotLottieVue } from '@lottiefiles/dotlottie-vue';
+import LoadingSpinner from '../components/LoadingSpinner.vue';
 
-import Header from '../components/Header.vue'
+import Header from '../components/Header.vue';
 
 export default {
   name: 'LoginView',
@@ -112,57 +116,49 @@ export default {
       loading: false,
       error: null,
       showPassword: false,
-    }
+    };
   },
 
-  // mapGetters must be used in computed
   computed: {
     ...mapGetters(['getToken']),
   },
 
   methods: {
-    // mapActions goes in methods
     ...mapActions(['getToken', 'setUserData', 'login']),
 
     async handleLogin() {
-      // start UI loading
-      this.loading = true
-      this.error = null
+      this.loading = true;
+      this.error = null;
 
       try {
-        // call the login action; your Vuex action should commit the token
         await this.login({
           email: this.email,
           password: this.password,
-        })
+        });
 
-        // read token via mapped getter
-        const token = this.getToken
+        const token = this.getToken;
 
         if (token) {
-          // fetch & set user data (optional)
-          await this.setUserData()
-          const user = this.$store.getters.getUser
-           if (user.role === 'ROLE_ADMIN') {
-            this.$router.push('/admin')
+          await this.setUserData();
+          const user = this.$store.getters.getUser;
+          if (user.role === 'ROLE_ADMIN') {
+            this.$router.push('/admin');
           } else {
-            this.$router.push('/user/dashboard')
+            this.$router.push('/user/dashboard');
           }
         } else {
-          this.error = 'Something went wrong. Please try again.'
+          this.error = 'Something went wrong. Please try again.';
         }
       } catch (err) {
-    
-        if(err.response.status == 404) {
-          this.error = 'User not found. Please check your email or password'
-        } else{
-          this.error = 'Login failed. Please try again.'
+        if (err.response.status == 404) {
+          this.error = 'User not found. Please check your email or password';
+        } else {
+          this.error = 'Login failed. Please try again.';
         }
       } finally {
-        this.loading = false
+        this.loading = false;
       }
     },
   },
-}
+};
 </script>
-

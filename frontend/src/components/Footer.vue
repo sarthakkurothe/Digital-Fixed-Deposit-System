@@ -13,8 +13,8 @@
             <span class="text-2xl font-bold">SmartFD</span>
           </div>
           <p class="text-gray-400 text-sm leading-relaxed">
-            Your trusted partner for digital Fixed Deposit management. Secure,
-            simple, and smart investments.
+            Your trusted partner for digital Fixed Deposit management. Secure, simple, and smart
+            investments.
           </p>
         </div>
 
@@ -43,10 +43,7 @@
             </div>
             <div class="flex items-center space-x-2 cursor-pointer">
               <Mail class="h-4 w-4" />
-              <a
-                href="mailto:support@smartfd.com"
-                class="hover:text-white transition-colors"
-              >
+              <a href="mailto:support@smartfd.com" class="hover:text-white transition-colors">
                 support@smartfd.com
               </a>
             </div>
@@ -97,38 +94,38 @@
 </template>
 
 <script>
-import { Banknote, Mail, Phone, MapPin } from "lucide-vue-next";
-import { useRouter } from "vue-router";
+import { Banknote, Mail, Phone, MapPin } from 'lucide-vue-next';
+import { useRouter } from 'vue-router';
 
 export default {
-  name: "Footer",
+  name: 'Footer',
   components: { Banknote, Mail, Phone, MapPin },
   setup() {
     const router = useRouter();
 
     const navItems = [
-      { id: "features", label: "Features" },
-      { id: "security", label: "Security" },
-      { id: "support", label: "Support" },
-      { id: "careers", label: "Careers" },
+      { id: 'features', label: 'Features' },
+      { id: 'security', label: 'Security' },
+      { id: 'support', label: 'Support' },
+      { id: 'careers', label: 'Careers' },
     ];
 
     const goToRegister = () => {
-      router.push("/register");
+      router.push('/register');
     };
 
-    const scrollToSection = (id) => {
+    const scrollToSection = id => {
       // If not on Home page, navigate first then scroll
-      if (router.currentRoute.value.name !== "Home") {
-        router.push("/").then(() => {
+      if (router.currentRoute.value.name !== 'Home') {
+        router.push('/').then(() => {
           nextTick(() => {
             const el = document.getElementById(id);
-            if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+            if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
           });
         });
       } else {
         const el = document.getElementById(id);
-        if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
     };
 

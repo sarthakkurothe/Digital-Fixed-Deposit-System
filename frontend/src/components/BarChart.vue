@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import { Bar } from 'vue-chartjs'
+import { Bar } from 'vue-chartjs';
 import {
   Chart as ChartJS,
   Title,
@@ -25,11 +25,11 @@ import {
   Legend,
   BarElement,
   CategoryScale,
-  LinearScale
-} from 'chart.js'
-import { mapGetters } from 'vuex'
+  LinearScale,
+} from 'chart.js';
+import { mapGetters } from 'vuex';
 
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend)
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 export default {
   name: 'BarChart',
@@ -38,24 +38,23 @@ export default {
     ...mapGetters(['getFDs']),
 
     chartData() {
-      const fds = this.getFDs || []
-      if (!fds.length) return null
+      const fds = this.getFDs || [];
+      if (!fds.length) return null;
 
       // extract interest rates
-      const rateOf = (fd) => {
-        const keys = ['interest_rate', 'interest']
+      const rateOf = fd => {
+        const keys = ['interest_rate', 'interest'];
         for (const k of keys) {
-          if (fd?.[k] != null && !isNaN(Number(fd[k]))) return Number(fd[k])
+          if (fd?.[k] != null && !isNaN(Number(fd[k]))) return Number(fd[k]);
         }
-        return 0
-      }
+        return 0;
+      };
 
-      const labels = fds.map((fd, i) => fd.name || fd.label || fd.bank || `FD ${i + 1}`)
-      const rates = fds.map((fd) => rateOf(fd))
+      const labels = fds.map((fd, i) => fd.name || fd.label || fd.bank || `FD ${i + 1}`);
+      const rates = fds.map(fd => rateOf(fd));
 
-      // if all rates are zero → return null
-      const total = rates.reduce((a, b) => a + b, 0)
-      if (total === 0) return null
+      const total = rates.reduce((a, b) => a + b, 0);
+      if (total === 0) return null;
 
       return {
         labels,
@@ -63,10 +62,10 @@ export default {
           {
             label: 'Interest Rate (%)',
             backgroundColor: '#3b82f6',
-            data: rates
-          }
-        ]
-      }
+            data: rates,
+          },
+        ],
+      };
     },
 
     options() {
@@ -77,30 +76,30 @@ export default {
           legend: { display: false },
           tooltip: {
             callbacks: {
-              label: (ctx) => {
-                const val = ctx.parsed.y ?? 0
-                return `${val}%`
-              }
-            }
-          }
+              label: ctx => {
+                const val = ctx.parsed.y ?? 0;
+                return `${val}%`;
+              },
+            },
+          },
         },
         scales: {
           y: {
             beginAtZero: true,
             ticks: {
-              callback: (v) => `${v}%`
-            }
-          }
-        }
-      }
+              callback: v => `${v}%`,
+            },
+          },
+        },
+      };
     },
 
     formattedAvg() {
-      const arr = this.chartData?.datasets?.[0]?.data || []
-      if (!arr.length) return '0%'
-      const avg = arr.reduce((a, b) => a + b, 0) / arr.length
-      return `${Number(avg).toFixed(2)}%`
-    }
-  }
-}
+      const arr = this.chartData?.datasets?.[0]?.data || [];
+      if (!arr.length) return '0%';
+      const avg = arr.reduce((a, b) => a + b, 0) / arr.length;
+      return `${Number(avg).toFixed(2)}%`;
+    },
+  },
+};
 </script>

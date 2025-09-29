@@ -19,7 +19,8 @@
           Everything You Need for <span class="gradient-text">FD Management</span>
         </h2>
         <p class="text-xl text-gray-600 max-w-2xl mx-auto">
-          Comprehensive tools and features designed to make Fixed Deposit management simple, secure, and profitable.
+          Comprehensive tools and features designed to make Fixed Deposit management simple, secure,
+          and profitable.
         </p>
       </div>
 

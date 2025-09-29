@@ -33,8 +33,11 @@
 
         <!-- Ticket Cards Grid (Mobile) -->
         <div class="md:hidden space-y-4">
-          <div v-for="ticket in paginatedTickets" :key="ticket.id"
-               class="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-sm transition-shadow">
+          <div
+            v-for="ticket in paginatedTickets"
+            :key="ticket.id"
+            class="bg-white border border-gray-200 rounded-lg p-4 hover:shadow-sm transition-shadow"
+          >
             <div class="flex justify-between items-start mb-3">
               <div>
                 <h3 class="font-medium text-gray-900">{{ ticket.subject }}</h3>
@@ -44,7 +47,10 @@
                 <span class="px-2 py-1 text-xs rounded-full" :class="getStatusClass(ticket.status)">
                   {{ ticket.status }}
                 </span>
-                <span class="px-2 py-1 text-xs rounded-full" :class="getPriorityClass(ticket.priority)">
+                <span
+                  class="px-2 py-1 text-xs rounded-full"
+                  :class="getPriorityClass(ticket.priority)"
+                >
                   {{ ticket.priority }}
                 </span>
               </div>
@@ -82,12 +88,36 @@
           <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
               <tr>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Ticket ID</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Subject</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Created</th>
-                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                <th
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  Ticket ID
+                </th>
+                <th
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  Customer
+                </th>
+                <th
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  Subject
+                </th>
+                <th
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  Status
+                </th>
+                <th
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  Created
+                </th>
+                <th
+                  class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                >
+                  Actions
+                </th>
               </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
@@ -106,7 +136,10 @@
                   <div class="text-sm text-gray-500 truncate">{{ ticket.description }}</div>
                 </td>
                 <td class="px-6 py-4 whitespace-nowrap">
-                  <span class="px-2 py-1 text-xs rounded-full" :class="getStatusClass(ticket.status)">
+                  <span
+                    class="px-2 py-1 text-xs rounded-full"
+                    :class="getStatusClass(ticket.status)"
+                  >
                     {{ ticket.status }}
                   </span>
                 </td>
@@ -121,8 +154,8 @@
                     :class="[
                       'px-3 py-2 rounded-lg font-semibold transition-colors',
                       ticket.status !== 'CLOSED'
-                      ? 'bg-purple-50 text-purple-600 hover:bg-purple-100 cursor-pointer'
-                      : 'bg-purple-50 text-purple-600 cursor-not-allowed opacity-80'
+                        ? 'bg-purple-50 text-purple-600 hover:bg-purple-100 cursor-pointer'
+                        : 'bg-purple-50 text-purple-600 cursor-not-allowed opacity-80',
                     ]"
                   >
                     REPLY
@@ -136,7 +169,9 @@
         <!-- Pagination -->
         <div class="mt-6 flex justify-between items-center">
           <div class="text-sm text-gray-700">
-            Showing {{ ((currentPage - 1) * pageSize) + 1 }} to {{ Math.min(currentPage * pageSize, filteredTickets.length) }} of {{ filteredTickets.length }} results
+            Showing {{ (currentPage - 1) * pageSize + 1 }} to
+            {{ Math.min(currentPage * pageSize, filteredTickets.length) }} of
+            {{ filteredTickets.length }} results
           </div>
           <div class="flex space-x-2">
             <button
@@ -170,24 +205,32 @@
         <!-- modal card (flex column) -->
         <div
           class="relative w-full max-w-3xl bg-white rounded-lg shadow-xl overflow-hidden flex flex-col"
-          style="max-height: 90vh;"
+          style="max-height: 90vh"
           aria-label="Ticket details"
         >
           <!-- header (fixed height) -->
-          <div class="flex items-start justify-between gap-4 p-6 border-b border-gray-100 flex-shrink-0">
+          <div
+            class="flex items-start justify-between gap-4 p-6 border-b border-gray-100 flex-shrink-0"
+          >
             <div class="min-w-0">
-              <h3 class="text-lg font-bold text-gray-900 truncate">Ticket Details - #{{ selectedTicket?.id ?? '—' }}</h3>
+              <h3 class="text-lg font-bold text-gray-900 truncate">
+                Ticket Details - #{{ selectedTicket?.id ?? '—' }}
+              </h3>
               <p class="text-sm text-gray-500 mt-1 truncate">{{ selectedTicket?.subject ?? '' }}</p>
             </div>
             <div class="flex items-center gap-2">
-              <button @click="closeModal" class="text-gray-400 hover:text-gray-600 p-2 rounded cursor-pointer" aria-label="Close">
+              <button
+                @click="closeModal"
+                class="text-gray-400 hover:text-gray-600 p-2 rounded cursor-pointer"
+                aria-label="Close"
+              >
                 <X class="w-6 h-6" />
               </button>
             </div>
           </div>
 
           <!-- body (scrollable) -->
-          <div class="p-6 space-y-6 overflow-y-auto" style="flex: 1 1 auto;">
+          <div class="p-6 space-y-6 overflow-y-auto" style="flex: 1 1 auto">
             <div v-if="selectedTicket" class="space-y-6">
               <!-- Ticket Information -->
               <div class="bg-gray-50 p-4 rounded-lg">
@@ -207,7 +250,10 @@
                   </div>
                   <div>
                     <p class="text-gray-500">Status:</p>
-                    <span class="px-2 py-1 text-xs rounded-full" :class="getStatusClass(selectedTicket.status)">
+                    <span
+                      class="px-2 py-1 text-xs rounded-full"
+                      :class="getStatusClass(selectedTicket.status)"
+                    >
                       {{ selectedTicket.status }}
                     </span>
                   </div>
@@ -244,10 +290,10 @@
                     @click="breakFD(selectedTicket.fd.id)"
                     :disabled="selectedTicket.fd.status !== 'PENDING'"
                     :class="[
-                        'px-4 py-2 rounded-lg font-bold transition-colors',
-                        selectedTicket.fd.status === 'PENDING'
+                      'px-4 py-2 rounded-lg font-bold transition-colors',
+                      selectedTicket.fd.status === 'PENDING'
                         ? 'bg-red-600 text-white hover:bg-red-700 cursor-pointer'
-                        : 'bg-red-400 text-white opacity-70 cursor-not-allowed'
+                        : 'bg-red-400 text-white opacity-70 cursor-not-allowed',
                     ]"
                   >
                     Break FD
@@ -268,13 +314,13 @@
               </div>
             </div>
 
-            <div v-else class="text-center text-gray-500 py-12">
-              Loading ticket details...
-            </div>
+            <div v-else class="text-center text-gray-500 py-12">Loading ticket details...</div>
           </div>
 
           <!-- footer (fixed, visible) -->
-          <div class="p-4 border-t border-gray-100 flex items-center justify-end gap-3 flex-shrink-0 bg-white">
+          <div
+            class="p-4 border-t border-gray-100 flex items-center justify-end gap-3 flex-shrink-0 bg-white"
+          >
             <button
               @click="closeModal"
               class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer font-bold"
@@ -296,13 +342,13 @@
 </template>
 
 <script>
-import AdminSidebar from '../components/AdminSidebar.vue'
-import { MenuIcon, Download, X } from 'lucide-vue-next'
-import { mapGetters, mapActions } from 'vuex'
-import Navbar from '../components/Navbar.vue'
-import axios from '../api'
-import { nextTick } from 'vue'
-import { useToast } from 'vue-toastification'
+import AdminSidebar from '../components/AdminSidebar.vue';
+import { MenuIcon, Download, X } from 'lucide-vue-next';
+import { mapGetters, mapActions } from 'vuex';
+import Navbar from '../components/Navbar.vue';
+import axios from '../api';
+import { nextTick } from 'vue';
+import { useToast } from 'vue-toastification';
 
 export default {
   name: 'AdminSupportTickets',
@@ -311,7 +357,7 @@ export default {
     MenuIcon,
     Download,
     X,
-    Navbar
+    Navbar,
   },
   data() {
     return {
@@ -327,186 +373,195 @@ export default {
       allFds: [],
       showTicketModal: false,
       selectedTicket: null,
-      responseText: ''
-    }
+      responseText: '',
+    };
   },
   computed: {
     mainContentClasses() {
-      if (this.isMobile) return 'ml-0'
-      return this.sidebarCollapsed ? 'ml-30' : 'md:ml-65'
+      if (this.isMobile) return 'ml-0';
+      return this.sidebarCollapsed ? 'ml-30' : 'md:ml-65';
     },
     allTickets() {
-      return this.allSupportTickets
+      return this.allSupportTickets;
     },
     filteredTickets() {
-      let filtered = this.allTickets
+      let filtered = this.allTickets;
 
       if (this.searchTerm) {
-        const term = this.searchTerm.toLowerCase()
-        filtered = filtered.filter(ticket =>
-          ticket.name?.toLowerCase().includes(term) ||
-          ticket.subject?.toLowerCase().includes(term) ||
-          ticket.id?.toString().includes(term) ||
-          ticket.email?.toLowerCase().includes(term)
-        )
+        const term = this.searchTerm.toLowerCase();
+        filtered = filtered.filter(
+          ticket =>
+            ticket.name?.toLowerCase().includes(term) ||
+            ticket.subject?.toLowerCase().includes(term) ||
+            ticket.id?.toString().includes(term) ||
+            ticket.email?.toLowerCase().includes(term)
+        );
       }
 
-      if (this.statusFilter) filtered = filtered.filter(ticket => ticket.status === this.statusFilter)
-      if (this.priorityFilter) filtered = filtered.filter(ticket => ticket.priority === this.priorityFilter)
+      if (this.statusFilter)
+        filtered = filtered.filter(ticket => ticket.status === this.statusFilter);
+      if (this.priorityFilter)
+        filtered = filtered.filter(ticket => ticket.priority === this.priorityFilter);
 
       if (this.sortBy === 'date') {
-        filtered.sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate))
+        filtered.sort((a, b) => new Date(b.createdDate) - new Date(a.createdDate));
       } else if (this.sortBy === 'status') {
-        filtered.sort((a, b) => a.status.localeCompare(b.status))
+        filtered.sort((a, b) => a.status.localeCompare(b.status));
       }
 
-      return filtered
+      return filtered;
     },
     paginatedTickets() {
-      const start = (this.currentPage - 1) * this.pageSize
-      return this.filteredTickets.slice(start, start + this.pageSize)
+      const start = (this.currentPage - 1) * this.pageSize;
+      return this.filteredTickets.slice(start, start + this.pageSize);
     },
     openTicketsCount() {
-      return this.allTickets.filter(ticket => ticket.status === 'OPEN').length
-    }
+      return this.allTickets.filter(ticket => ticket.status === 'OPEN').length;
+    },
   },
   methods: {
     ...mapActions(['logout']),
     handleToggleSidebar() {
-      if (this.$refs.sidebar) this.$refs.sidebar.toggleSidebar()
+      if (this.$refs.sidebar) this.$refs.sidebar.toggleSidebar();
     },
     handleSidebarToggle(collapsed) {
-      this.sidebarCollapsed = collapsed
+      this.sidebarCollapsed = collapsed;
     },
     checkMobile() {
-      this.isMobile = window.innerWidth < 768
+      this.isMobile = window.innerWidth < 768;
     },
     formatDate(dateString) {
-      return new Date(dateString).toLocaleDateString()
+      return new Date(dateString).toLocaleDateString();
     },
     getStatusClass(status) {
       const classes = {
-        'OPEN': 'bg-red-100 text-red-800',
-        'CLOSED': 'bg-gray-100 text-gray-800'
-      }
-      return classes[status] || 'bg-gray-100 text-gray-800'
+        OPEN: 'bg-red-100 text-red-800',
+        CLOSED: 'bg-gray-100 text-gray-800',
+      };
+      return classes[status] || 'bg-gray-100 text-gray-800';
     },
     getPriorityClass(priority) {
       const classes = {
-        'high': 'bg-red-100 text-red-800',
-        'medium': 'bg-yellow-100 text-yellow-800',
-        'low': 'bg-green-100 text-green-800'
-      }
-      return classes[priority] || 'bg-gray-100 text-gray-800'
+        high: 'bg-red-100 text-red-800',
+        medium: 'bg-yellow-100 text-yellow-800',
+        low: 'bg-green-100 text-green-800',
+      };
+      return classes[priority] || 'bg-gray-100 text-gray-800';
     },
     replyToTicket(ticket) {
-      this.selectedTicket = ticket
-      this.responseText = ''
-      this.showTicketModal = true
+      this.selectedTicket = ticket;
+      this.responseText = '';
+      this.showTicketModal = true;
     },
     closeModal() {
-      this.showTicketModal = false
-      this.selectedTicket = null
-      this.responseText = ''
+      this.showTicketModal = false;
+      this.selectedTicket = null;
+      this.responseText = '';
     },
     prevPage() {
-      if (this.currentPage > 1) this.currentPage--
+      if (this.currentPage > 1) this.currentPage--;
     },
     nextPage() {
-      if (this.currentPage * this.pageSize < this.filteredTickets.length) this.currentPage++
+      if (this.currentPage * this.pageSize < this.filteredTickets.length) this.currentPage++;
     },
     async breakFD(fdId) {
       try {
-        const res = await axios.put(`/admin/fd/${fdId}`, {"status":"BROKEN"});
+        const res = await axios.put(`/admin/fd/${fdId}`, { status: 'BROKEN' });
         if (this.selectedTicket) {
-          this.selectedTicket.fd.status = 'BROKEN'
+          this.selectedTicket.fd.status = 'BROKEN';
         }
-        this.toast.success('FD has been broken successfully')
+        this.toast.success('FD has been broken successfully');
       } catch (error) {
-        this.toast.error('Failed to break FD: ' + (error.response?.data?.message || error.message))
+        this.toast.error('Failed to break FD: ' + (error.response?.data?.message || error.message));
       }
     },
     async closeTicket() {
       if (!this.responseText.trim()) {
-        this.toast.error('Please enter a response before closing the ticket')
-        return
+        this.toast.error('Please enter a response before closing the ticket');
+        return;
       }
 
       try {
-        const response = await axios.post(`/admin/tickets/${this.selectedTicket.id}`, this.responseText, {
-          headers: {
-            'Content-Type': 'text/plain'
+        const response = await axios.post(
+          `/admin/tickets/${this.selectedTicket.id}`,
+          this.responseText,
+          {
+            headers: {
+              'Content-Type': 'text/plain',
+            },
           }
-        })
+        );
 
         // Update the ticket status locally
-        const ticketIndex = this.allSupportTickets.findIndex(t => t.id === this.selectedTicket.id)
+        const ticketIndex = this.allSupportTickets.findIndex(t => t.id === this.selectedTicket.id);
         if (ticketIndex !== -1) {
-          this.allSupportTickets[ticketIndex].status = 'CLOSED'
+          this.allSupportTickets[ticketIndex].status = 'CLOSED';
         }
 
-        this.closeModal()
-        this.toast.success('Ticket has been closed successfully')
+        this.closeModal();
+        this.toast.success('Ticket has been closed successfully');
       } catch (error) {
-        this.toast.error('Failed to close ticket: ' + (error.response?.data?.message || error.message))
+        this.toast.error(
+          'Failed to close ticket: ' + (error.response?.data?.message || error.message)
+        );
       }
     },
     async logout() {
       try {
-        await this.logout()
-        this.$router.push('/login')
+        await this.logout();
+        this.$router.push('/login');
       } catch (error) {
-        this.toast.error('Logout error')
+        this.toast.error('Logout error');
       }
     },
     /* keyboard handler for ESC to close modal */
     onKeydown(e) {
-      if (e.key === 'Escape' && this.showTicketModal) this.closeModal()
-    }
+      if (e.key === 'Escape' && this.showTicketModal) this.closeModal();
+    },
   },
   async mounted() {
-    this.checkMobile()
-    window.addEventListener('resize', this.checkMobile)
-    window.addEventListener('keydown', this.onKeydown)
+    this.checkMobile();
+    window.addEventListener('resize', this.checkMobile);
+    window.addEventListener('keydown', this.onKeydown);
 
     try {
-      const res = await axios.get('/fd/fds')
-      this.allFds = res.data
+      const res = await axios.get('/fd/fds');
+      this.allFds = res.data;
     } catch (error) {
       // no console logs by request
     }
 
     // Fetch support tickets data
     try {
-      const res = await axios.get('/admin/tickets')
-      this.allSupportTickets = res.data
+      const res = await axios.get('/admin/tickets');
+      this.allSupportTickets = res.data;
     } catch (error) {
       // no console logs by request
     }
 
     // initialize toast
-    this.toast = useToast()
+    this.toast = useToast();
   },
   watch: {
     showTicketModal(newVal) {
       // prevent background scrolling while modal is open
-      document.body.style.overflow = newVal ? 'hidden' : ''
+      document.body.style.overflow = newVal ? 'hidden' : '';
       if (newVal) {
         // focus textarea next tick
         nextTick(() => {
-          const el = this.$refs.responseBox
-          if (el && el.focus) el.focus()
-        })
+          const el = this.$refs.responseBox;
+          if (el && el.focus) el.focus();
+        });
       }
-    }
+    },
   },
   beforeUnmount() {
-    window.removeEventListener('resize', this.checkMobile)
-    window.removeEventListener('keydown', this.onKeydown)
+    window.removeEventListener('resize', this.checkMobile);
+    window.removeEventListener('keydown', this.onKeydown);
     // ensure body scroll is restored
-    document.body.style.overflow = ''
-  }
-}
+    document.body.style.overflow = '';
+  },
+};
 </script>
 
 <style scoped>
@@ -521,7 +576,9 @@ export default {
 /* Modal animation */
 .modal-fade-enter-active,
 .modal-fade-leave-active {
-  transition: opacity 200ms ease, transform 200ms ease;
+  transition:
+    opacity 200ms ease,
+    transform 200ms ease;
 }
 .modal-fade-enter-from,
 .modal-fade-leave-to {
@@ -529,4 +586,3 @@ export default {
   transform: translateY(8px) scale(0.995);
 }
 </style>
-

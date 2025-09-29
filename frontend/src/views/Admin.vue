@@ -14,7 +14,9 @@
       </div>
 
       <!-- Total FDs Card -->
-      <div class="bg-gradient-to-r from-green-50 to-green-100 p-4 rounded-lg border border-green-200 hover:shadow-sm transition-shadow">
+      <div
+        class="bg-gradient-to-r from-green-50 to-green-100 p-4 rounded-lg border border-green-200 hover:shadow-sm transition-shadow"
+      >
         <div class="flex items-center justify-between">
           <h3 class="text-sm font-medium text-green-700">Total FDs</h3>
           <div class="w-8 h-8 bg-green-200 rounded-lg flex items-center justify-center">
@@ -48,7 +50,6 @@
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-
       <TicketsPieChart :open="openTickets" :closed="totalTickets - openTickets" />
 
       <!--Quick Actions -->
@@ -59,7 +60,9 @@
           to="/admin/fds"
           class="flex items-center h-[120px] p-4 border border-blue-200 rounded-lg hover:bg-blue-50 transition-colors group"
         >
-          <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mr-4 group-hover:bg-blue-200 transition-colors">
+          <div
+            class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mr-4 group-hover:bg-blue-200 transition-colors"
+          >
             <Building class="w-6 h-6 text-blue-500" />
           </div>
           <div>
@@ -74,7 +77,9 @@
           to="/admin/tickets"
           class="flex items-center h-[120px] p-4 border border-green-200 rounded-lg hover:bg-green-50 transition-colors group"
         >
-          <div class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mr-4 group-hover:bg-green-200 transition-colors">
+          <div
+            class="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mr-4 group-hover:bg-green-200 transition-colors"
+          >
             <HelpCircle class="w-6 h-6 text-green-500" />
           </div>
           <div>
@@ -86,81 +91,88 @@
       </div>
     </div>
   </div>
-
 </template>
 
 <script>
-import { MenuIcon, Users, Building, Inbox, HelpCircle, ChevronRight, BarChart2 } from 'lucide-vue-next'
-import { mapGetters, mapActions } from 'vuex'
-import TicketsPieChart from '../components/TicketsPieChart.vue'
+import {
+  MenuIcon,
+  Users,
+  Building,
+  Inbox,
+  HelpCircle,
+  ChevronRight,
+  BarChart2,
+} from 'lucide-vue-next';
+import { mapGetters, mapActions } from 'vuex';
+import TicketsPieChart from '../components/TicketsPieChart.vue';
 
 export default {
   name: 'Admin',
   components: {
-    MenuIcon, 
-    Users, 
-    Building, 
+    MenuIcon,
+    Users,
+    Building,
     Inbox,
-    HelpCircle, 
-    ChevronRight, 
-    TicketsPieChart
+    HelpCircle,
+    ChevronRight,
+    TicketsPieChart,
   },
   data() {
     return {
       sidebarCollapsed: false,
       isMobile: false,
-    }
+    };
   },
   computed: {
     ...mapGetters(['getDashboardInfo']),
     totalUsers() {
-      return this.getDashboardInfo.totalUsers || 0
+      return this.getDashboardInfo.totalUsers || 0;
     },
     totalFDs() {
-      return this.getDashboardInfo.totalFDs || 0
+      return this.getDashboardInfo.totalFDs || 0;
     },
     totalTickets() {
-      return this.getDashboardInfo.totalTickets || 0
+      return this.getDashboardInfo.totalTickets || 0;
     },
     openTickets() {
-      return this.getDashboardInfo.totalOpenTickets || 0
+      return this.getDashboardInfo.totalOpenTickets || 0;
     },
     mainContentClasses() {
       if (this.isMobile) {
-        return 'ml-0'
+        return 'ml-0';
       }
-      return this.sidebarCollapsed ? 'md:ml-30' : 'md:ml-65'
-    }
+      return this.sidebarCollapsed ? 'md:ml-30' : 'md:ml-65';
+    },
   },
   methods: {
     ...mapActions(['logout']),
     handleToggleSidebar() {
       if (this.$refs.sidebar) {
-        this.$refs.sidebar.toggleSidebar()
+        this.$refs.sidebar.toggleSidebar();
       }
     },
     handleSidebarToggle(collapsed) {
-      this.sidebarCollapsed = collapsed
+      this.sidebarCollapsed = collapsed;
     },
     checkMobile() {
-      this.isMobile = window.innerWidth < 768
+      this.isMobile = window.innerWidth < 768;
     },
     async logout() {
       try {
-        await this.logout()
-        this.$router.push('/login')
+        await this.logout();
+        this.$router.push('/login');
       } catch (error) {
-        console.error('Logout error:', error)
+        console.error('Logout error:', error);
       }
-    }
+    },
   },
   mounted() {
-    this.checkMobile()
-    window.addEventListener('resize', this.checkMobile)
-    this.$store.dispatch('fetchDashboardInfo')
+    this.checkMobile();
+    window.addEventListener('resize', this.checkMobile);
+    this.$store.dispatch('fetchDashboardInfo');
   },
   beforeUnmount() {
-    window.removeEventListener('resize', this.checkMobile)
-  }
-}
+    window.removeEventListener('resize', this.checkMobile);
+  },
+};
 </script>
