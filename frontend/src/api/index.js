@@ -26,7 +26,7 @@ const toast = useToast();
 axios.interceptors.response.use(
   response => response,
   error => {
-    if (error.response && error.response.status === 401) {
+    if (error.response && error.status === 401) {
       toast.error('Your session has expired. Please login again.');
       store.dispatch('logout');
       router.push('/');

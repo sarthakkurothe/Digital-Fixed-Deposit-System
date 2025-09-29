@@ -2,7 +2,9 @@ package com.fdsystem.backend.config;
 
 import com.fdsystem.backend.util.jwt.AuthTokenFilter;
 import com.fdsystem.backend.util.jwt.JWTAuthEntryPoint;
+import com.fdsystem.backend.util.jwt.JWTUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,6 +25,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -32,12 +35,22 @@ import java.util.List;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
+
+  @Autowired
+  @Qualifier("handlerExceptionResolver")
+  private HandlerExceptionResolver handlerExceptionResolver;
+
+  @Bean
+  public JWTUtils jwtUtils(){
+    return new JWTUtils();
+  }
+
   @Autowired
   private JWTAuthEntryPoint unAuthEntryPoint;
 
   @Bean
   public AuthTokenFilter authenticationJwtTokenFilter(){
-    return new AuthTokenFilter();  //step 3
+    return new AuthTokenFilter(handlerExceptionResolver) ;  //step 3
   }
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {

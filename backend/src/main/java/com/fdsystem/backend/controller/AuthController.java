@@ -12,6 +12,7 @@ import com.fdsystem.backend.service.FixedDepositService;
 import com.fdsystem.backend.service.UserService;
 import com.fdsystem.backend.entity.enums.Role;
 import com.fdsystem.backend.util.jwt.JWTUtils;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -33,6 +34,7 @@ import java.util.Map;
 
 // rename this file to AuthController
 
+@Slf4j
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
@@ -53,11 +55,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
-
-        System.out.println(userService.isUserExists(loginRequest.getEmail()));
-        if(!userService.isUserExists(loginRequest.getEmail())){
-            throw new UsernameNotFoundException("User Not Found");
-        }
+        log.info("Infol........ ");
         Authentication authentication;
         try{
             authentication = authenticationManager
@@ -92,6 +90,8 @@ public class AuthController {
         user.setCreated_at(new Timestamp(System.currentTimeMillis()));
         userService.addUser(user);
 
+        System.out.println(user);
+
         return new ResponseEntity<>("User added successfully!", HttpStatus.CREATED);
     }
 
@@ -110,8 +110,4 @@ public class AuthController {
 
         return new ResponseEntity<>(userDTO, HttpStatus.ACCEPTED);
     }
-
-
-
-
 }

@@ -1,12 +1,14 @@
 package com.fdsystem.backend.util.jwt;
 
 
+import com.fdsystem.backend.exception.TokenExpiredException;
 import com.fdsystem.backend.service.UserDetailsServiceImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
+import org.antlr.v4.runtime.Token;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -14,17 +16,22 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import java.io.IOException;
 
 @Slf4j
-@Component
 public class AuthTokenFilter extends OncePerRequestFilter {
   @Autowired
   private JWTUtils jwtUtil;
 
+  private HandlerExceptionResolver exceptionResolver;
   @Autowired
   private UserDetailsServiceImpl userDetailsService;
+
+  public AuthTokenFilter(HandlerExceptionResolver exceptionResolver){
+    this.exceptionResolver = exceptionResolver;
+  }
 
 
   @Override
@@ -32,6 +39,8 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     try{
 
       String jwt = this.jwtUtil.getJwtFromHeader(request);
+
+      log.info("jwt token {}",jwt);
 
 
       if(jwt != null && jwtUtil.isValidJwtToken(jwt) ){
@@ -49,10 +58,11 @@ public class AuthTokenFilter extends OncePerRequestFilter {
         SecurityContextHolder.getContext().setAuthentication(authentication);
       }
 
-    }catch(Exception e){
-      log.error("Error in the finding the bearer {}",e.getMessage());
+    }catch(Exception e) {
+      log.error("Error in the finding the bearer {}", e.getMessage());
+      exceptionResolver.resolveException(request, response, null, e);
+      return;
     }
-
     filterChain.doFilter(request,response);
   }
 }

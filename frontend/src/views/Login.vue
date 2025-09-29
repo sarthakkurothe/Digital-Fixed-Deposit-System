@@ -164,13 +164,13 @@ export default {
           } else {
             this.$router.push('/user/dashboard');
           }
-        } else if (res.data.status === 404) {
-          this.error = 'User not found. Please check your email or password';
-        } else {
+        } 
+        else {
           this.error = 'Login failed. Please try again.';
         }
       } catch (err) {
-        if (err?.response?.status == 404) {
+        console.log(err);
+        if (err?.status == 404) {
           this.error = 'User not found. Please check your email or password';
         } else {
           this.error = 'Login failed. Please try again.';
