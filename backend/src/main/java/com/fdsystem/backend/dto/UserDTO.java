@@ -3,6 +3,8 @@ package com.fdsystem.backend.dto;
 import com.fdsystem.backend.entity.enums.Role;
 import lombok.Data;
 
+import java.util.Date;
+
 
 @Data
 public class UserDTO {

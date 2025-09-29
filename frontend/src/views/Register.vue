@@ -51,7 +51,7 @@
             <!-- Date of Birth -->
             <div>
               <input
-                v-model="dob"
+                v-model="dateOfBirth"
                 type="date"
                 placeholder="Date of Birth"
                 required
@@ -59,7 +59,7 @@
                 :max="maxDate"
                 :min="minDate"
               />
-              <p v-if="errors.dob" class="text-xs text-red-600 mt-1">{{ errors.dob }}</p>
+              <p v-if="errors.dateOfBirth" class="text-xs text-red-600 mt-1">{{ errors.dateOfBirth }}</p>
             </div>
 
             <!-- Password -->
@@ -156,13 +156,14 @@ export default {
     return {
       name: '',
       email: '',
-      dob: '',
+      dateOfBirth: '',
       password: '',
       confirmPassword: '',
       loading: false,
       successMessage: '',
       showPassword: false,
       showConfirmPassword: false,
+      suppressValidation: false, // 🚀 new flag
       errors: {
         name: '',
         email: '',
@@ -176,9 +177,11 @@ export default {
   },
   watch: {
     name(newName) {
+      if (this.suppressValidation) return; // 🚀 skip after success
       this.errors.name = newName ? '' : 'Name cannot be empty';
     },
     email(newEmail) {
+      if (this.suppressValidation) return;
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       this.errors.email = !newEmail
         ? 'Email cannot be empty'
@@ -186,25 +189,8 @@ export default {
         ? 'Invalid email address'
         : '';
     },
-    dob(newDob) {
-      if (!newDob) {
-        this.errors.dob = 'Date of Birth cannot be empty';
-      } else {
-        const today = new Date();
-        const dobDate = new Date(newDob);
-        let age = today.getFullYear() - dobDate.getFullYear();
-        const m = today.getMonth() - dobDate.getMonth();
-        if (m < 0 || (m === 0 && today.getDate() < dobDate.getDate())) {
-          age--;
-        }
-        if (age < 18 || age > 100) {
-          this.errors.dob = 'Age must be between 18 and 100';
-        } else {
-          this.errors.dob = '';
-        }
-      }
-    },
     password(newPassword) {
+      if (this.suppressValidation) return;
       const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
       if (!newPassword) {
         this.errors.password = 'Password cannot be empty';
@@ -222,12 +208,25 @@ export default {
       }
     },
     confirmPassword(newConfirm) {
+      if (this.suppressValidation) return;
       this.errors.confirmPassword =
         newConfirm && newConfirm !== this.password ? 'Passwords do not match' : '';
     },
   },
   methods: {
     ...mapActions(['register']),
+    resetForm() {
+      this.suppressValidation = true; // 🚀 disable validation
+      this.name = '';
+      this.email = '';
+      this.dateOfBirth = '';
+      this.password = '';
+      this.confirmPassword = '';
+      this.errors = { name: '', email: '', dateOfBirth: '', password: '', confirmPassword: '' };
+      this.$nextTick(() => {
+        this.suppressValidation = false; 
+      });
+    },
     async handleRegister() {
       const hasErrors = Object.values(this.errors).some((err) => err);
       if (hasErrors) return;
@@ -235,18 +234,24 @@ export default {
       this.loading = true;
       this.successMessage = '';
       try {
+
+        console.log('Registering user with:', {
+          name: this.name,
+          email: this.email,
+          dateOfBirth: this.dateOfBirth,
+          password: this.password,
+        });
         const res = await this.register({
           name: this.name,
           email: this.email,
-          dob: this.dob,
+          dateOfBirth: this.dateOfBirth,
           password: this.password,
         });
 
         if (res.status === 201) {
           this.successMessage = 'Registration successful! 🎉 Redirecting to login in 3 seconds...';
 
-          this.name = this.email = this.dob = this.password = this.confirmPassword = '';
-          this.errors = { name: '', email: '', dob: '', password: '', confirmPassword: '' };
+          this.resetForm(); // ✅ clear safely without triggering watchers
 
           let countdown = 3;
           const timer = setInterval(() => {

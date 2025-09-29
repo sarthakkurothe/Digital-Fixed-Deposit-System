@@ -193,47 +193,45 @@
       </div>
     </div>
 
-    <!-- Ticket Details Modal (improved: header fixed, body scrollable, footer visible; prevents page scroll) -->
     <transition name="modal-fade" appear>
       <div
         v-if="showTicketModal"
-        class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4"
+        class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm px-4"
         role="dialog"
         aria-modal="true"
+        aria-label="Ticket details"
         @click.self="closeModal"
       >
-        <!-- modal card (flex column) -->
         <div
-          class="relative w-full max-w-3xl bg-white rounded-lg shadow-xl overflow-hidden flex flex-col"
-          style="max-height: 90vh"
-          aria-label="Ticket details"
+          class="w-full max-w-3xl bg-white rounded-xl shadow-2xl overflow-hidden flex flex-col"
+          style="max-height: 90vh;"
         >
-          <!-- header (fixed height) -->
-          <div
-            class="flex items-start justify-between gap-4 p-6 border-b border-gray-100 flex-shrink-0"
-          >
+          <!-- Header -->
+          <header class="flex items-start justify-between gap-4 p-5 border-b border-gray-100 flex-shrink-0">
             <div class="min-w-0">
               <h3 class="text-lg font-bold text-gray-900 truncate">
                 Ticket Details - #{{ selectedTicket?.id ?? '—' }}
               </h3>
               <p class="text-sm text-gray-500 mt-1 truncate">{{ selectedTicket?.subject ?? '' }}</p>
             </div>
+
             <div class="flex items-center gap-2">
               <button
                 @click="closeModal"
-                class="text-gray-400 hover:text-gray-600 p-2 rounded cursor-pointer"
-                aria-label="Close"
+                class="p-2 rounded hover:bg-gray-100 text-gray-600 cursor-pointer"
+                aria-label="Close ticket details"
+                type="button"
               >
-                <X class="w-6 h-6" />
+                <X class="w-5 h-5" />
               </button>
             </div>
-          </div>
+          </header>
 
-          <!-- body (scrollable) -->
-          <div class="p-6 space-y-6 overflow-y-auto" style="flex: 1 1 auto">
+          <!-- Body-->
+          <div class="p-6 space-y-6 overflow-y-auto" style="flex: 1 1 auto;">
             <div v-if="selectedTicket" class="space-y-6">
               <!-- Ticket Information -->
-              <div class="bg-gray-50 p-4 rounded-lg">
+              <section class="bg-gray-50 p-4 rounded-lg">
                 <h4 class="font-semibold text-gray-900 mb-3">Ticket Information</h4>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                   <div>
@@ -250,22 +248,19 @@
                   </div>
                   <div>
                     <p class="text-gray-500">Status:</p>
-                    <span
-                      class="px-2 py-1 text-xs rounded-full"
-                      :class="getStatusClass(selectedTicket.status)"
-                    >
+                    <span class="px-2 py-1 text-xs rounded-full" :class="getStatusClass(selectedTicket.status)">
                       {{ selectedTicket.status }}
                     </span>
                   </div>
                   <div class="md:col-span-2">
                     <p class="text-gray-500">Description:</p>
-                    <p class="font-medium">{{ selectedTicket.description }}</p>
+                    <p class="font-medium whitespace-pre-wrap">{{ selectedTicket.description }}</p>
                   </div>
                 </div>
-              </div>
+              </section>
 
               <!-- FD Details (if applicable) -->
-              <div v-if="selectedTicket.fd?.id" class="bg-blue-50 p-4 rounded-lg">
+              <section v-if="selectedTicket.fd?.id" class="bg-blue-50 p-4 rounded-lg">
                 <h4 class="font-semibold text-gray-900 mb-3">Fixed Deposit Details</h4>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                   <div>
@@ -285,66 +280,137 @@
                     <p class="font-medium">{{ selectedTicket.fd.status }}</p>
                   </div>
                 </div>
-                <div class="mt-4" v-if="selectedTicket.fd.status !== 'BROKEN'">
+
+                <div class="mt-4 flex flex-wrap gap-3">
                   <button
                     @click="breakFD(selectedTicket.fd.id)"
-                    :disabled="selectedTicket.fd.status !== 'PENDING'"
+                    :disabled="!(selectedTicket.fd.status === 'PENDING' || selectedTicket.fd.status === 'ACTIVE')"
                     :class="[
                       'px-4 py-2 rounded-lg font-bold transition-colors',
-                      selectedTicket.fd.status === 'PENDING'
+                      (selectedTicket.fd.status === 'PENDING' || selectedTicket.fd.status === 'ACTIVE')
                         ? 'bg-red-600 text-white hover:bg-red-700 cursor-pointer'
-                        : 'bg-red-400 text-white opacity-70 cursor-not-allowed',
+                        : 'bg-red-400 text-white opacity-70 cursor-not-allowed'
                     ]"
+                    type="button"
                   >
-                    Break FD
+                    Break Fixed Deposit
+                  </button>
+
+                  <button
+                    @click="ActiveFD(selectedTicket.fd.id)"
+                    :disabled="selectedTicket.fd.status !== 'BROKEN'"
+                    :class="[
+                      'px-4 py-2 rounded-lg font-bold transition-colors',
+                      selectedTicket.fd.status === 'BROKEN'
+                        ? 'bg-green-600 text-white hover:bg-green-700 cursor-pointer'
+                        : 'bg-green-400 text-white opacity-70 cursor-not-allowed'
+                    ]"
+                    type="button"
+                  >
+                    Activate Fixed Deposit
                   </button>
                 </div>
-              </div>
+              </section>
 
               <!-- Admin Response -->
-              <div class="bg-green-50 p-4 rounded-lg">
+              <section class="bg-green-50 p-4 rounded-lg">
                 <h4 class="font-semibold text-gray-900 mb-3">Admin Response</h4>
                 <textarea
                   ref="responseBox"
                   v-model="responseText"
                   rows="6"
-                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 min-h-[140px]"
                   placeholder="Enter your response to the customer..."
+                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 min-h-[140px] resize-vertical"
                 ></textarea>
-              </div>
+              </section>
             </div>
 
             <div v-else class="text-center text-gray-500 py-12">Loading ticket details...</div>
           </div>
 
-          <!-- footer (fixed, visible) -->
-          <div
-            class="p-4 border-t border-gray-100 flex items-center justify-end gap-3 flex-shrink-0 bg-white"
-          >
+          <!-- Footer (fixed) -->
+          <footer class="p-4 border-t border-gray-100 flex items-center justify-end gap-3 flex-shrink-0 bg-white">
             <button
               @click="closeModal"
               class="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer font-bold"
+              type="button"
             >
               Cancel
             </button>
+
             <button
               @click="closeTicket"
               :disabled="!responseText.trim()"
               class="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors cursor-pointer font-bold"
+              type="button"
             >
               Close Ticket
             </button>
-          </div>
+          </footer>
         </div>
       </div>
     </transition>
+
+    <!-- Confirm Action Modal -->
+<transition name="modal-fade" appear>
+  <div
+    v-if="showConfirmModal"
+    class="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm px-4"
+    @click.self="cancelConfirm"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Confirm action"
+  >
+    <div class="w-full max-w-sm bg-white rounded-xl shadow-2xl overflow-hidden">
+      <!-- Header -->
+      <div class="flex items-center justify-between p-5 border-b border-gray-100">
+        <h4 class="text-lg font-bold text-gray-900">Confirm Action</h4>
+        <button
+          @click="cancelConfirm"
+          class="p-2 rounded hover:bg-gray-100 text-gray-600 cursor-pointer"
+          aria-label="Close confirm modal"
+          type="button"
+        >
+          <X class="w-5 h-5" />
+        </button>
+      </div>
+
+      <!-- Body -->
+      <div class="p-6 flex flex-col items-center text-center space-y-4">
+        <div class="w-12 h-12 flex items-center justify-center rounded-full bg-red-100">
+          <CircleAlert class="w-7 h-7 text-red-600" />
+        </div>
+        <p class="text-gray-700">{{ confirmMessage }}</p>
+      </div>
+
+      <!-- Footer -->
+      <div class="flex justify-end gap-3 px-6 py-4 bg-gray-50 border-t border-gray-100">
+        <button
+          @click="cancelConfirm"
+          class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 font-medium cursor-pointer"
+          type="button"
+        >
+          Cancel
+        </button>
+        <button
+          @click="confirmProceed"
+          class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 font-bold cursor-pointer"
+          type="button"
+        >
+          Confirm
+        </button>
+      </div>
+    </div>
+  </div>
+</transition>
+
   </div>
 </template>
 
 <script>
 import AdminSidebar from '../components/AdminSidebar.vue';
-import { MenuIcon, Download, X } from 'lucide-vue-next';
-import { mapGetters, mapActions } from 'vuex';
+import { MenuIcon, Download, X, CircleAlert } from 'lucide-vue-next';
+import { mapActions } from 'vuex';
 import Navbar from '../components/Navbar.vue';
 import axios from '../api';
 import { nextTick } from 'vue';
@@ -357,6 +423,7 @@ export default {
     MenuIcon,
     Download,
     X,
+    CircleAlert,
     Navbar,
   },
   data() {
@@ -374,6 +441,9 @@ export default {
       showTicketModal: false,
       selectedTicket: null,
       responseText: '',
+      showConfirmModal: false,
+      confirmAction: null,
+      confirmMessage: '',
     };
   },
   computed: {
@@ -420,7 +490,9 @@ export default {
     },
   },
   methods: {
-    ...mapActions(['logout']),
+    // map Vuex logout action to logoutAction so local logout method can call it safely
+    ...mapActions({ logoutAction: 'logout' }),
+
     handleToggleSidebar() {
       if (this.$refs.sidebar) this.$refs.sidebar.toggleSidebar();
     },
@@ -448,6 +520,7 @@ export default {
       };
       return classes[priority] || 'bg-gray-100 text-gray-800';
     },
+
     replyToTicket(ticket) {
       this.selectedTicket = ticket;
       this.responseText = '';
@@ -464,17 +537,47 @@ export default {
     nextPage() {
       if (this.currentPage * this.pageSize < this.filteredTickets.length) this.currentPage++;
     },
-    async breakFD(fdId) {
-      try {
-        const res = await axios.put(`/admin/fd/${fdId}`, { status: 'BROKEN' });
-        if (this.selectedTicket) {
-          this.selectedTicket.fd.status = 'BROKEN';
-        }
-        this.toast.success('FD has been broken successfully');
-      } catch (error) {
-        this.toast.error('Failed to break FD: ' + (error.response?.data?.message || error.message));
-      }
+
+    askConfirmation(message, actionFn) {
+      this.confirmMessage = message;
+      this.confirmAction = actionFn;
+      this.showConfirmModal = true;
     },
+    async confirmProceed() {
+      if (this.confirmAction) await this.confirmAction();
+      this.showConfirmModal = false;
+    },
+    cancelConfirm() {
+      this.showConfirmModal = false;
+      this.confirmAction = null;
+    },
+
+    breakFD(fdId) {
+      this.askConfirmation('Are you sure you want to break this FD?', async () => {
+        try {
+          await axios.put(`/admin/fd/${fdId}`, { status: 'BROKEN' });
+          if (this.selectedTicket) this.selectedTicket.fd.status = 'BROKEN';
+          this.toast.success('FD has been broken successfully');
+        } catch (error) {
+          this.toast.error('Failed to break FD: ' + (error.response?.data?.message || error.message));
+        }
+      });
+    },
+
+    ActiveFD(fdId) {
+      this.askConfirmation('Activate this FD again?', async () => {
+        try {
+          await axios.put(`/admin/fd/${fdId}`, { status: 'ACTIVE' });
+          if (this.selectedTicket) this.selectedTicket.fd.status = 'ACTIVE';
+          this.toast.success('FD has been activated successfully');
+        } catch (error) {
+          this.toast.error(
+            'Failed to activate FD: ' + (error.response?.data?.message || error.message)
+          );
+        }
+      });
+    },
+
     async closeTicket() {
       if (!this.responseText.trim()) {
         this.toast.error('Please enter a response before closing the ticket');
@@ -482,7 +585,7 @@ export default {
       }
 
       try {
-        const response = await axios.post(
+        await axios.post(
           `/admin/tickets/${this.selectedTicket.id}`,
           this.responseText,
           {
@@ -506,14 +609,17 @@ export default {
         );
       }
     },
+
+    // wrapper logout to call mapped action
     async logout() {
       try {
-        await this.logout();
+        await this.logoutAction();
         this.$router.push('/login');
       } catch (error) {
         this.toast.error('Logout error');
       }
     },
+
     /* keyboard handler for ESC to close modal */
     onKeydown(e) {
       if (e.key === 'Escape' && this.showTicketModal) this.closeModal();
@@ -524,19 +630,20 @@ export default {
     window.addEventListener('resize', this.checkMobile);
     window.addEventListener('keydown', this.onKeydown);
 
+    // fetch FDs
     try {
       const res = await axios.get('/fd/fds');
       this.allFds = res.data;
     } catch (error) {
-      // no console logs by request
+      // intentionally silent (no console logs)
     }
 
-    // Fetch support tickets data
+    // fetch support tickets
     try {
       const res = await axios.get('/admin/tickets');
       this.allSupportTickets = res.data;
     } catch (error) {
-      // no console logs by request
+      // intentionally silent
     }
 
     // initialize toast
