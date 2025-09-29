@@ -288,15 +288,29 @@
                 <div class="mt-4" v-if="selectedTicket.fd.status !== 'BROKEN'">
                   <button
                     @click="breakFD(selectedTicket.fd.id)"
-                    :disabled="selectedTicket.fd.status !== 'PENDING'"
+                    :disabled="selectedTicket.fd.status !== 'PENDING' && selectedTicket.fd.status !== 'ACTIVE'"
                     :class="[
                       'px-4 py-2 rounded-lg font-bold transition-colors',
-                      selectedTicket.fd.status === 'PENDING'
+                      selectedTicket.fd.status === 'PENDING' || selectedTicket.fd.status === 'ACTIVE'
                         ? 'bg-red-600 text-white hover:bg-red-700 cursor-pointer'
                         : 'bg-red-400 text-white opacity-70 cursor-not-allowed',
                     ]"
                   >
                     Break FD
+                  </button>
+                </div>
+                <div class="mt-4" v-if="selectedTicket.fd.status === 'BROKEN'">
+                  <button
+                    @click="ActiveFD(selectedTicket.fd.id)"
+                    :disabled="selectedTicket.fd.status !== 'BROKEN'"
+                    :class="[
+                      'px-4 py-2 rounded-lg font-bold transition-colors',
+                      selectedTicket.fd.status === 'BROKEN'
+                        ? 'bg-green-600 text-white hover:bg-green-700 cursor-pointer'
+                        : 'bg-green-400 text-white opacity-70 cursor-not-allowed',
+                    ]"
+                  >
+                    Active FD
                   </button>
                 </div>
               </div>
@@ -338,6 +352,33 @@
         </div>
       </div>
     </transition>
+    <transition name="modal-fade">
+  <div
+    v-if="showConfirmModal"
+    class="fixed inset-0 z-60 flex items-center justify-center bg-black/50 px-4"
+    @click.self="cancelConfirm"
+  >
+    <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-sm">
+      <h3 class="text-lg font-semibold text-gray-900 mb-4">Confirm Action</h3>
+      <p class="text-gray-700 mb-6">{{ confirmMessage }}</p>
+      <div class="flex justify-end space-x-3">
+        <button
+          @click="cancelConfirm"
+          class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 font-medium"
+        >
+          Cancel
+        </button>
+        <button
+          @click="confirmProceed"
+          class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 font-bold"
+        >
+          Yes
+        </button>
+      </div>
+    </div>
+  </div>
+</transition>
+
   </div>
 </template>
 
@@ -374,6 +415,9 @@ export default {
       showTicketModal: false,
       selectedTicket: null,
       responseText: '',
+      showConfirmModal: false,
+      confirmAction: null,
+      confirmMessage: '',
     };
   },
   computed: {
@@ -464,17 +508,47 @@ export default {
     nextPage() {
       if (this.currentPage * this.pageSize < this.filteredTickets.length) this.currentPage++;
     },
-    async breakFD(fdId) {
-      try {
-        const res = await axios.put(`/admin/fd/${fdId}`, { status: 'BROKEN' });
-        if (this.selectedTicket) {
-          this.selectedTicket.fd.status = 'BROKEN';
-        }
-        this.toast.success('FD has been broken successfully');
-      } catch (error) {
-        this.toast.error('Failed to break FD: ' + (error.response?.data?.message || error.message));
-      }
+    
+
+    askConfirmation(message, actionFn) {
+      this.confirmMessage = message;
+      this.confirmAction = actionFn;
+      this.showConfirmModal = true;
     },
+    async confirmProceed() {
+      if (this.confirmAction) await this.confirmAction();
+      this.showConfirmModal = false;
+    },
+    cancelConfirm() {
+      this.showConfirmModal = false;
+      this.confirmAction = null;
+    },
+
+    breakFD(fdId) {
+      this.askConfirmation('Are you sure you want to break this FD?', async () => {
+        try {
+          const res = await axios.put(`/admin/fd/${fdId}`, { status: 'BROKEN' });
+          if (this.selectedTicket) this.selectedTicket.fd.status = 'BROKEN';
+          this.toast.success('FD has been broken successfully');
+        } catch (error) {
+          this.toast.error('Failed to break FD: ' + (error.response?.data?.message || error.message));
+        }
+      });
+    },
+    ActiveFD(fdId) {
+      this.askConfirmation('Activate this FD again?', async () => {
+        try {
+          const res = await axios.put(`/admin/fd/${fdId}`, { status: 'ACTIVE' });
+          if (this.selectedTicket) this.selectedTicket.fd.status = 'ACTIVE';
+          this.toast.success('FD has been activated successfully');
+        } catch (error) {
+          this.toast.error(
+            'Failed to activate FD: ' + (error.response?.data?.message || error.message)
+          );
+        }
+      });
+    },
+
     async closeTicket() {
       if (!this.responseText.trim()) {
         this.toast.error('Please enter a response before closing the ticket');
