@@ -36,6 +36,7 @@ describe('BreakFD.vue', () => {
     mockDispatch.mockReset();
     mockToast.success.mockReset();
     mockToast.error.mockReset();
+    vi.spyOn(console, 'error').mockImplementation(() => {});
   });
 
   it('renders loading state initially', async () => {
@@ -73,13 +74,28 @@ describe('BreakFD.vue', () => {
     expect(mockToast.error).toHaveBeenCalledWith('Server error');
   });
 
-  it('emits fdBroken on confirmBreakFD', async () => {
+  it('opens confirmation dialog on Confirm Break click', async () => {
     mockDispatch.mockResolvedValueOnce(previewMock);
     const wrapper = mount(BreakFD, { props: { fdId: 1 } });
-    await new Promise(resolve => setTimeout(resolve));
+    await new Promise(resolve => setTimeout(resolve)); // wait for preview to load
     const confirmBtn = wrapper.findAll('button').find(btn => btn.text() === 'Confirm Break');
     expect(confirmBtn).toBeDefined();
     await confirmBtn.trigger('click');
+    await wrapper.vm.$nextTick(); // wait for dialog to render
+    expect(wrapper.text()).toContain('Confirm Break Fixed Deposit');
+  });
+
+  it('emits fdBroken when confirm button is clicked', async () => {
+    mockDispatch.mockResolvedValueOnce(previewMock);
+    const wrapper = mount(BreakFD, { props: { fdId: 1 } });
+    await new Promise(resolve => setTimeout(resolve)); // wait for preview to load
+    const confirmBtn = wrapper.findAll('button').find(btn => btn.text() === 'Confirm Break');
+    expect(confirmBtn).toBeDefined();
+    await confirmBtn.trigger('click');
+    await wrapper.vm.$nextTick(); // wait for dialog to appear
+    const yesBtn = wrapper.findAll('button').find(btn => btn.text() === 'Yes, Break FD');
+    expect(yesBtn).toBeDefined();
+    await yesBtn.trigger('click');
     expect(wrapper.emitted()).toHaveProperty('fdBroken');
   });
 
@@ -93,3 +109,4 @@ describe('BreakFD.vue', () => {
     expect(wrapper.emitted()).toHaveProperty('close');
   });
 });
+
