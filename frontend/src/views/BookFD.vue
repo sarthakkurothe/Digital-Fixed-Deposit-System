@@ -81,15 +81,15 @@
 
             <div class="flex">
               <button
-                @click="bookFD"
-                :disabled="isBookDisabled"
-                class="w-full bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg h-14 flex items-center justify-center cursor-pointer"
-              >
-                <div class="flex items-center justify-center">
-                  <span v-if="loading" class="loader mr-2"></span>
-                  <CirclePlus class="mr-2" />
-                  {{ loading ? 'Booking...' : 'Book Fixed Deposit' }}
-                </div>
+                  @click="openConfirmModal"
+                  :disabled="isBookDisabled"
+                  class="w-full bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg h-14 flex items-center justify-center cursor-pointer"
+                >
+                  <div class="flex items-center justify-center">
+                    <span v-if="loading" class="loader mr-2"></span>
+                    <CirclePlus class="mr-2" />
+                    {{ loading ? 'Booking...' : 'Book Fixed Deposit' }}
+                  </div>
               </button>
             </div>
           </div>
@@ -230,6 +230,57 @@
         </div>
       </div>
     </div>
+
+        <!-- Confirmation Modal -->
+      <div
+        v-if="showConfirmModal"
+        class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+      >
+        <div class="bg-white rounded-lg shadow-lg w-full max-w-md p-6">
+          <h2 class="text-xl font-bold text-gray-800 mb-4">Confirm Fixed Deposit</h2>
+          <div class="space-y-3 text-gray-700">
+            <div class="flex justify-between">
+              <span>Investment Amount:</span>
+              <span>₹{{ formatCurrency(amount) }}</span>
+            </div>
+            <div class="flex justify-between">
+              <span>Tenure:</span>
+              <span>{{ selectedScheme.tenureMonths }} months</span>
+            </div>
+            <div class="flex justify-between">
+              <span>Interest Rate:</span>
+              <span>{{ Number(effectiveRate).toFixed(1) }}% p.a.</span>
+            </div>
+            <div class="flex justify-between">
+              <span>Maturity Date:</span>
+              <span>{{ formattedMaturityDate }}</span>
+            </div>
+            <div class="flex justify-between">
+              <span>Expected Interest:</span>
+              <span>₹{{ formatCurrency(maturityInterest) }}</span>
+            </div>
+            <div class="flex justify-between font-semibold">
+              <span>Total Maturity Amount:</span>
+              <span>₹{{ formatCurrency(maturityAmount) }}</span>
+            </div>
+          </div>
+          <div class="mt-6 flex justify-end space-x-3">
+            <button
+              @click="closeConfirmModal"
+              class="px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-100"
+            >
+              Cancel
+            </button>
+            <button
+              @click="confirmBookFD"
+              class="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700"
+            >
+              Confirm
+            </button>
+          </div>
+        </div>
+      </div>
+
   </div>
 </template>
 
@@ -264,6 +315,7 @@ export default {
       loading: false,
       baseSchemes: STANDARD_FD_SCHEMES,
       amountError: '',
+      showConfirmModal: false,
     };
   },
   watch: {
@@ -339,6 +391,17 @@ export default {
     return { toast };
   },
   methods: {
+    openConfirmModal() {
+      if (this.isBookDisabled) return;
+      this.showConfirmModal = true;
+    },
+    closeConfirmModal() {
+      this.showConfirmModal = false;
+    },
+    async confirmBookFD() {
+      this.showConfirmModal = false;
+      await this.bookFD();
+    },
     formatCurrency(amount) {
       return FDCalculator.formatCurrency(amount);
     },

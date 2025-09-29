@@ -141,4 +141,70 @@ public class FixedDepositServiceTest {
         assertEquals(10500.0, response.getPayout(), "Payout should be amount + interest - penalty");
         assertEquals(6, response.getTimeElapsed(), "Months elapsed should be 6");
     }
+    @Test
+    void testGetAll_returnsAllFDs() {
+        FixedDeposit fd1 = new FixedDeposit();
+        fd1.setId(1L);
+        FixedDeposit fd2 = new FixedDeposit();
+        fd2.setId(2L);
+
+        when(fixedDepositRepository.findAll()).thenReturn(Arrays.asList(fd1, fd2));
+
+        List<FixedDeposit> result = fixedDepositService.getAll();
+
+        assertEquals(2, result.size());
+        assertEquals(1L, result.get(0).getId());
+        assertEquals(2L, result.get(1).getId());
+        verify(fixedDepositRepository, times(1)).findAll();
+    }
+
+    @Test
+    void testGetFdById_returnsCorrectFD() {
+        FixedDeposit fd = new FixedDeposit();
+        fd.setId(5L);
+        when(fixedDepositRepository.findById(5L)).thenReturn(Optional.of(fd));
+
+        FixedDeposit result = fixedDepositService.getFdById(5L);
+
+        assertNotNull(result);
+        assertEquals(5L, result.getId());
+        verify(fixedDepositRepository, times(1)).findById(5L);
+    }
+
+    @Test
+    void testGetAllFDs_convertsEntitiesToDtos() {
+        User user = new User();
+        user.setName("Lakshmi");
+        user.setEmail("lakshmi@example.com");
+
+        FixedDeposit fd = new FixedDeposit();
+        fd.setId(10L);
+        fd.setAmount(50000.0);
+        fd.setInterest_rate(6.5);
+        fd.setUser(user);
+        fd.setMaturity_date(Date.valueOf(LocalDate.now().plusMonths(12)));
+        fd.setStatus(FdStatus.ACTIVE);
+
+        when(fixedDepositRepository.findAll()).thenReturn(List.of(fd));
+
+        var dtos = fixedDepositService.getAllFDs();
+
+        assertEquals(1, dtos.size());
+        assertEquals(10L, dtos.get(0).getFdId());
+        assertEquals("Lakshmi", dtos.get(0).getName());
+        assertEquals("lakshmi@example.com", dtos.get(0).getEmail());
+        assertEquals("ACTIVE", dtos.get(0).getFdStatus());
+        verify(fixedDepositRepository, times(1)).findAll();
+    }
+
+    @Test
+    void testGetAllFdsCount_returnsCorrectCount() {
+        when(fixedDepositRepository.countTotalFds()).thenReturn(42L);
+
+        long result = fixedDepositService.getAllFdsCount();
+
+        assertEquals(42L, result);
+        verify(fixedDepositRepository, times(1)).countTotalFds();
+    }
+
 }
