@@ -82,7 +82,7 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody User user) {
         if(userService.isUserExists(user.getEmail())) {
-            return ResponseEntity.badRequest().body("Email is already taken");
+            return ResponseEntity.ok("User already exists!");
         }
         String hashed_password = passwordEncoder.encode(user.getPassword());
         user.setPassword(hashed_password);
