@@ -2,6 +2,7 @@ package com.fdsystem.backend.service;
 
 import com.fdsystem.backend.entity.FixedDeposit;
 import com.fdsystem.backend.entity.User;
+import com.fdsystem.backend.exception.InterestCalculationException;
 import com.fdsystem.backend.repository.FixedDepositRepository;
 import com.fdsystem.backend.repository.UserRepository;
 import com.fdsystem.backend.entity.enums.FdStatus;
@@ -41,6 +42,19 @@ public class AccruedInterestService {
             long monthsElapsed = ChronoUnit.MONTHS.between(startDate, now);
             if (monthsElapsed < 0) monthsElapsed = 0;
 
+            if (principal <= 0) {
+                throw new InterestCalculationException("Principal must be positive");
+            }
+            if (rate < 0) {
+                throw new InterestCalculationException("Interest rate must be non-negative");
+            }
+            if (tenureMonths <= 0) {
+                throw new InterestCalculationException("Tenure months must be positive");
+            }
+            if (monthsElapsed < 0) {
+                throw new InterestCalculationException("Elapsed months cannot be negative");
+            }
+
             // Decide how many months to consider
             int applicableMonths = (int) Math.min(monthsElapsed, tenureMonths);
 
@@ -51,18 +65,18 @@ public class AccruedInterestService {
             double maturityAmount = principal;
 
             switch (fd.getStatus()) {
-                // it is calculated only once , when FD is set to matured status taken from Case Active below
+//                It is calculated only once , when FD is set to matured status taken from Case Active below
 //                case MATURED:
-//                    //case 1: matured - pay interest for the full tenure (calculate full interest based in interest sceheme)
+//                      case 1: matured - pay interest for the full tenure (calculate full interest based in interest sceheme)
 //
 
 
                 // broken case is removed because we need to do it only once when user breaks the FD (FixedDepositService.setFixedDepositStatus)
 //                case BROKEN:
-//                    //case 2: broken before 3 months - no interest
-//                    //case 3: broken after 3 months but before maturity - simple interest for elapsed
-//                        // compound is actually compounded quaterly(4times) per year ,  based on scheme whose ternue is >= 24 months
-//                        // but if broken before 24 months, then only simple interest is paid for elapsed months
+//                      case 2: broken before 3 months - no interest
+//                      case 3: broken after 3 months but before maturity - simple interest for elapsed
+//                                   compound is actually compounded quaterly(4times) per year ,  based on scheme whose ternue is >= 24 months
+//                                   but if broken before 24 months, then only simple interest is paid for elapsed months
 //
 
                 case ACTIVE:
