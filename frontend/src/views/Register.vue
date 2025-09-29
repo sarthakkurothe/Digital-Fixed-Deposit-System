@@ -163,7 +163,7 @@ export default {
       successMessage: '',
       showPassword: false,
       showConfirmPassword: false,
-      suppressValidation: false, // 🚀 new flag
+      suppressValidation: false, 
       errors: {
         name: '',
         email: '',
@@ -177,7 +177,7 @@ export default {
   },
   watch: {
     name(newName) {
-      if (this.suppressValidation) return; // 🚀 skip after success
+      if (this.suppressValidation) return; 
       this.errors.name = newName ? '' : 'Name cannot be empty';
     },
     email(newEmail) {
@@ -216,7 +216,7 @@ export default {
   methods: {
     ...mapActions(['register']),
     resetForm() {
-      this.suppressValidation = true; // 🚀 disable validation
+      this.suppressValidation = true; 
       this.name = '';
       this.email = '';
       this.dateOfBirth = '';
@@ -251,7 +251,7 @@ export default {
         if (res.status === 201) {
           this.successMessage = 'Registration successful! 🎉 Redirecting to login in 3 seconds...';
 
-          this.resetForm(); // ✅ clear safely without triggering watchers
+          this.resetForm(); 
 
           let countdown = 3;
           const timer = setInterval(() => {
