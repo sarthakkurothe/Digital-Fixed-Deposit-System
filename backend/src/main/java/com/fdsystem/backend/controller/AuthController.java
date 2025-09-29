@@ -25,6 +25,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -102,7 +104,8 @@ public class AuthController {
         userDTO.setId(user.getId());
         userDTO.setRole(user.getRole());
         userDTO.setName(user.getName());
-        userDTO.setAge(user.getAge());
+        int age = Period.between(user.getDateOfBirth().toLocalDate(), LocalDate.now()).getYears();
+        userDTO.setAge(age);
         userDTO.setEmail(user.getEmail());
 
         return new ResponseEntity<>(userDTO, HttpStatus.ACCEPTED);

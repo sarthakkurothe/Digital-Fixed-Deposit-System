@@ -1,12 +1,15 @@
 package com.fdsystem.backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fdsystem.backend.entity.enums.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.sql.Date;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 
 @Entity
 @Data
@@ -21,7 +24,8 @@ public class User {
   @Column(unique = true, nullable = false)
   private String email;
   private String password;
-  private int age;
+  @JsonFormat(pattern = "yyyy-MM-dd")
+  private Date dateOfBirth;
   @Enumerated(EnumType.STRING)
   private Role role;
   private Timestamp created_at;

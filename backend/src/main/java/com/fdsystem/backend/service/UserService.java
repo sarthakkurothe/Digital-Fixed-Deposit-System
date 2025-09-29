@@ -17,7 +17,6 @@ public class UserService {
     public UserService(UserRepository userRepository){
       this.userRepository = userRepository;
     }
-
     public boolean addUser(User user){
       try {
         userRepository.save(user);
@@ -27,7 +26,6 @@ public class UserService {
       }
       return false;
     }
-
     public boolean isUserExists(String email){
       if(email == null) {
         throw new IllegalArgumentException("Email must not be null");
