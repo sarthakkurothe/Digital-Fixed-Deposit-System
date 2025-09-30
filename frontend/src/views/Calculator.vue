@@ -288,6 +288,4 @@ export default {
 };
 </script>
 
-<style scoped>
-/* Tailwind handles most styling; additional tweaks if needed */
-</style>
+<style scoped></style>

@@ -354,7 +354,7 @@ const handleSubmitTicket = async () => {
       description: newTicket.value.description,
       userId: userId.value,
     });
-    toast.success('Support Ticket Created Successfully 🎫'); // <-- replaced alert
+    toast.success('Support Ticket Created Successfully 🎫');
     closeModal();
     await fetchTickets();
   } catch (err) {
