@@ -198,7 +198,7 @@
           <div class="flex justify-end space-x-3">
             <button
               @click="showConfirmDialog = false"
-              class="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-gray-800 rounded-lg"
+              class="px-4 py-2 bg-gray-300 hover:bg-gray-400 text-gray-800 rounded-lg cursor-pointer"
             >
               Cancel
             </button>
@@ -209,9 +209,9 @@
                   showConfirmDialog = false;
                 }
               "
-              class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg"
+              class="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg cursor-pointer"
             >
-              Yes, Break FD
+              Confirm
             </button>
           </div>
         </div>
