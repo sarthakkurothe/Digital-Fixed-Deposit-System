@@ -4,7 +4,8 @@ import { createStore } from 'vuex';
 export default createStore({
   state: {
     user: JSON.parse(localStorage.getItem('user')) || null,
-    token: localStorage.getItem('token') || null,
+    accessToken: localStorage.getItem('accessToken') || null,
+    refreshToken: localStorage.getItem('refreshToken') || null,
     fds: [],
     summary: {},
     dashboardInfo: {},
@@ -20,17 +21,21 @@ export default createStore({
       state.user = user;
       localStorage.setItem('user', JSON.stringify(user));
     },
-    setToken(state, token) {
-      state.token = token;
-      localStorage.setItem('token', token);
+    setTokens(state, { accessToken, refreshToken }) {
+      state.accessToken = accessToken;
+      state.refreshToken = refreshToken;
+      localStorage.setItem('accessToken', accessToken);
+      localStorage.setItem('refreshToken', refreshToken);
     },
     clearAuth(state) {
       state.user = null;
-      state.token = null;
+      state.accessToken = null;
+      state.refreshToken = null;
       state.fds = [];
       state.summary = {};
       localStorage.removeItem('user');
-      localStorage.removeItem('token');
+      localStorage.removeItem('accessToken');
+      localStorage.removeItem('refreshToken');
     },
 
     // --- FDs ---
@@ -62,7 +67,7 @@ export default createStore({
         const res = await axios.get(`/fd/user/${state.user.id}`);
         commit('SET_FDS', res.data);
       } catch (err) {
-        throw err;
+        console.error('Error fetching FDs:', err);
       } finally {
         commit('SET_LOADING', false);
       }
@@ -84,7 +89,7 @@ export default createStore({
     async fetchBreakPreview({ state }, fdId) {
       try {
         const res = await axios.get(`/fd/${fdId}/break-preview`, {
-          headers: { Authorization: `bearer ${state.token}` },
+          headers: { Authorization: `bearer ${state.accessToken}` },
         });
         return res.data;
       } catch (err) {
@@ -98,7 +103,7 @@ export default createStore({
           `/fd/${fdId}/break`,
           {},
           {
-            headers: { Authorization: `bearer ${state.token}` },
+            headers: { Authorization: `bearer ${state.accessToken}` },
           }
         );
 
@@ -126,7 +131,7 @@ export default createStore({
       commit('SET_LOADING', true);
       try {
         const res = await axios.get('/admin/dashboard/info', {
-          headers: { Authorization: `bearer ${state.token}` },
+          headers: { Authorization: `bearer ${state.accessToken}` },
         });
         commit('SET_DASHBOARD_INFO', res.data);
       } catch (err) {
@@ -146,8 +151,8 @@ export default createStore({
           password: credentials.password,
         });
 
-        const token = res.data.token;
-        commit('setToken', token);
+        const { accessToken, refreshToken } = res.data;
+        commit('setTokens', { accessToken, refreshToken });
 
         return res;
       } catch (err) {
@@ -160,14 +165,15 @@ export default createStore({
      * Fetch logged-in user details using stored token
      */
     async setUserData({ commit, state }) {
-      if (!state.token) return;
+      if (!state.accessToken) return;
 
       try {
         const res = await axios.get('/auth/me', {
-          headers: { Authorization: `Bearer ${state.token}` },
+          headers: { Authorization: `bearer ${state.accessToken}` },
         });
         commit('setUser', res.data);
       } catch (err) {
+        
         throw err;
       }
     },
@@ -201,12 +207,13 @@ export default createStore({
   },
 
   getters: {
-    isAuthenticated: state => !!state.token,
+    isAuthenticated: state => !!state.accessToken,
     getFDsCount: state => state.fds.length,
     getUser: state => state.user,
     getUserName: state => state.user?.name || '',
     getUserEmail: state => state.user?.email || '',
-    getToken: state => state.token,
+    getAccessToken: state => state.accessToken,
+    getRefreshToken: state => state.refreshToken,
     getFDs: state => state.fds,
     isLoading: state => state.loading,
     getFDById: state => id => state.fds.find(fd => fd.id === id),

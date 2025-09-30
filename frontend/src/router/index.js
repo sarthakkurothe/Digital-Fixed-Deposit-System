@@ -64,7 +64,7 @@ const routes = [
 const router = createRouter({ history: createWebHistory(), routes });
 
 router.beforeEach((to, from, next) => {
-  const isAuthenticated = !!store.state.token;
+  const isAuthenticated = !!store.state.accessToken;
   const user = store.state.user;
   const isAdmin = user?.role === 'ROLE_ADMIN';
 
