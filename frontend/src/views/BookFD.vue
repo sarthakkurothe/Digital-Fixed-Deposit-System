@@ -428,7 +428,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(['getUser', 'getToken']),
+    ...mapGetters(['getUser']),
     isSenior() {
       return this.getUser?.age >= 60;
     },
@@ -513,9 +513,7 @@ export default {
         interest_rate: parseFloat(this.effectiveRate),
       };
       try {
-        await axios.post('http://localhost:8080/fd/book', payload, {
-          headers: { Authorization: `bearer ${this.getToken}` },
-        });
+        await axios.post('http://localhost:8080/fd/book', payload);
         await this.$store.dispatch('fetchFDs');
         this.toast.success('Fixed Deposit booked successfully! 🎉');
         setTimeout(() => {
