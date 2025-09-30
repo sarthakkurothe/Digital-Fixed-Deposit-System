@@ -55,6 +55,13 @@ public class AuthController {
         this.authenticationManager = authenticationManager;
     }
 
+    /**
+     * Authenticates a user and generates JWT tokens
+     * 
+     * @param loginRequest Contains user credentials (email and password)
+     * @return ResponseEntity with access and refresh tokens if authentication is successful,
+     *         or error details if authentication fails
+     */
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest){
         Authentication authentication;
@@ -82,6 +89,13 @@ public class AuthController {
         return ResponseEntity.ok(response);
     }
 
+    /**
+     * Registers a new user in the system
+     * 
+     * @param user User object containing registration details
+     * @return ResponseEntity with success message and CREATED status if registration is successful,
+     *         or message indicating user already exists
+     */
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody User user) {
         if(userService.isUserExists(user.getEmail())) {
@@ -96,6 +110,11 @@ public class AuthController {
         return new ResponseEntity<>("User added successfully!", HttpStatus.CREATED);
     }
 
+    /**
+     * Retrieves the currently authenticated user's information
+     * 
+     * @return ResponseEntity containing UserDTO with user details and ACCEPTED status
+     */
     @GetMapping("/me")
     public ResponseEntity<?> getUser(){
         UserPrincipal principal = (UserPrincipal) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -112,6 +131,13 @@ public class AuthController {
         return new ResponseEntity<>(userDTO, HttpStatus.ACCEPTED);
     }
 
+    /**
+     * Refreshes the user's access token using a valid refresh token
+     * 
+     * @param refreshRequest Contains the refresh token
+     * @return ResponseEntity with a new access token
+     * @throws TokenExpiredException If the refresh token is expired or invalid
+     */
     @PostMapping("/refresh")
     public ResponseEntity<Map<String, String>> refresh(@RequestBody RefreshRequest refreshRequest) throws TokenExpiredException {
         if (!jwtUtils.isValidJwtToken(refreshRequest.getRefreshToken())) {
