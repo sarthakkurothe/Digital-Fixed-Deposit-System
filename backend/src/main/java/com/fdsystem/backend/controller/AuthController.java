@@ -15,6 +15,7 @@ import com.fdsystem.backend.service.UserService;
 import com.fdsystem.backend.entity.enums.Role;
 import com.fdsystem.backend.util.jwt.JWTUtils;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -169,6 +170,22 @@ public class AuthController {
 
         return ResponseEntity.ok(map);
     }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletResponse response) {
+       log.info("Called");
+        ResponseCookie cookie = ResponseCookie.from("refreshToken", "")
+                .httpOnly(true)
+                .secure(false)
+                .path("/")
+                .maxAge(0)
+                .build();
+
+        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+
+        return ResponseEntity.ok("Logged out successfully");
+    }
+
 
 
 
