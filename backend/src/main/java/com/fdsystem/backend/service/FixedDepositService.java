@@ -22,6 +22,10 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Service for managing fixed deposits in the system
+ * Handles booking, viewing, breaking, and status management of fixed deposits
+ */
 @Service public class FixedDepositService {
 
     private final FixedDepositRepository fixedDepositRepository;
@@ -41,6 +45,12 @@ import java.util.List;
     }
 
 
+    /**
+     * Books a new fixed deposit, setting start date, maturity date and status
+     * 
+     * @param fixedDeposit The fixed deposit object to book, should contain amount, interest rate, 
+     *                     tenure months and user information
+     */
     public void bookFD(FixedDeposit fixedDeposit){
         int tenure_months=fixedDeposit.getTenure_months();
         Date start_date= Date.valueOf(LocalDate.now());
@@ -52,19 +62,42 @@ import java.util.List;
         this.fixedDepositRepository.save(fixedDeposit);
     }
 
+    /**
+     * Retrieves all fixed deposits for a specific user
+     * 
+     * @param user_id The ID of the user whose fixed deposits to retrieve
+     * @return List of FixedDeposit objects belonging to the user
+     */
     public List<FixedDeposit> getFdsByUserId(Long user_id){
         User user = userRepository.findById(user_id).get();
         return this.fixedDepositRepository.findAllByUser(user);
     }
 
+    /**
+     * Retrieves all fixed deposits in the system
+     * 
+     * @return List of all FixedDeposit objects
+     */
     public List<FixedDeposit> getAll(){
         return this.fixedDepositRepository.findAll();
     }
 
+    /**
+     * Retrieves a specific fixed deposit by its ID
+     * 
+     * @param fd_id The ID of the fixed deposit to retrieve
+     * @return The FixedDeposit object with the specified ID
+     */
     public  FixedDeposit getFdById(Long fd_id){
         return this.fixedDepositRepository.findById(fd_id).get();
     }
 
+    /**
+     * Initiates the process of breaking a fixed deposit prematurely
+     * Creates a support ticket and changes the FD status to PENDING
+     * 
+     * @param fdId The ID of the fixed deposit to break
+     */
     public void breakFD(Long fdId) {
         FixedDeposit fd = fixedDepositRepository.findById(fdId).get();
         SupportTicket ticket = new SupportTicket();
@@ -79,6 +112,13 @@ import java.util.List;
         fixedDepositRepository.save(fd);
     }
 
+    /**
+     * Calculates the break preview details for a fixed deposit
+     * Includes penalty calculation based on time elapsed and interest rate
+     * 
+     * @param fdId The ID of the fixed deposit to get break preview for
+     * @return BreakPreviewResponse containing break details including penalty and payout
+     */
     public BreakPreviewResponse getBreakPreview(Long fdId) {
         FixedDeposit fd = this.fixedDepositRepository.findById(fdId).get();
         LocalDate startDate = fd.getStart_date().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
@@ -96,6 +136,13 @@ import java.util.List;
         return new BreakPreviewResponse(fd.getId(), fd.getAmount(), fd.getAccrued_interest(), fd.getStart_date(), fd.getMaturity_date(), penalty, payout, fd.getInterest_rate(), fd.getTenure_months(), monthsElapsed);
     }
 
+    /**
+     * Updates the status of a fixed deposit and calculates appropriate interest
+     * based on the new status and time elapsed
+     * 
+     * @param id The ID of the fixed deposit to update
+     * @param fdStatus The new status to set (e.g., BROKEN, MATURED)
+     */
     public void setFixedDepositStatus(Long id, FdStatus fdStatus) {
         FixedDeposit fixedDeposit = this.fixedDepositRepository.findById(id).get();
         fixedDeposit.setStatus(fdStatus);
@@ -132,6 +179,11 @@ import java.util.List;
 
     }
 
+    /**
+     * Retrieves all fixed deposits with additional user information for admin view
+     * 
+     * @return List of AdminFixedDepositDto objects containing FD details with user info
+     */
     public List<AdminFixedDepositDto> getAllFDs() {
         List<FixedDeposit> allFds = this.fixedDepositRepository.findAll();
         List<AdminFixedDepositDto> allFdsDto = new ArrayList<>();
@@ -150,6 +202,11 @@ import java.util.List;
         return allFdsDto;
     }
 
+    /**
+     * Counts the total number of fixed deposits in the system
+     * 
+     * @return The count of total fixed deposits
+     */
     public long getAllFdsCount(){
         return this.fixedDepositRepository.countTotalFds();
     }

@@ -19,6 +19,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+/**
+ * Service for managing support tickets in the system
+ * Handles creation, retrieval, and status updates of support tickets
+ */
 @Service
 public class SupportTicketService {
 
@@ -32,6 +36,12 @@ public class SupportTicketService {
         this.userRepository = userRepository;
     }
 
+    /**
+     * Creates a new support ticket in the system
+     * 
+     * @param ticketRequestDTO Contains the details of the support ticket to be created
+     *                       including fdId, subject, and description
+     */
     public void createTicket(TicketRequestDTO ticketRequestDTO){
         SupportTicket supportTicket = new SupportTicket();
         FixedDeposit fixedDeposit = fixedDepositRepository.findById(ticketRequestDTO.getFdId()).get();
@@ -44,6 +54,12 @@ public class SupportTicketService {
         supportTicketRepository.save(supportTicket);
     }
 
+    /**
+     * Retrieves all support tickets for a specific user
+     * 
+     * @param userId The ID of the user whose tickets are to be retrieved
+     * @return List of TicketResponseDTO objects containing ticket details
+     */
     public List<TicketResponseDTO> getTicketsByUserId(long userId){
         User user = this.userRepository.findById(userId).get();
         List<SupportTicket> list = this.supportTicketRepository.findAllByUser(user);
@@ -63,6 +79,11 @@ public class SupportTicketService {
         return responseDTOS;
     }
 
+    /**
+     * Retrieves all support tickets in the system for admin view
+     * 
+     * @return List of AdminSupportTicketDto objects containing ticket details with user information
+     */
     public List<AdminSupportTicketDto> getAll(){
         List<SupportTicket> tickets = this.supportTicketRepository.findAll();
         List<AdminSupportTicketDto> ticketDtos = new ArrayList<>();
@@ -85,6 +106,13 @@ public class SupportTicketService {
         return ticketDtos;
     }
 
+    /**
+     * Updates the status of a support ticket and adds a response
+     * 
+     * @param id The ID of the ticket to update
+     * @param response The response text to add to the ticket
+     * @param status The new status for the ticket (e.g., OPEN, CLOSED)
+     */
     public void setTicketStatusById(long id,String response, SupportTicketStatus status){
         SupportTicket ticket = this.supportTicketRepository.findById(id).get();
         ticket.setResponse(response);
@@ -92,6 +120,12 @@ public class SupportTicketService {
         this.supportTicketRepository.save(ticket);
     }
 
+    /**
+     * Counts tickets with a specific status
+     * 
+     * @param status The status to count tickets for (e.g., "OPEN", "CLOSED")
+     * @return The count of tickets with the specified status
+     */
     public Long getAllStatusTicketsCount(String status){
         return this.supportTicketRepository.getAllStatusTicketsCount(status);
     }

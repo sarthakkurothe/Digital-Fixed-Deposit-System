@@ -20,6 +20,10 @@ import java.util.List;
 
 
 
+/**
+ * Service for calculating accrued interest on fixed deposits
+ * Handles interest calculations based on various schemes and statuses
+ */
 @Service
 public class AccruedInterestService {
     @Autowired
@@ -28,6 +32,13 @@ public class AccruedInterestService {
     @Autowired
     private UserRepository userRepository;
 
+    /**
+     * Calculates accrued interest for all fixed deposits of a user
+     * Updates the interest values and potentially changes FD status to MATURED when applicable
+     * 
+     * @param user The user whose fixed deposits need interest calculation
+     * @throws InterestCalculationException If there are invalid parameters for interest calculation
+     */
     public void calculateAccruedInterest(User user) {
         List<FixedDeposit> fixedDeposits = fixedDepositRepository.findAllByUser(user);
 
@@ -108,11 +119,27 @@ public class AccruedInterestService {
         }
     }
 
+    /**
+     * Computes simple interest for a given principal, rate and time period
+     * 
+     * @param principal The principal amount
+     * @param ratePercent The annual interest rate as a percentage (e.g., 7.0 for 7%)
+     * @param months The time period in months
+     * @return The simple interest amount
+     */
     public double computeSimpleInterest(double principal, double ratePercent, int months) {
         double years = months / 12.0;
         return (principal * ratePercent * years) / 100.0;
     }
 
+    /**
+     * Computes compound interest with quarterly compounding
+     * 
+     * @param principal The principal amount
+     * @param ratePercent The annual interest rate as a percentage (e.g., 7.0 for 7%)
+     * @param months The time period in months
+     * @return The compound interest amount (maturity amount - principal)
+     */
     public double computeCompoundInterest(double principal, double ratePercent, int months) {
         double rateDec = ratePercent / 100.0;
         double years = months / 12.0;
@@ -121,6 +148,12 @@ public class AccruedInterestService {
         return amount - principal;
     }
 
+    /**
+     * Rounds a decimal value to two decimal places
+     * 
+     * @param value The value to round
+     * @return The rounded value with two decimal places
+     */
     public double roundTwoDecimals(double value) {
         BigDecimal bd = BigDecimal.valueOf(value);
         bd = bd.setScale(2, RoundingMode.HALF_UP);

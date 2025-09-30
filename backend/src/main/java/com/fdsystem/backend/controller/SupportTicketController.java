@@ -18,6 +18,13 @@ public class SupportTicketController {
     public SupportTicketController(SupportTicketService supportTicketService){
         this.supportTicketService = supportTicketService;
     }
+
+    /**
+     * Creates a new support ticket for a user
+     * 
+     * @param ticketRequestDTO Contains details of the support ticket to be created
+     * @return ResponseEntity with CREATED status if successful
+     */
     @PostMapping
     public ResponseEntity<Void> createTicket(@RequestBody TicketRequestDTO ticketRequestDTO){
         this.supportTicketService.createTicket(ticketRequestDTO);
