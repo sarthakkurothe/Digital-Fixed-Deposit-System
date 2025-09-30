@@ -22,7 +22,12 @@ public class UserController {
     @Autowired
     private AccruedInterestService accruedInterestService;
 
-    //TotalInvestment , InterestEarned, ActiveFDs,AverageInterest
+    /**
+     * Retrieves dashboard statistics for the current authenticated user's investments
+     * 
+     * @return ResponseEntity containing UserDashboardDTO with total investment amount,
+     *         interest earned, number of active FDs, and average interest with HTTP status ACCEPTED
+     */
     @GetMapping("/investments")
     public ResponseEntity<?> getDashboardStats(){
 

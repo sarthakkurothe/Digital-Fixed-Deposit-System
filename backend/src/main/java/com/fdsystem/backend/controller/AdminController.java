@@ -29,11 +29,23 @@ public class AdminController {
     this.userService = userService;
   }
 
+  /**
+   * Retrieves all fixed deposits in the system for admin view
+   * 
+   * @return ResponseEntity containing a list of AdminFixedDepositDto objects with HTTP status OK
+   */
   @GetMapping("/fds")
   public ResponseEntity<List<AdminFixedDepositDto>> getFds(){
     return new ResponseEntity<>(this.fixedDepositService.getAllFDs(), HttpStatus.OK);
   }
 
+  /**
+   * Updates the status of a fixed deposit by its ID
+   * 
+   * @param id The ID of the fixed deposit to update
+   * @param body A map containing the new status in the format {"status": "STATUS_VALUE"}
+   * @return ResponseEntity with HTTP status OK if successful, BAD_REQUEST if status is missing or invalid
+   */
   @PutMapping("/fd/{id}")
   public ResponseEntity<Void> setFDStatusById(@PathVariable Long id, @RequestBody Map<String,String> body) {
     //we are always sending BROKEN status from frontend
@@ -51,11 +63,23 @@ public class AdminController {
     }
   }
 
+  /**
+   * Retrieves all support tickets for admin management
+   * 
+   * @return ResponseEntity containing a list of AdminSupportTicketDto objects with HTTP status OK
+   */
   @GetMapping("/tickets")
   public ResponseEntity<List<AdminSupportTicketDto>> getAll(){
     return new ResponseEntity<>(this.supportTicketService.getAll(), HttpStatus.OK);
   }
 
+  /**
+   * Updates a support ticket status to CLOSED and adds admin response
+   * 
+   * @param id The ID of the support ticket to update
+   * @param response The admin's response text to the ticket
+   * @return ResponseEntity with HTTP status OK
+   */
   @PostMapping("/tickets/{id}")
   public ResponseEntity<Void> setTicketStatusById(@PathVariable long id,@RequestBody String response){
     this.supportTicketService.setTicketStatusById(id, response, SupportTicketStatus.CLOSED);
@@ -63,6 +87,12 @@ public class AdminController {
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
+  /**
+   * Retrieves dashboard statistics for the admin panel
+   * 
+   * @return ResponseEntity containing AdminDashboardDto with ticket counts, user count,
+   *         and fixed deposit count with HTTP status OK
+   */
   @GetMapping("/dashboard/info")
   public ResponseEntity<AdminDashboardDto> getDashBoardInfo(){
     AdminDashboardDto dashboardDto = new AdminDashboardDto();
