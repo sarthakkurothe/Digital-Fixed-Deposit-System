@@ -13,6 +13,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -28,7 +29,7 @@ public class TokenValidationTest {
   private UserDetailsServiceImpl userDetailsService;
   
   @Mock
-  private org.springframework.web.servlet.HandlerExceptionResolver exceptionResolver;
+  private HandlerExceptionResolver exceptionResolver;
   
   private AuthTokenFilter authTokenFilter;
 
@@ -49,10 +50,8 @@ public class TokenValidationTest {
   @org.junit.jupiter.api.BeforeEach
   void setUp() {
     // Manually create AuthTokenFilter with mocked HandlerExceptionResolver
-    authTokenFilter = new AuthTokenFilter(exceptionResolver);
-    // Set the mocked dependencies that would normally be autowired
-    org.springframework.test.util.ReflectionTestUtils.setField(authTokenFilter, "jwtUtil", jwtUtils);
-    org.springframework.test.util.ReflectionTestUtils.setField(authTokenFilter, "userDetailsService", userDetailsService);
+    authTokenFilter = new AuthTokenFilter(jwtUtils, exceptionResolver, userDetailsService);
+
   }
 
   @Test

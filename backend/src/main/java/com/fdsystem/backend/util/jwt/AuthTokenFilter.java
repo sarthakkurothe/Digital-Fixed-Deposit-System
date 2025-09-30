@@ -22,17 +22,18 @@ import java.io.IOException;
 
 @Slf4j
 public class AuthTokenFilter extends OncePerRequestFilter {
-  @Autowired
   private JWTUtils jwtUtil;
 
   private HandlerExceptionResolver exceptionResolver;
-  @Autowired
   private UserDetailsServiceImpl userDetailsService;
 
-  public AuthTokenFilter(HandlerExceptionResolver exceptionResolver){
+  public AuthTokenFilter(JWTUtils jwtUtil,
+                         HandlerExceptionResolver exceptionResolver,
+                         UserDetailsServiceImpl userDetailsService) {
+    this.jwtUtil = jwtUtil;
     this.exceptionResolver = exceptionResolver;
+    this.userDetailsService = userDetailsService;
   }
-
 
   @Override
   public void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
