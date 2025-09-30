@@ -417,7 +417,6 @@ export default {
       }
     },
     showConfirmModal(newVal) {
-      // focus confirm button when modal opens and prevent body scroll
       document.body.style.overflow = newVal ? 'hidden' : '';
       if (newVal) {
         nextTick(() => {
