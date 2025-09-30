@@ -4,7 +4,7 @@ import Register from '../src/views/Register.vue';
 import { createStore } from 'vuex';
 import { createRouter, createWebHistory } from 'vue-router';
 
-// Mock store
+
 const createVuexStore = () => {
   const actions = {
     register: vi.fn(),
@@ -16,7 +16,6 @@ const createVuexStore = () => {
   });
 };
 
-// Mock router
 const router = createRouter({
   history: createWebHistory(),
   routes: [
@@ -64,7 +63,6 @@ describe('Register.vue', () => {
   });
 
   it('successfully submits the form with valid data', async () => {
-    // Setup mock before mounting
     const mockRegisterAction = vi.fn().mockResolvedValue({ status: 201 });
     store = createVuexStore();
     store.dispatch = mockRegisterAction;
@@ -79,20 +77,20 @@ describe('Register.vue', () => {
       },
     });
 
-    // Fill in valid form data
+  
     await wrapper.find('input[placeholder="Full Name"]').setValue('John Doe');
     await wrapper.find('input[type="email"]').setValue('john@example.com');
     await wrapper.find('input[type="date"]').setValue('1990-01-01');
     await wrapper.find('input[placeholder="Password"]').setValue('StrongPass1!');
     await wrapper.find('input[placeholder="Confirm Password"]').setValue('StrongPass1!');
 
-    // Submit the form
+    
     await wrapper.find('form').trigger('submit');
 
-    // Wait for Vue to update
+    
     await wrapper.vm.$nextTick();
 
-    // Verify that the register action was called with correct data
+    
     expect(mockRegisterAction).toHaveBeenCalledWith('register', {
       name: 'John Doe',
       email: 'john@example.com',
@@ -100,12 +98,12 @@ describe('Register.vue', () => {
       password: 'StrongPass1!',
     });
 
-    // Verify success message
+   
     expect(wrapper.vm.successMessage).toContain('Registration successful!');
   });
 
   it('handles registration of existing user', async () => {
-    // Setup mock before mounting
+   
     const mockRegisterAction = vi.fn().mockResolvedValue({
       status: 400,
       data: 'User already exists!',
@@ -123,20 +121,20 @@ describe('Register.vue', () => {
       },
     });
 
-    // Fill in form data
+    
     await wrapper.find('input[placeholder="Full Name"]').setValue('John Doe');
     await wrapper.find('input[type="email"]').setValue('existing@example.com');
     await wrapper.find('input[type="date"]').setValue('1990-01-01');
     await wrapper.find('input[placeholder="Password"]').setValue('StrongPass1!');
     await wrapper.find('input[placeholder="Confirm Password"]').setValue('StrongPass1!');
 
-    // Submit the form
+    
     await wrapper.find('form').trigger('submit');
 
-    // Wait for Vue to update
+    
     await wrapper.vm.$nextTick();
 
-    // Verify error message
+   
     expect(wrapper.vm.errors.email).toBe('User already exists!');
   });
 });

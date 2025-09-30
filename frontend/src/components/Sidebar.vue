@@ -229,7 +229,6 @@ export default {
     },
     async signout() {
       await this.logout();
-      
       this.$router.push('/');
     },
   },

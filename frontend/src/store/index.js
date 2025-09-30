@@ -15,7 +15,7 @@ export default createStore({
     SET_SUMMARY(state, summary) {
       state.summary = summary;
     },
-    // --- AUTH ---
+    
     setUser(state, user) {
       state.user = user;
       localStorage.setItem('user', JSON.stringify(user));
@@ -53,9 +53,7 @@ export default createStore({
   },
 
   actions: {
-    /**
-     * Fetch all FDs for the logged-in user
-     */
+    
     async fetchFDs({ commit, state }) {
       commit('SET_LOADING', true);
       try {
@@ -136,9 +134,7 @@ export default createStore({
       }
     },
 
-    /**
-     * Login user -> save token
-     */
+    
     async login({ commit }, credentials) {
       try {
         const res = await axios.post('/auth/login', {
@@ -151,13 +147,12 @@ export default createStore({
 
         return res;
       } catch (err) {
+        console.log(err);
         throw err;
       }
     },
 
-    /**
-     * Fetch logged-in user details using stored token
-     */
+    
     async setUserData({ commit, state }) {
       if (!state.accessToken) return;
 
@@ -171,9 +166,7 @@ export default createStore({
       }
     },
 
-    /**
-     * Register a new user
-     */
+    
     async register({ commit }, credentials) {
       try {
         const res = await axios.post('/auth/register', {

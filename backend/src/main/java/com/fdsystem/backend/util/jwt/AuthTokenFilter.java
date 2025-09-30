@@ -41,8 +41,6 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 
       String jwt = this.jwtUtil.getJwtFromHeader(request);
 
-      log.info("jwt token {}",jwt);
-
 
       if(jwt != null && jwtUtil.isValidJwtToken(jwt) ){
 
