@@ -149,9 +149,9 @@
             </div>
             <div class="bg-blue-50 rounded-lg p-4 text-center">
               <div class="text-2xl font-bold text-blue-600 mb-1">💵</div>
-              <div class="text-sm text-gray-600 mb-1">Compound Maturity</div>
+              <div class="text-sm text-gray-600 mb-1">Simple Interest</div>
               <div class="text-xl font-bold text-gray-800">
-                ₹{{ formatCurrency(compoundInterest.maturityAmount) }}
+                ₹{{ formatCurrency(simpleInterest.interest) }}
               </div>
             </div>
           </div>
