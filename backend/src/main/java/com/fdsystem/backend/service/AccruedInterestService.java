@@ -62,9 +62,6 @@ public class AccruedInterestService {
             if (tenureMonths <= 0) {
                 throw new InterestCalculationException("Tenure months must be positive");
             }
-            if (monthsElapsed < 0) {
-                throw new InterestCalculationException("Elapsed months cannot be negative");
-            }
 
             // Decide how many months to consider
             int applicableMonths = (int) Math.min(monthsElapsed, tenureMonths);
