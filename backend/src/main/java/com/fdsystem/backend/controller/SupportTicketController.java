@@ -22,7 +22,7 @@ public class SupportTicketController {
     /**
      * Creates a new support ticket for a user
      * 
-     * @param TicketRequestDTO Contains details of the support ticket to be created
+     * @param ticketRequestDTO Contains details of the support ticket to be created
      * @return ResponseEntity with CREATED status if successful
      */
     @PostMapping
