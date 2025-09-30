@@ -109,4 +109,3 @@ describe('BreakFD.vue', () => {
     expect(wrapper.emitted()).toHaveProperty('close');
   });
 });
-

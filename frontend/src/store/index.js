@@ -173,7 +173,6 @@ export default createStore({
         });
         commit('setUser', res.data);
       } catch (err) {
-        
         throw err;
       }
     },

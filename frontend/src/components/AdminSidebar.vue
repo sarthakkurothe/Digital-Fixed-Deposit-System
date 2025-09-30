@@ -136,6 +136,7 @@ import { mapGetters, mapActions } from 'vuex';
 export default {
   name: 'AdminSidebar',
   components: { Shield, LayoutDashboard, Building, HelpCircle, LogOutIcon, Vault },
+  emits: ['toggle'],
 
   data() {
     return {
