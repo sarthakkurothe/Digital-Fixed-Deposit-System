@@ -7,7 +7,7 @@
     <div
       class="w-full max-w-6xl mx-auto flex flex-col lg:flex-row items-center justify-between p-6 lg:p-12 gap-12"
     >
-      <!-- Left Side - Branding & Features -->
+     
       <DotLottieVue
         class="hidden md:block"
         style="height: 500px; width: 500px"
@@ -16,7 +16,6 @@
         src="https://lottie.host/61b67c2f-ce7e-42bd-9f35-74450e0453a5/YbUAdRE2Jl.lottie"
       />
 
-      <!-- Right Side - Login Form -->
       <div class="w-full max-w-md mx-auto">
         <div class="bg-white shadow-xl rounded-2xl p-8">
           <h2 class="text-2xl font-bold text-center mb-2">Welcome Back</h2>

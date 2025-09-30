@@ -72,7 +72,7 @@ router.beforeEach((to, from, next) => {
     return next('/login');
   }
   if (to.meta.requiresAdmin && !isAdmin) {
-    return next('/user/dashboard'); // redirect normal users to dashboard
+    return next('/user/dashboard');
   }
   if (isAuthenticated && (to.name === 'Login' || to.name === 'Register' || to.name === 'Home')) {
     return isAdmin ? next('/admin') : next('/user/dashboard');

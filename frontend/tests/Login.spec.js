@@ -4,7 +4,7 @@ import { createStore } from 'vuex';
 import { createRouter, createWebHistory } from 'vue-router';
 import Login from '../src/views/Login.vue';
 
-// Mock store
+
 const createVuexStore = () => {
   return createStore({
     actions: {
@@ -18,7 +18,7 @@ const createVuexStore = () => {
   });
 };
 
-// Mock router
+
 const router = createRouter({
   history: createWebHistory(),
   routes: [
@@ -53,7 +53,7 @@ describe('Login.vue', () => {
     wrapper = mount(Login, {
       global: {
         plugins: [store, router],
-        stubs: ['DotLottieVue'], // Stub the lottie animation component
+        stubs: ['DotLottieVue'], 
       },
     });
   });
@@ -68,11 +68,11 @@ describe('Login.vue', () => {
   it('validates email format', async () => {
     const emailInput = wrapper.find('input[type="email"]');
 
-    // Test invalid email
+    
     await emailInput.setValue('invalid-email');
     expect(wrapper.vm.emailError).toBe('Please enter a valid email address');
 
-    // Test valid email
+
     await emailInput.setValue('test@example.com');
     expect(wrapper.vm.emailError).toBe(null);
   });
@@ -84,7 +84,7 @@ describe('Login.vue', () => {
       password: 'password123',
     });
 
-    // Trigger form submission
+    
     form.trigger('submit');
     await wrapper.vm.$nextTick();
 
@@ -101,12 +101,12 @@ describe('Login.vue', () => {
 
     await wrapper.vm.handleLogin();
 
-    // Verify router push was called with correct path
+    
     expect(routerPushSpy).toHaveBeenCalledWith('/user/dashboard');
   });
 
   it('displays error message on login failure', async () => {
-    // Mock login action to throw an error
+  
     store.dispatch = vi.fn().mockRejectedValue({ status: 404 });
 
     await wrapper.setData({
