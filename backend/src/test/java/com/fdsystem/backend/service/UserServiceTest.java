@@ -41,6 +41,19 @@ class UserServiceTest {
     assertTrue(result);
     verify(userRepository, times(1)).save(user);
   }
+  
+  @Test
+  void testAddUser_WhenExceptionOccurs() {
+    // Arrange
+    when(userRepository.save(user)).thenThrow(new RuntimeException("Database connection error"));
+    
+    // Act
+    boolean result = userService.addUser(user);
+    
+    // Assert
+    assertFalse(result);
+    verify(userRepository, times(1)).save(user);
+  }
 
   @Test
   void testIsUserExists_WhenUserExists() {

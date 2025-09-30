@@ -141,6 +141,8 @@ public class FixedDepositServiceTest {
         assertEquals(10500.0, response.getPayout(), "Payout should be amount + interest - penalty");
         assertEquals(6, response.getTimeElapsed(), "Months elapsed should be 6");
     }
+    
+
     @Test
     void testGetAll_returnsAllFDs() {
         FixedDeposit fd1 = new FixedDeposit();
@@ -205,6 +207,94 @@ public class FixedDepositServiceTest {
 
         assertEquals(42L, result);
         verify(fixedDepositRepository, times(1)).countTotalFds();
+    }
+    
+    @Test
+    void testBreakFD_createsTicketAndChangesFDStatus() {
+        // Arrange
+        Long fdId = 3L;
+        
+        // Create test data
+        User testUser = new User();
+        testUser.setId(1L);
+        testUser.setName("Test User");
+        testUser.setEmail("test@example.com");
+        
+        FixedDeposit fd = new FixedDeposit();
+        fd.setId(fdId);
+        fd.setUser(testUser);
+        fd.setAmount(10000.0);
+        fd.setInterest_rate(5.0);
+        fd.setTenure_months(12);
+        fd.setStatus(FdStatus.ACTIVE);
+        fd.setStart_date(java.util.Date.from(
+                LocalDate.now().minusMonths(4).atStartOfDay(ZoneId.systemDefault()).toInstant()
+        ));
+        
+        // Mock repository responses
+        when(fixedDepositRepository.findById(fdId)).thenReturn(Optional.of(fd));
+        when(supportTicketRepository.save(any(com.fdsystem.backend.entity.SupportTicket.class)))
+            .thenAnswer(invocation -> invocation.getArgument(0));
+        when(fixedDepositRepository.save(any(FixedDeposit.class)))
+            .thenAnswer(invocation -> invocation.getArgument(0));
+            
+        // Act
+        fixedDepositService.breakFD(fdId);
+        
+        // Assert
+        // Verify FD status changed to PENDING
+        assertEquals(FdStatus.PENDING, fd.getStatus(), "FD status should be changed to PENDING");
+        
+        // Verify support ticket was created
+        verify(supportTicketRepository, times(1)).save(argThat(ticket -> {
+            return ticket.getUser().equals(testUser) &&
+                   ticket.getFixedDeposit().equals(fd) &&
+                   ticket.getSubject().equals("Break Fixed Deposit") &&
+                   ticket.getDescription().equals("Premature Withdrawal") &&
+                   ticket.getStatus().equals(com.fdsystem.backend.entity.enums.SupportTicketStatus.OPEN);
+        }));
+
+        verify(fixedDepositRepository, times(1)).save(fd);
+    }
+
+    @Test
+    void testSetFixedDepositStatus_CompoundInterestPath() {
+        // Arrange
+        Long fdId = 99L;
+        double principal = 50000.0;
+        double rate = 7.5;
+        int tenureMonths = 36;
+        int applicableMonths = 30;
+        double compoundInterest = 5000.0;
+        double roundedInterest = 5000.0;
+
+        User user = new User();
+        user.setId(1L);
+        FixedDeposit fd = new FixedDeposit();
+        fd.setId(fdId);
+        fd.setUser(user);
+        fd.setAmount(principal);
+        fd.setInterest_rate(rate);
+        fd.setTenure_months(tenureMonths);
+        fd.setStatus(FdStatus.ACTIVE);
+        fd.setStart_date(java.util.Date.from(
+                LocalDate.now().minusMonths(applicableMonths).atStartOfDay(ZoneId.systemDefault()).toInstant()
+        ));
+
+        when(fixedDepositRepository.findById(fdId)).thenReturn(Optional.of(fd));
+        when(accruedInterestService.computeCompoundInterest(principal, rate, applicableMonths)).thenReturn(compoundInterest);
+        when(accruedInterestService.roundTwoDecimals(compoundInterest)).thenReturn(roundedInterest);
+        when(fixedDepositRepository.save(any(FixedDeposit.class))).thenReturn(fd);
+
+        // Act
+        fixedDepositService.setFixedDepositStatus(fdId, FdStatus.BROKEN);
+
+        // Assert
+        assertEquals(FdStatus.BROKEN, fd.getStatus());
+        assertEquals(roundedInterest, fd.getAccrued_interest());
+        verify(accruedInterestService, times(1)).computeCompoundInterest(principal, rate, applicableMonths);
+        verify(accruedInterestService, times(1)).roundTwoDecimals(compoundInterest);
+        verify(fixedDepositRepository, times(1)).save(fd);
     }
 
 }
