@@ -1,5 +1,6 @@
 package com.fdsystem.backend.config;
 
+import com.fdsystem.backend.service.UserDetailsServiceImpl;
 import com.fdsystem.backend.util.jwt.AuthTokenFilter;
 import com.fdsystem.backend.util.jwt.JWTAuthEntryPoint;
 import com.fdsystem.backend.util.jwt.JWTUtils;
@@ -40,6 +41,9 @@ public class SecurityConfig {
   @Qualifier("handlerExceptionResolver")
   private HandlerExceptionResolver handlerExceptionResolver;
 
+  @Autowired
+  private UserDetailsServiceImpl userDetailsService;
+
   @Bean
   public JWTUtils jwtUtils(){
     return new JWTUtils();
@@ -50,7 +54,7 @@ public class SecurityConfig {
 
   @Bean
   public AuthTokenFilter authenticationJwtTokenFilter(){
-    return new AuthTokenFilter(handlerExceptionResolver) ;  //step 3
+    return new AuthTokenFilter(jwtUtils(),handlerExceptionResolver, userDetailsService) ;  //step 3
   }
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
