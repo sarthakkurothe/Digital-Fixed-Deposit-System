@@ -169,7 +169,6 @@ export default {
           this.error = 'Login failed. Please try again.';
         }
       } catch (err) {
-        console.log(err);
         if (err?.status == 404) {
           this.error = 'User not found. Please check your email or password';
         } else {
