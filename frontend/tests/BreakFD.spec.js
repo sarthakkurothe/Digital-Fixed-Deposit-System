@@ -89,7 +89,7 @@ describe('BreakFD.vue', () => {
     expect(confirmBtn).toBeDefined();
     await confirmBtn.trigger('click');
     await wrapper.vm.$nextTick(); // wait for dialog to appear
-    const yesBtn = wrapper.findAll('button').find(btn => btn.text() === 'Yes, Break FD');
+    const yesBtn = wrapper.findAll('button').find(btn => btn.text() === 'Confirm');
     expect(yesBtn).toBeDefined();
     await yesBtn.trigger('click');
     expect(wrapper.emitted()).toHaveProperty('fdBroken');
