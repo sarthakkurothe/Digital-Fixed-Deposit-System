@@ -9,7 +9,11 @@ axios.defaults.withCredentials = true;
 
 axios.interceptors.request.use(
   config => {
-    if (config.url.includes('/auth/refresh') || config.url.includes('/auth/logout') || config.url.includes('/auth/register')) {
+    if (
+      config.url.includes('/auth/refresh') ||
+      config.url.includes('/auth/logout') ||
+      config.url.includes('/auth/register')
+    ) {
       return config;
     }
     const accessToken = localStorage.getItem('accessToken');
