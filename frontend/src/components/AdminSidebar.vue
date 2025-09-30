@@ -189,8 +189,8 @@ export default {
     closeMobileSidebar() {
       this.showMobile = false;
     },
-    signout() {
-      this.logout();
+    async signout() {
+      await this.logout();
       this.$router.push('/');
     },
   },

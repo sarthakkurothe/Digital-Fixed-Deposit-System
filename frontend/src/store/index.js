@@ -191,7 +191,12 @@ export default createStore({
       }
     },
 
-    logout({ commit }) {
+    async logout({ commit }) {
+      try {
+        await axios.post('/auth/logout');
+      } catch (e) {
+        console.error(e);
+      }
       commit('clearAuth');
     },
   },
