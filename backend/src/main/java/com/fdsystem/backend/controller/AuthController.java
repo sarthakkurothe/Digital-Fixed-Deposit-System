@@ -14,9 +14,12 @@ import com.fdsystem.backend.service.FixedDepositService;
 import com.fdsystem.backend.service.UserService;
 import com.fdsystem.backend.entity.enums.Role;
 import com.fdsystem.backend.util.jwt.JWTUtils;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -63,30 +66,38 @@ public class AuthController {
      *         or error details if authentication fails
      */
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest){
+    public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
         Authentication authentication;
-        try{
-            authentication = authenticationManager
-                    .authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(),loginRequest.getPassword()));
-        }catch(AuthenticationException e){
+        try {
+            authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
+        } catch (AuthenticationException e) {
             Map<String, Object> map = new HashMap<>();
-            map.put("error",e.getMessage());
+            map.put("error", e.getMessage());
             map.put("status", false);
-
-            return new ResponseEntity<Object>(map, HttpStatus.NOT_FOUND);
-
+            return new ResponseEntity<>(map, HttpStatus.UNAUTHORIZED);
         }
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
 
-        String refreshToken = this.jwtUtils.generateRefreshToken((userPrincipal.getUsername()));
-        String accessToken = this.jwtUtils.generateAccessToken(userPrincipal.getUsername());
+        String refreshToken = jwtUtils.generateRefreshToken(userPrincipal.getUsername());
+        String accessToken = jwtUtils.generateAccessToken(userPrincipal.getUsername());
+
+        // 🔑 Put refresh token in HttpOnly cookie
+        ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", refreshToken)
+                .httpOnly(true)
+                .path("/auth/refresh")
+                .maxAge(7 * 24 * 60 * 60) // 7 days
+                .sameSite("Lax")
+                .build();
 
         Map<String, String> response = new HashMap<>();
-        response.put("refreshToken", refreshToken);
         response.put("accessToken", accessToken);
-        return ResponseEntity.ok(response);
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, refreshTokenCookie.toString())
+                .body(response);
     }
 
     /**
@@ -112,8 +123,9 @@ public class AuthController {
 
     /**
      * Retrieves the currently authenticated user's information
-     * 
-     * @return ResponseEntity containing UserDTO with user details and ACCEPTED status
+     *
+     *
+     * @return ResponseEntity containing UserDTO with user details and ACCEPTED status.
      */
     @GetMapping("/me")
     public ResponseEntity<?> getUser(){
@@ -133,18 +145,27 @@ public class AuthController {
 
     /**
      * Refreshes the user's access token using a valid refresh token
-     * 
-     * @param refreshRequest Contains the refresh token
+     *
      * @return ResponseEntity with a new access token
      * @throws TokenExpiredException If the refresh token is expired or invalid
      */
     @PostMapping("/refresh")
-    public ResponseEntity<Map<String, String>> refresh(@RequestBody RefreshRequest refreshRequest) throws TokenExpiredException {
-        if (!jwtUtils.isValidJwtToken(refreshRequest.getRefreshToken())) {
-            throw new TokenExpiredException("Refresh Token got expired!");
+    public ResponseEntity<Map<String, String>> refresh(HttpServletRequest request) throws TokenExpiredException {
+        String refreshToken = null;
+
+        if (request.getCookies() != null) {
+            for (var cookie : request.getCookies()) {
+                if ("refreshToken".equals(cookie.getName())) {
+                    refreshToken = cookie.getValue();
+                }
+            }
         }
 
-        String username = jwtUtils.getUsernameFromJwtToken(refreshRequest.getRefreshToken());
+        if (refreshToken == null || !jwtUtils.isValidJwtToken(refreshToken)) {
+            throw new TokenExpiredException("Refresh Token got expired or missing!");
+        }
+
+        String username = jwtUtils.getUsernameFromJwtToken(refreshToken);
         String newAccessToken = jwtUtils.generateAccessToken(username);
 
         Map<String, String> map = new HashMap<>();

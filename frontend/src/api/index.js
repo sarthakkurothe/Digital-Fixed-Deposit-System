@@ -1,12 +1,11 @@
 import axios from 'axios';
-
 import store from '../store';
 import router from '../router';
-
 import { useToast } from 'vue-toastification';
 
 axios.defaults.baseURL = 'http://localhost:8080';
 axios.defaults.headers.common['Content-Type'] = 'application/json';
+axios.defaults.withCredentials = true; 
 
 axios.interceptors.request.use(
   config => {
@@ -19,9 +18,7 @@ axios.interceptors.request.use(
     }
     return config;
   },
-  error => {
-    return Promise.reject(error);
-  }
+  error => Promise.reject(error)
 );
 
 const toast = useToast();
@@ -36,25 +33,22 @@ axios.interceptors.response.use(
     }
 
     if (error.response && error.response.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true; // avoid retry loop
+      originalRequest._retry = true;
 
       try {
-        const res = await axios.post('/auth/refresh', {
-          refreshToken: store.state.refreshToken,
-        });
+        
+        const res = await axios.post('/auth/refresh');
 
         if (res.status === 200) {
-          const { accessToken } = res.data;
+          const { accessToken, refreshToken } = res.data;
 
-          store.commit('setTokens', { accessToken, refreshToken: store.state.refreshToken });
-          localStorage.setItem('accessToken', accessToken);
+          store.commit('setTokens', { accessToken, refreshToken });
 
           originalRequest.headers['Authorization'] = `bearer ${accessToken}`;
 
           return axios(originalRequest);
         }
       } catch (err) {
-        // refresh failed → logout user
         toast.error('Your session has expired. Please login again.');
         store.dispatch('logout');
         router.push('/');
