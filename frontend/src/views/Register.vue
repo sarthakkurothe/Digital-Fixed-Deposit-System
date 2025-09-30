@@ -59,7 +59,9 @@
                 :max="maxDate"
                 :min="minDate"
               />
-              <p v-if="errors.dateOfBirth" class="text-xs text-red-600 mt-1">{{ errors.dateOfBirth }}</p>
+              <p v-if="errors.dateOfBirth" class="text-xs text-red-600 mt-1">
+                {{ errors.dateOfBirth }}
+              </p>
             </div>
 
             <!-- Password -->
@@ -99,7 +101,9 @@
                 <Eye v-if="!showConfirmPassword" class="w-5 h-5" />
                 <EyeOff v-else class="w-5 h-5" />
               </button>
-              <p v-if="errors.confirmPassword" class="text-xs text-red-600 mt-1">{{ errors.confirmPassword }}</p>
+              <p v-if="errors.confirmPassword" class="text-xs text-red-600 mt-1">
+                {{ errors.confirmPassword }}
+              </p>
             </div>
 
             <!-- Success message -->
@@ -163,7 +167,7 @@ export default {
       successMessage: '',
       showPassword: false,
       showConfirmPassword: false,
-      suppressValidation: false, 
+      suppressValidation: false,
       errors: {
         name: '',
         email: '',
@@ -177,7 +181,7 @@ export default {
   },
   watch: {
     name(newName) {
-      if (this.suppressValidation) return; 
+      if (this.suppressValidation) return;
       this.errors.name = newName ? '' : 'Name cannot be empty';
     },
     email(newEmail) {
@@ -186,8 +190,8 @@ export default {
       this.errors.email = !newEmail
         ? 'Email cannot be empty'
         : !emailRegex.test(newEmail)
-        ? 'Invalid email address'
-        : '';
+          ? 'Invalid email address'
+          : '';
     },
     password(newPassword) {
       if (this.suppressValidation) return;
@@ -216,7 +220,7 @@ export default {
   methods: {
     ...mapActions(['register']),
     resetForm() {
-      this.suppressValidation = true; 
+      this.suppressValidation = true;
       this.name = '';
       this.email = '';
       this.dateOfBirth = '';
@@ -224,17 +228,16 @@ export default {
       this.confirmPassword = '';
       this.errors = { name: '', email: '', dateOfBirth: '', password: '', confirmPassword: '' };
       this.$nextTick(() => {
-        this.suppressValidation = false; 
+        this.suppressValidation = false;
       });
     },
     async handleRegister() {
-      const hasErrors = Object.values(this.errors).some((err) => err);
+      const hasErrors = Object.values(this.errors).some(err => err);
       if (hasErrors) return;
 
       this.loading = true;
       this.successMessage = '';
       try {
-
         console.log('Registering user with:', {
           name: this.name,
           email: this.email,
@@ -251,7 +254,7 @@ export default {
         if (res.status === 201) {
           this.successMessage = 'Registration successful! 🎉 Redirecting to login in 3 seconds...';
 
-          this.resetForm(); 
+          this.resetForm();
 
           let countdown = 3;
           const timer = setInterval(() => {

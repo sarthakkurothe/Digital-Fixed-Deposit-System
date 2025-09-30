@@ -156,19 +156,16 @@ export default {
 
         const token = this.getAccessToken();
 
-      
-
         if (token) {
           await this.setUserData();
           const user = this.$store.getters.getUser;
-          
+
           if (user.role === 'ROLE_ADMIN') {
             this.$router.push('/admin');
           } else {
             this.$router.push('/user/dashboard');
           }
-        } 
-        else {
+        } else {
           this.error = 'Login failed. Please try again.';
         }
       } catch (err) {
