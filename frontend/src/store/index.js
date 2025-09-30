@@ -192,9 +192,6 @@ export default createStore({
       }
     },
 
-    /**
-     * Logout user -> clear store & localStorage
-     */
     logout({ commit }) {
       commit('clearAuth');
     },

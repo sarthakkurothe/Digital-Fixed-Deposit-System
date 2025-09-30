@@ -41,15 +41,11 @@ describe('BreakFD.vue', () => {
 
   it('renders loading state initially', async () => {
     mockDispatch.mockImplementation(() => {
-      return new Promise(resolve => setTimeout(() => resolve(null), 100)); // delay response
+      return new Promise(resolve => setTimeout(() => resolve(null), 100));
     });
 
     const wrapper = mount(BreakFD, { props: { fdId: 1 } });
-
-    // Wait for the next tick so the DOM updates after mount
     await wrapper.vm.$nextTick();
-
-    // Assert loading state before the promise resolves
     expect(wrapper.text()).toContain('Loading preview...');
   });
 
@@ -58,7 +54,7 @@ describe('BreakFD.vue', () => {
     const wrapper = mount(BreakFD, {
       props: { fdId },
     });
-    await new Promise(resolve => setTimeout(resolve)); // wait for fetchPreview
+    await new Promise(resolve => setTimeout(resolve));
     expect(wrapper.text()).toContain('Break Fixed Deposit');
     expect(wrapper.text()).toContain('₹10,000');
     expect(wrapper.text()).toContain('Total Payout');
@@ -77,7 +73,7 @@ describe('BreakFD.vue', () => {
   it('opens confirmation dialog on Confirm Break click', async () => {
     mockDispatch.mockResolvedValueOnce(previewMock);
     const wrapper = mount(BreakFD, { props: { fdId: 1 } });
-    await new Promise(resolve => setTimeout(resolve)); // wait for preview to load
+    await new Promise(resolve => setTimeout(resolve));
     const confirmBtn = wrapper.findAll('button').find(btn => btn.text() === 'Confirm Break');
     expect(confirmBtn).toBeDefined();
     await confirmBtn.trigger('click');

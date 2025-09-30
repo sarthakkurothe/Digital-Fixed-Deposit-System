@@ -100,6 +100,4 @@ export default {
 };
 </script>
 
-<style scoped>
-/* Optional: custom hover effects or shadows */
-</style>
+<style scoped></style>

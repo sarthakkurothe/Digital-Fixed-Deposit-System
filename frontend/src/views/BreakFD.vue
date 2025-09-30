@@ -176,7 +176,7 @@
             </div>
           </div>
 
-          <!-- fallback if no preview and not loading (shouldn't normally happen) -->
+          <!-- fallback if no preview and not loading  -->
           <div v-else class="text-center py-6 text-gray-500">No preview available.</div>
         </div>
       </div>
@@ -310,7 +310,6 @@ const copy = async (val, message = 'Copied') => {
 // close helper
 const close = () => {
   visible.value = false;
-  // emit to parent - parent should set showBreakModal false
   emit('close');
 };
 
@@ -328,7 +327,6 @@ onUnmounted(() => {
   window.removeEventListener('keydown', onKey);
 });
 
-// watch fdId changes (parent might reuse component)
 watch(
   () => props.fdId,
   n => {
@@ -341,7 +339,6 @@ watch(
 </script>
 
 <style scoped>
-/* Simple enter/leave animation */
 .fd-modal-enter-active,
 .fd-modal-leave-active {
   transition:

@@ -5,7 +5,7 @@ import { useToast } from 'vue-toastification';
 
 axios.defaults.baseURL = 'http://localhost:8080';
 axios.defaults.headers.common['Content-Type'] = 'application/json';
-axios.defaults.withCredentials = true; 
+axios.defaults.withCredentials = true;
 
 axios.interceptors.request.use(
   config => {
@@ -36,7 +36,6 @@ axios.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
-        
         const res = await axios.post('/auth/refresh');
 
         if (res.status === 200) {
