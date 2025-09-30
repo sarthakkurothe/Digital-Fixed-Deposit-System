@@ -72,10 +72,7 @@ public class AuthController {
             authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
         } catch (AuthenticationException e) {
-            Map<String, Object> map = new HashMap<>();
-            map.put("error", e.getMessage());
-            map.put("status", false);
-            return new ResponseEntity<>(map, HttpStatus.UNAUTHORIZED);
+           throw new UsernameNotFoundException("User Not Found");
         }
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
