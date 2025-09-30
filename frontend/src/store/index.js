@@ -5,7 +5,6 @@ export default createStore({
   state: {
     user: JSON.parse(localStorage.getItem('user')) || null,
     accessToken: localStorage.getItem('accessToken') || null,
-    refreshToken: localStorage.getItem('refreshToken') || null,
     fds: [],
     summary: {},
     dashboardInfo: {},
@@ -21,21 +20,17 @@ export default createStore({
       state.user = user;
       localStorage.setItem('user', JSON.stringify(user));
     },
-    setTokens(state, { accessToken, refreshToken }) {
+    setTokens(state, { accessToken }) {
       state.accessToken = accessToken;
-      state.refreshToken = refreshToken;
       localStorage.setItem('accessToken', accessToken);
-      localStorage.setItem('refreshToken', refreshToken);
     },
     clearAuth(state) {
       state.user = null;
       state.accessToken = null;
-      state.refreshToken = null;
       state.fds = [];
       state.summary = {};
       localStorage.removeItem('user');
       localStorage.removeItem('accessToken');
-      localStorage.removeItem('refreshToken');
     },
 
     // --- FDs ---
@@ -151,8 +146,8 @@ export default createStore({
           password: credentials.password,
         });
 
-        const { accessToken, refreshToken } = res.data;
-        commit('setTokens', { accessToken, refreshToken });
+        const { accessToken } = res.data;
+        commit('setTokens', { accessToken });
 
         return res;
       } catch (err) {
@@ -212,7 +207,7 @@ export default createStore({
     getUserName: state => state.user?.name || '',
     getUserEmail: state => state.user?.email || '',
     getAccessToken: state => state.accessToken,
-    getRefreshToken: state => state.refreshToken,
+
     getFDs: state => state.fds,
     isLoading: state => state.loading,
     getFDById: state => id => state.fds.find(fd => fd.id === id),
