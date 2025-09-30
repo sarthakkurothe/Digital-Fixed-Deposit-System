@@ -81,7 +81,6 @@ public class AuthController {
         String refreshToken = jwtUtils.generateRefreshToken(userPrincipal.getUsername());
         String accessToken = jwtUtils.generateAccessToken(userPrincipal.getUsername());
 
-        // 🔑 Put refresh token in HttpOnly cookie
         ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", refreshToken)
                 .httpOnly(true)
                 .path("/auth/refresh")

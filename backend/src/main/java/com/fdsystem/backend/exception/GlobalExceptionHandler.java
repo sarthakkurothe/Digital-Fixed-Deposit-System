@@ -53,7 +53,7 @@ public class GlobalExceptionHandler {
     return new ResponseEntity<>(map, HttpStatus.UNAUTHORIZED);
   }
 
-  // -------------------- Optional: Catch-all for other exceptions --------------------
+
   @ExceptionHandler(Exception.class)
   public ResponseEntity<Map<String, String>> handleGenericException(Exception ex) {
     Map<String, String> map = new HashMap<>();
