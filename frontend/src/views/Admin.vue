@@ -10,7 +10,7 @@
             <Users class="w-5 h-5 text-blue-600" />
           </div>
         </div>
-        <p class="mt-2 text-2xl font-bold text-gray-900">{{ totalUsers }}</p>
+        <p class="mt-2 text-2xl font-bold text-gray-900">{{ totalUsers - 1 }}</p>
       </div>
 
       <!-- Total FDs Card -->
