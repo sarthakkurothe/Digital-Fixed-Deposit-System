@@ -238,12 +238,6 @@ export default {
       this.loading = true;
       this.successMessage = '';
       try {
-        console.log('Registering user with:', {
-          name: this.name,
-          email: this.email,
-          dateOfBirth: this.dateOfBirth,
-          password: this.password,
-        });
         const res = await this.register({
           name: this.name,
           email: this.email,
@@ -272,7 +266,6 @@ export default {
           this.errors.email = res.error || 'Registration failed. Please try again.';
         }
       } catch (error) {
-        console.error('Registration error:', error);
         this.errors.email = error.response?.data || 'Registration failed. Please try again.';
       } finally {
         this.loading = false;
