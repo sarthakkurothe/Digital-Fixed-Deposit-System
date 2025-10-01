@@ -49,7 +49,6 @@ public class TokenValidationTest {
   
   @org.junit.jupiter.api.BeforeEach
   void setUp() {
-    // Manually create AuthTokenFilter with mocked HandlerExceptionResolver
     authTokenFilter = new AuthTokenFilter(jwtUtils, exceptionResolver, userDetailsService);
 
   }

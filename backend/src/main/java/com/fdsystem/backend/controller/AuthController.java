@@ -18,6 +18,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
@@ -113,9 +114,13 @@ public class AuthController {
         user.setPassword(hashed_password);
         user.setRole(Role.ROLE_USER);
         user.setCreated_at(new Timestamp(System.currentTimeMillis()));
-        userService.addUser(user);
 
-        return new ResponseEntity<>("User added successfully!", HttpStatus.CREATED);
+        try {
+            userService.addUser(user);
+            return new ResponseEntity<>("User added successfully!", HttpStatus.CREATED);
+        } catch (DataIntegrityViolationException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("User already exists!");
+        }
     }
 
     /**
