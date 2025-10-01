@@ -69,25 +69,25 @@ public class AuthControllerTest {
     @InjectMocks
     private AuthController authController;
 
-    // Test data
+
     private User testUser;
     private LoginRequest loginRequest;
     private UserPrincipal userPrincipal;
 
     @BeforeEach
     public void setup() {
-        // Initialize mocks
+
         MockitoAnnotations.openMocks(this);
 
-        // Set up test data
+
         testUser = createTestUser();
         userPrincipal = new UserPrincipal(testUser);
         loginRequest = createLoginRequest();
 
-        // Set up mock MVC
+
         mockMvc = MockMvcBuilders.standaloneSetup(authController).build();
 
-        // Set up security context
+
         when(securityContext.getAuthentication()).thenReturn(authentication);
         when(authentication.getPrincipal()).thenReturn(userPrincipal);
         SecurityContextHolder.setContext(securityContext);
@@ -95,7 +95,7 @@ public class AuthControllerTest {
 
     @AfterEach
     public void tearDown() {
-        // Clear SecurityContextHolder after each test
+
         SecurityContextHolder.clearContext();
     }
 
@@ -107,7 +107,6 @@ public class AuthControllerTest {
         user.setPassword("encodedPassword");
         user.setRole(Role.ROLE_USER);
         user.setCreated_at(new Timestamp(System.currentTimeMillis()));
-        // Add date of birth to avoid NullPointerException
         user.setDateOfBirth(new java.sql.Date(System.currentTimeMillis() - 25L * 365 * 24 * 60 * 60 * 1000)); // 25 years ago
         return user;
     }
@@ -124,7 +123,6 @@ public class AuthControllerTest {
     @Test
     @DisplayName("Get User Success")
     public void testGetUserSuccess() throws Exception {
-        // Act & Assert
         mockMvc.perform(get("/auth/me"))
                 .andExpect(status().isAccepted())
                 .andExpect(jsonPath("$.id").value(testUser.getId()))
@@ -136,13 +134,10 @@ public class AuthControllerTest {
     @Test
     @DisplayName("Get User - Direct Controller Method Test")
     public void testGetUserDirectCall() {
-        // Given
-        // Security context already set up in setUp()
 
-        // When
         ResponseEntity<?> response = authController.getUser();
 
-        // Then
+
         assertEquals(HttpStatus.ACCEPTED, response.getStatusCode());
         assertTrue(response.getBody() instanceof UserDTO);
 

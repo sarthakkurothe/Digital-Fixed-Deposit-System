@@ -49,7 +49,7 @@ class SupportTicketServiceTest {
 
     @BeforeEach
     void setup() {
-        // MockitoExtension handles init; keep for any extra setup if needed
+
     }
 
     // Helper builders
@@ -82,7 +82,6 @@ class SupportTicketServiceTest {
 
     @Test
     void testCreateTicket_Success() {
-        // Arrange
         long fdId = 10L;
         User user = sampleUser(2L, "Sarthak", "sarthak@example.com");
         FixedDeposit fd = sampleFd(fdId, user);
@@ -96,10 +95,8 @@ class SupportTicketServiceTest {
         // Save should return the passed entity (common mock pattern)
         when(supportTicketRepository.save(any(SupportTicket.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
-        // Act
         supportTicketService.createTicket(dto);
 
-        // Assert
         ArgumentCaptor<SupportTicket> captor = ArgumentCaptor.forClass(SupportTicket.class);
         verify(supportTicketRepository, times(1)).save(captor.capture());
         SupportTicket saved = captor.getValue();
@@ -116,7 +113,6 @@ class SupportTicketServiceTest {
 
     @Test
     void testCreateTicket_FdNotFound_Throws() {
-        // Arrange
         long missingFd = 99L;
         TicketRequestDTO dto = new TicketRequestDTO();
         dto.setFdId(missingFd);
@@ -125,14 +121,12 @@ class SupportTicketServiceTest {
 
         when(fixedDepositRepository.findById(missingFd)).thenReturn(Optional.empty());
 
-        // Act & Assert
         assertThrows(java.util.NoSuchElementException.class, () -> supportTicketService.createTicket(dto));
         verify(supportTicketRepository, never()).save(any());
     }
 
     @Test
     void testGetTicketsByUserId_ReturnsMappedResponses() {
-        // Arrange
         long userId = 5L;
         User user = sampleUser(userId, "Test User", "test@example.com");
         FixedDeposit fd = sampleFd(20L, user);
@@ -149,10 +143,8 @@ class SupportTicketServiceTest {
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
         when(supportTicketRepository.findAllByUser(user)).thenReturn(storedTickets);
 
-        // Act
         List<TicketResponseDTO> responses = supportTicketService.getTicketsByUserId(userId);
 
-        // Assert
         assertNotNull(responses);
         assertEquals(2, responses.size());
 
@@ -168,7 +160,6 @@ class SupportTicketServiceTest {
 
     @Test
     void testGetAll_ReturnsAdminDtos() {
-        // Arrange
         User user1 = sampleUser(11L, "A", "a@example.com");
         FixedDeposit fd1 = sampleFd(201L, user1);
         SupportTicket ticket1 = sampleTicket(301L, user1, fd1, "S1", "D1", SupportTicketStatus.OPEN);
@@ -181,10 +172,8 @@ class SupportTicketServiceTest {
 
         when(supportTicketRepository.findAll()).thenReturn(tickets);
 
-        // Act
         List<AdminSupportTicketDto> dtos = supportTicketService.getAll();
 
-        // Assert
         assertNotNull(dtos);
         assertEquals(2, dtos.size());
 
@@ -201,7 +190,6 @@ class SupportTicketServiceTest {
 
     @Test
     void testSetTicketStatusById_UpdatesAndSaves() {
-        // Arrange
         long ticketId = 44L;
         User user = sampleUser(33L, "U", "u@example.com");
         FixedDeposit fd = sampleFd(77L, user);
@@ -210,11 +198,9 @@ class SupportTicketServiceTest {
         when(supportTicketRepository.findById(ticketId)).thenReturn(Optional.of(existing));
         when(supportTicketRepository.save(any(SupportTicket.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
-        // Act
         String newResponse = "Resolved by admin";
         supportTicketService.setTicketStatusById(ticketId, newResponse, SupportTicketStatus.CLOSED);
 
-        // Assert
         ArgumentCaptor<SupportTicket> captor = ArgumentCaptor.forClass(SupportTicket.class);
         verify(supportTicketRepository, times(1)).save(captor.capture());
         SupportTicket saved = captor.getValue();
@@ -225,14 +211,11 @@ class SupportTicketServiceTest {
 
     @Test
     void testGetAllStatusTicketsCount_ReturnsCount() {
-        // Arrange
         String status = "OPEN";
         when(supportTicketRepository.getAllStatusTicketsCount(status)).thenReturn(7L);
 
-        // Act
         Long count = supportTicketService.getAllStatusTicketsCount(status);
 
-        // Assert
         assertNotNull(count);
         assertEquals(7L, count.longValue());
         verify(supportTicketRepository, times(1)).getAllStatusTicketsCount(status);

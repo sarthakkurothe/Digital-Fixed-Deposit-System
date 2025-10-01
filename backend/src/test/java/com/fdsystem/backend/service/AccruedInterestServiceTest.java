@@ -103,7 +103,6 @@ class AccruedInterestServiceTest {
     
     @Test
     void testNegativePrincipalException() {
-        // Arrange
         FixedDeposit fdNegativePrincipal = new FixedDeposit();
         fdNegativePrincipal.setId(3L);
         fdNegativePrincipal.setUser(user);
@@ -115,7 +114,6 @@ class AccruedInterestServiceTest {
         
         when(fixedDepositRepository.findAllByUser(user)).thenReturn(Collections.singletonList(fdNegativePrincipal));
         
-        // Act & Assert
         Exception exception = assertThrows(com.fdsystem.backend.exception.InterestCalculationException.class, () -> {
             accruedInterestService.calculateAccruedInterest(user);
         });
@@ -125,7 +123,6 @@ class AccruedInterestServiceTest {
     
     @Test
     void testNegativeRateException() {
-        // Arrange
         FixedDeposit fdNegativeRate = new FixedDeposit();
         fdNegativeRate.setId(4L);
         fdNegativeRate.setUser(user);
@@ -137,7 +134,6 @@ class AccruedInterestServiceTest {
         
         when(fixedDepositRepository.findAllByUser(user)).thenReturn(Collections.singletonList(fdNegativeRate));
         
-        // Act & Assert
         Exception exception = assertThrows(com.fdsystem.backend.exception.InterestCalculationException.class, () -> {
             accruedInterestService.calculateAccruedInterest(user);
         });
@@ -147,7 +143,6 @@ class AccruedInterestServiceTest {
 
     @Test
     void testZeroTenureMonthsException() {
-        // Arrange
         FixedDeposit fdZeroTenure = new FixedDeposit();
         fdZeroTenure.setId(5L);
         fdZeroTenure.setUser(user);
@@ -159,7 +154,6 @@ class AccruedInterestServiceTest {
 
         when(fixedDepositRepository.findAllByUser(user)).thenReturn(Collections.singletonList(fdZeroTenure));
 
-        // Act & Assert
         Exception exception = assertThrows(InterestCalculationException.class, () -> {
             accruedInterestService.calculateAccruedInterest(user);
         });
@@ -180,7 +174,6 @@ class AccruedInterestServiceTest {
 
         when(fixedDepositRepository.findAllByUser(user)).thenReturn(Collections.singletonList(fdZeroTenure));
 
-        // Act & Assert
         Exception exception = assertThrows(InterestCalculationException.class, () -> {
             accruedInterestService.calculateAccruedInterest(user);
         });
