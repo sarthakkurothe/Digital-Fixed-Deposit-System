@@ -6,7 +6,7 @@
       role="dialog"
       aria-modal="true"
     >
-      <!-- overlay: click outside to close -->
+
       <div class="absolute inset-0 bg-black/50 backdrop-blur-sm" @click.self="close"></div>
 
       <!-- modal card -->
@@ -62,7 +62,7 @@
 
           <!-- preview -->
           <div v-else-if="preview">
-            <!-- summary row -->
+            
             <div class="grid grid-cols-2 gap-4 mb-4">
               <div class="p-4 rounded-lg bg-gray-50 border border-gray-100">
                 <div class="text-xs text-slate-400 mb-1">FD</div>
@@ -176,7 +176,7 @@
             </div>
           </div>
 
-          <!-- fallback if no preview and not loading  -->
+          
           <div v-else class="text-center py-6 text-gray-500">No preview available.</div>
         </div>
       </div>
@@ -226,17 +226,17 @@ import { useStore } from 'vuex';
 import { useToast } from 'vue-toastification';
 import { AlertTriangle, X, Clipboard, CircleAlert } from 'lucide-vue-next';
 
-// props & emits
+
 const props = defineProps({
   fdId: { type: [Number, String], required: true },
 });
 const emit = defineEmits(['close', 'fdBroken']);
 
-// store & toast
+
 const store = useStore();
 const toast = useToast();
 
-// state
+
 const visible = ref(true);
 const preview = ref(null);
 const loading = ref(false);
@@ -254,7 +254,7 @@ const formatDate = dateStr => {
   return d.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
 };
 
-// fetch preview
+
 const fetchPreview = async () => {
   loading.value = true;
   error.value = null;
@@ -274,7 +274,7 @@ const fetchPreview = async () => {
   }
 };
 
-// confirm break (emit to parent)
+
 const confirmBreakFD = async () => {
   if (!preview.value || confirming.value) return;
 
@@ -297,7 +297,7 @@ const confirmBreakFD = async () => {
   }
 };
 
-// copy helper
+
 const copy = async (val, message = 'Copied') => {
   try {
     await navigator.clipboard.writeText(String(val));
@@ -307,13 +307,13 @@ const copy = async (val, message = 'Copied') => {
   }
 };
 
-// close helper
+
 const close = () => {
   visible.value = false;
   emit('close');
 };
 
-// handle esc key to close
+
 const onKey = e => {
   if (e.key === 'Escape') close();
 };

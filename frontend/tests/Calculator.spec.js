@@ -33,7 +33,7 @@ vi.mock('../src/utils/fdCalculations.js', () => {
   };
 });
 
-// Minimal stub for SchemeDropDown used by the view
+
 vi.mock('../components/SchemeDropDown.vue', () => ({
   default: {
     name: 'SchemeDropDown',
