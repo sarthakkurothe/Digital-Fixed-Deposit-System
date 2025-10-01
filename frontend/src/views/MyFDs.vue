@@ -224,7 +224,7 @@
 
           <!-- content -->
           <div class="p-6 grid grid-cols-1 md:grid-cols-3 gap-6">
-            <!-- left column: big numbers -->
+           
             <div
               class="md:col-span-1 bg-gradient-to-br from-white to-blue-50 p-4 rounded-xl flex flex-col gap-3"
             >
@@ -336,7 +336,6 @@ import { mapState } from 'vuex';
 import BreakFD from './BreakFD.vue';
 import FDCard from '../components/FDCard.vue';
 
-// lucide icons (added ones used by modal)
 import {
   Info,
   Filter,
@@ -452,7 +451,7 @@ export default {
       return this.filteredFds.reduce((sum, fd) => sum + fd.amount, 0);
     },
 
-    // Modal-related computed properties
+    
     formattedAmount() {
       return this.selectedFD?.amount != null
         ? Number(this.selectedFD.amount).toLocaleString('en-IN')
@@ -518,7 +517,7 @@ export default {
       if (this.quickFilter !== type) this.quickFilter = '';
     },
 
-    // Modal open/close
+    
     openViewModal(fd) {
       this.selectedFD = fd;
       this.showModal = true;
@@ -528,7 +527,7 @@ export default {
       this.selectedFD = {};
     },
 
-    // Break FD flow (parent already uses this)
+    
     breakFD(fd) {
       this.selectedFD = fd;
       this.showBreakModal = true;
@@ -571,7 +570,7 @@ export default {
 </script>
 
 <style scoped>
-/* Modal enter/leave */
+
 .modal-fade-enter-active,
 .modal-fade-leave-active {
   transition:

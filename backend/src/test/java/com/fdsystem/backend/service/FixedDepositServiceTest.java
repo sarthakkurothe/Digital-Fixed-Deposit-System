@@ -47,17 +47,13 @@ public class FixedDepositServiceTest {
     @Test
     void testBookFD_setsDatesAndStatusAndSaves() {
 
-        // Arrange
         FixedDeposit fd = new FixedDeposit();
         fd.setTenure_months(12);
 
-        // Mock repository save
         when(fixedDepositRepository.save(any(FixedDeposit.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
-        // Act
         fixedDepositService.bookFD(fd);
 
-        // Assert
         assertNotNull(fd.getStart_date(), "Start date should not be null");
         assertNotNull(fd.getMaturity_date(), "Maturity date should not be null");
         assertEquals(FdStatus.ACTIVE, fd.getStatus(), "FD should be active after booking");
@@ -66,13 +62,11 @@ public class FixedDepositServiceTest {
         LocalDate expectedMaturityDate = LocalDate.now().plusMonths(12);
         assertEquals(Date.valueOf(expectedMaturityDate), fd.getMaturity_date(), "Maturity date should be start_date + tenure_months");
 
-        // Verify save called
         verify(fixedDepositRepository, times(1)).save(fd);
     }
 
     @Test
     void testGetFdsByUserId_returnsDepositsForUser() {
-        // Arrange
         Long userId = 1L;
         User user = new User();
         user.setId(userId);
@@ -85,10 +79,8 @@ public class FixedDepositServiceTest {
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
         when(fixedDepositRepository.findAllByUser(user)).thenReturn(Arrays.asList(fd1, fd2));
 
-        // Act
         List<FixedDeposit> result = fixedDepositService.getFdsByUserId(userId);
 
-        // Assert
         assertEquals(2, result.size(), "Should return 2 fixed deposits");
         verify(userRepository, times(1)).findById(userId);
         verify(fixedDepositRepository, times(1)).findAllByUser(user);
@@ -96,7 +88,6 @@ public class FixedDepositServiceTest {
 
     @Test
     void testGetBreakPreview_penaltyFullAccruedInterestIfLessThan3Months() {
-        // Arrange
         FixedDeposit fd = new FixedDeposit();
         fd.setId(1L);
         fd.setStart_date(java.util.Date.from(
@@ -109,10 +100,8 @@ public class FixedDepositServiceTest {
 
         when(fixedDepositRepository.findById(1L)).thenReturn(Optional.of(fd));
 
-        // Act
         BreakPreviewResponse response = fixedDepositService.getBreakPreview(1L);
 
-        // Assert
         assertEquals(500.0, response.getPenalty(), "Penalty should equal full accrued interest");
         assertEquals(10000.0, response.getPayout(), "Payout should just be the amount");
         assertEquals(2, response.getTimeElapsed(), "Months elapsed should be 2");
@@ -120,7 +109,6 @@ public class FixedDepositServiceTest {
 
     @Test
     void testGetBreakPreview_penaltyPartialIfMidTenure() {
-        // Arrange
         FixedDeposit fd = new FixedDeposit();
         fd.setId(2L);
         fd.setStart_date(java.util.Date.from(
@@ -133,10 +121,8 @@ public class FixedDepositServiceTest {
 
         when(fixedDepositRepository.findById(2L)).thenReturn(Optional.of(fd));
 
-        // Act
         BreakPreviewResponse response = fixedDepositService.getBreakPreview(2L);
 
-        // Assert
         assertEquals(100.0, response.getPenalty(), "Penalty should be accrued interest divided by interest rate");
         assertEquals(10500.0, response.getPayout(), "Payout should be amount + interest - penalty");
         assertEquals(6, response.getTimeElapsed(), "Months elapsed should be 6");
@@ -211,10 +197,8 @@ public class FixedDepositServiceTest {
     
     @Test
     void testBreakFD_createsTicketAndChangesFDStatus() {
-        // Arrange
         Long fdId = 3L;
         
-        // Create test data
         User testUser = new User();
         testUser.setId(1L);
         testUser.setName("Test User");
@@ -231,17 +215,14 @@ public class FixedDepositServiceTest {
                 LocalDate.now().minusMonths(4).atStartOfDay(ZoneId.systemDefault()).toInstant()
         ));
         
-        // Mock repository responses
         when(fixedDepositRepository.findById(fdId)).thenReturn(Optional.of(fd));
         when(supportTicketRepository.save(any(com.fdsystem.backend.entity.SupportTicket.class)))
             .thenAnswer(invocation -> invocation.getArgument(0));
         when(fixedDepositRepository.save(any(FixedDeposit.class)))
             .thenAnswer(invocation -> invocation.getArgument(0));
             
-        // Act
         fixedDepositService.breakFD(fdId);
         
-        // Assert
         // Verify FD status changed to PENDING
         assertEquals(FdStatus.PENDING, fd.getStatus(), "FD status should be changed to PENDING");
         
@@ -286,10 +267,8 @@ public class FixedDepositServiceTest {
         when(accruedInterestService.roundTwoDecimals(compoundInterest)).thenReturn(roundedInterest);
         when(fixedDepositRepository.save(any(FixedDeposit.class))).thenReturn(fd);
 
-        // Act
         fixedDepositService.setFixedDepositStatus(fdId, FdStatus.BROKEN);
 
-        // Assert
         assertEquals(FdStatus.BROKEN, fd.getStatus());
         assertEquals(roundedInterest, fd.getAccrued_interest());
         verify(accruedInterestService, times(1)).computeCompoundInterest(principal, rate, applicableMonths);

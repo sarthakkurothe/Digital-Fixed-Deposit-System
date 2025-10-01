@@ -231,7 +231,7 @@
       </div>
     </div>
 
-    <!-- Confirmation Modal (refactored with animation, icons, blur backdrop) -->
+    <!-- Confirmation Modal -->
     <transition name="modal-scale" appear>
       <div
         v-if="showConfirmModal"
@@ -531,7 +531,7 @@ export default {
 </script>
 
 <style scoped>
-/* Loading spinner */
+
 .loader {
   border: 2px solid #f3f3f3;
   border-top: 2px solid white;
@@ -549,14 +549,14 @@ export default {
   }
 }
 
-/* Donut chart animation */
+
 circle {
   transition:
     stroke-dasharray 1s ease-in-out,
     stroke-dashoffset 1s ease-in-out;
 }
 
-/* Modal scale + fade animation */
+
 .modal-scale-enter-active,
 .modal-scale-leave-active {
   transition:

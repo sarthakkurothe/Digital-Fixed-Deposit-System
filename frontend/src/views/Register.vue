@@ -6,7 +6,7 @@
     <div
       class="w-full max-w-6xl mx-auto flex flex-col lg:flex-row items-center justify-between p-6 lg:p-12 gap-5"
     >
-      <!-- Left Side - Branding -->
+     
       <DotLottieVue
         class="hidden md:block"
         style="height: 500px; width: 500px"
@@ -15,7 +15,7 @@
         src="https://lottie.host/3dfb02e8-bf8e-4872-9de1-bc51ae29925b/dEg2EQLi5K.lottie"
       />
 
-      <!-- Right Side - Registration Form -->
+      
       <div class="flex-1 max-w-md w-full">
         <div class="bg-white shadow-md rounded-xl p-8">
           <h2 class="text-2xl font-bold text-center text-gray-900">Create Account</h2>

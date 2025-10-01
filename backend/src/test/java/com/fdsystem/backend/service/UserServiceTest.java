@@ -5,15 +5,18 @@ import com.fdsystem.backend.entity.User;
 import com.fdsystem.backend.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 class UserServiceTest {
 
   @Mock
@@ -26,7 +29,7 @@ class UserServiceTest {
 
   @BeforeEach
   void setUp() {
-    MockitoAnnotations.openMocks(this);
+
     user = new User();
     user.setId(1L);
     user.setEmail("test@example.com");
@@ -44,13 +47,9 @@ class UserServiceTest {
   
   @Test
   void testAddUser_WhenExceptionOccurs() {
-    // Arrange
+
     when(userRepository.save(user)).thenThrow(new RuntimeException("Database connection error"));
-    
-    // Act
     boolean result = userService.addUser(user);
-    
-    // Assert
     assertFalse(result);
     verify(userRepository, times(1)).save(user);
   }

@@ -64,18 +64,16 @@ public class UserControllerTest {
 
     @BeforeEach
     public void setup() {
-        // Initialize mocks
+
         MockitoAnnotations.openMocks(this);
         
-        // Set up test data
+
         testUser = createTestUser();
         userPrincipal = new UserPrincipal(testUser);
         fixedDeposits = new ArrayList<>();
         
-        // Set up mock MVC
         mockMvc = MockMvcBuilders.standaloneSetup(userController).build();
         
-        // Set up security context
         when(securityContext.getAuthentication()).thenReturn(authentication);
         when(authentication.getPrincipal()).thenReturn(userPrincipal);
         SecurityContextHolder.setContext(securityContext);
@@ -83,7 +81,6 @@ public class UserControllerTest {
     
     @AfterEach
     public void tearDown() {
-        // Clear SecurityContextHolder after each test
         SecurityContextHolder.clearContext();
     }
     
@@ -95,7 +92,6 @@ public class UserControllerTest {
         user.setPassword("password");
         user.setRole(Role.ROLE_USER);
         user.setCreated_at(new Timestamp(System.currentTimeMillis()));
-        // Add date of birth to avoid potential NullPointerException in other parts of the code
         user.setDateOfBirth(new java.sql.Date(System.currentTimeMillis() - 25L * 365 * 24 * 60 * 60 * 1000)); // 25 years ago
         return user;
     }
@@ -113,7 +109,6 @@ public class UserControllerTest {
     @Test
     @DisplayName("Test getDashboardStats with active fixed deposits returns correct statistics")
     public void testGetDashboardStats_WithActiveFixedDeposits_ReturnsCorrectStats() throws Exception {
-        // Arrange: Set up fixed deposits with different statuses
         fixedDeposits.add(createFixedDeposit(1L, 10000.0, 500.0, FdStatus.ACTIVE));
         fixedDeposits.add(createFixedDeposit(2L, 20000.0, 1000.0, FdStatus.ACTIVE));
         fixedDeposits.add(createFixedDeposit(3L, 15000.0, 300.0, FdStatus.PENDING));
@@ -126,11 +121,9 @@ public class UserControllerTest {
         // Not just the interest from active FDs
         double expectedAverageInterest = 900.0; // 1800.0 / 2
         
-        // Mock service calls
         when(fixedDepositService.getFdsByUserId(testUser.getId())).thenReturn(fixedDeposits);
         doNothing().when(accruedInterestService).calculateAccruedInterest(testUser);
         
-        // Act & Assert using MockMvc
         mockMvc.perform(get("/user/investments")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isAccepted())
@@ -139,7 +132,6 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.activeFDs").value(expectedActiveFDs))
                 .andExpect(jsonPath("$.averageInterest").value(expectedAverageInterest));
         
-        // Verify service method calls
         verify(fixedDepositService, times(3)).getFdsByUserId(testUser.getId());
         verify(accruedInterestService).calculateAccruedInterest(testUser);
     }
@@ -147,21 +139,17 @@ public class UserControllerTest {
     @Test
     @DisplayName("Test getDashboardStats with no active fixed deposits returns zero average interest")
     public void testGetDashboardStats_WithNoActiveFDs_ReturnsZeroAverageInterest() throws Exception {
-        // Arrange: Set up fixed deposits with non-active statuses
         fixedDeposits.add(createFixedDeposit(1L, 10000.0, 500.0, FdStatus.PENDING));
         fixedDeposits.add(createFixedDeposit(2L, 20000.0, 1000.0, FdStatus.BROKEN));
         
-        // Expected values
         double expectedTotalInvestment = 30000.0; // 10000 + 20000
         double expectedInterestEarned = 1500.0;   // 500 + 1000
         long expectedActiveFDs = 0;               // No active FDs
         double expectedAverageInterest = 0.0;     // No active FDs, so average is 0
         
-        // Mock service calls
         when(fixedDepositService.getFdsByUserId(testUser.getId())).thenReturn(fixedDeposits);
         doNothing().when(accruedInterestService).calculateAccruedInterest(testUser);
         
-        // Act & Assert using MockMvc
         mockMvc.perform(get("/user/investments")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isAccepted())
@@ -170,7 +158,6 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.activeFDs").value(expectedActiveFDs))
                 .andExpect(jsonPath("$.averageInterest").value(expectedAverageInterest));
         
-        // Verify service method calls
         verify(fixedDepositService, times(3)).getFdsByUserId(testUser.getId());
         verify(accruedInterestService).calculateAccruedInterest(testUser);
     }
@@ -178,20 +165,15 @@ public class UserControllerTest {
     @Test
     @DisplayName("Test getDashboardStats with no fixed deposits returns empty statistics")
     public void testGetDashboardStats_WithNoFDs_ReturnsEmptyStats() throws Exception {
-        // Arrange: Set up empty fixed deposits list
-        // Empty fixedDeposits list is already initialized in setup()
-        
-        // Expected values
+
         double expectedTotalInvestment = 0.0;
         double expectedInterestEarned = 0.0;
         long expectedActiveFDs = 0;
         double expectedAverageInterest = 0.0;
         
-        // Mock service calls
         when(fixedDepositService.getFdsByUserId(testUser.getId())).thenReturn(fixedDeposits);
         doNothing().when(accruedInterestService).calculateAccruedInterest(testUser);
         
-        // Act & Assert using MockMvc
         mockMvc.perform(get("/user/investments")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isAccepted())
@@ -200,7 +182,6 @@ public class UserControllerTest {
                 .andExpect(jsonPath("$.activeFDs").value(expectedActiveFDs))
                 .andExpect(jsonPath("$.averageInterest").value(expectedAverageInterest));
         
-        // Verify service method calls
         verify(fixedDepositService, times(3)).getFdsByUserId(testUser.getId());
         verify(accruedInterestService).calculateAccruedInterest(testUser);
     }
@@ -208,31 +189,24 @@ public class UserControllerTest {
     @Test
     @DisplayName("Test getDashboardStats with authentication failure")
     public void testGetDashboardStats_WithAuthenticationFailure() {
-        // Arrange: Set up authentication failure
-        // Create a fresh security context for this test only
+
         SecurityContext testSecurityContext = mock(SecurityContext.class);
         Authentication testAuthentication = mock(Authentication.class);
         
-        // Set null authentication to simulate failure
         when(testSecurityContext.getAuthentication()).thenReturn(null);
         SecurityContextHolder.setContext(testSecurityContext);
         
-        // Act & Assert using direct controller call to catch the exception
         try {
-            // Direct call to controller method instead of using MockMvc
             userController.getDashboardStats();
             fail("Expected exception was not thrown");
         } catch (Exception e) {
-            // Expected behavior - we should get an exception when authentication fails
-            assertTrue(e instanceof NullPointerException || 
+            assertTrue(e instanceof NullPointerException ||
                       e.getCause() instanceof NullPointerException ||
                       e.getMessage() != null && e.getMessage().contains("Authentication"));
         } finally {
-            // Clean up test-specific security context
             SecurityContextHolder.clearContext();
         }
         
-        // Verify that service methods were not called
         verify(fixedDepositService, never()).getFdsByUserId(anyLong());
         verify(accruedInterestService, never()).calculateAccruedInterest(any(User.class));
     }
@@ -240,18 +214,15 @@ public class UserControllerTest {
     @Test
     @DisplayName("Test getDashboardStats with direct method invocation")
     public void testGetDashboardStats_DirectMethodInvocation() {
-        // Arrange
         fixedDeposits.add(createFixedDeposit(1L, 10000.0, 500.0, FdStatus.ACTIVE));
         fixedDeposits.add(createFixedDeposit(2L, 20000.0, 1000.0, FdStatus.ACTIVE));
         
-        // Mock service calls
         when(fixedDepositService.getFdsByUserId(testUser.getId())).thenReturn(fixedDeposits);
         doNothing().when(accruedInterestService).calculateAccruedInterest(testUser);
         
-        // Act
+
         ResponseEntity<?> responseEntity = userController.getDashboardStats();
         
-        // Assert
         assertEquals(HttpStatus.ACCEPTED, responseEntity.getStatusCode());
         assertTrue(responseEntity.getBody() instanceof UserDashboardDTO);
         
@@ -259,12 +230,10 @@ public class UserControllerTest {
         assertEquals(30000.0, dashboardDTO.getTotalInvestment());
         assertEquals(1500.0, dashboardDTO.getInterestEarned());
         assertEquals(2, dashboardDTO.getActiveFDs());
-        // Calculate the expected average interest based on the logic in the controller
         double expectedAverageInterest = 750.0; // 1500.0 / 2
         assertEquals(expectedAverageInterest, dashboardDTO.getAverageInterest(), 
                     "Average interest should be " + expectedAverageInterest + " (total interest / active FDs)");
         
-        // Verify service method calls
         verify(fixedDepositService, times(3)).getFdsByUserId(testUser.getId());
         verify(accruedInterestService).calculateAccruedInterest(testUser);
     }

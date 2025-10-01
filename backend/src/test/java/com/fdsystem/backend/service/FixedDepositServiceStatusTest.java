@@ -84,10 +84,8 @@ class FixedDepositServiceStatusTest {
         when(accruedInterestService.computeSimpleInterest(15000.0, 6.0, 6)).thenReturn(sixMonthInterest);
         when(accruedInterestService.roundTwoDecimals(sixMonthInterest)).thenReturn(sixMonthInterest);
 
-        // act
         fixedDepositService.setFixedDepositStatus(200L, FdStatus.BROKEN);
 
-        // assert
         assertEquals(FdStatus.BROKEN, fd.getStatus());
         assertEquals(sixMonthInterest, fd.getAccrued_interest());
 
